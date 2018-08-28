@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "export PORT=1333 && babel-watch server.js"
+    "start": "node server.js",
+    "dev": "export PORT=1333 && babel-watch server.js"
   },
   "repository": {
     "type": "git",
