@@ -1,7 +1,8 @@
-const path = require("path");
+const path    = require("path");
 const express = require("express");
-const fs = require("fs");
-import moment     from "moment";
+const fs      = require("fs");
+const moment  = require("moment");
+
 const PORT = process.env.PORT || 8080;
 
 const app = express();
