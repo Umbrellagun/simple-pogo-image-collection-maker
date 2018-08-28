@@ -8,10 +8,8 @@ const PORT = process.env.PORT || 8080;
 const app = express();
 
 app.use("/dist", express.static("dist"));
-// app.use("/static", express.static("static"));
 app.use(express.static(path.join(__dirname, "client")));
-// var index = (process.env.NODE_ENV == "production") ? ("/index.html") : ("/staging.html");
-var index = "/index.html";
+var index = (process.env.NODE_ENV == "production") ? ("/index.html") : ("/dev.html");
 
 if (process.env.NODE_ENV !== "production"){
 

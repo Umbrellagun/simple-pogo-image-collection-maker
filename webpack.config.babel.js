@@ -4,12 +4,14 @@ const path    = require("path");
 const PORT = process.env.PORT || 1333;
 
 const DEVELOPMENT = (process.env.NODE_ENV === "dev");
-
+console.log(DEVELOPMENT);
+console.log(process.env.NODE_ENV);
+const entryPath = "./client/js/app.js";
 const entry = (DEVELOPMENT) ? ([
   `webpack-hot-middleware/client?path=http://localhost:${PORT}/__webpack_hmr&timeout=20000`,
-  "./client/js/app.js"
+  entryPath
 ]) : ({
-  "dist/js/bundle.js": "./client/js/app.js",
+  "dist/js/bundle.js": entryPath,
 });
 
 const output = (DEVELOPMENT) ? ({
