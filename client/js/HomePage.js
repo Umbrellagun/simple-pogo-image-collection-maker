@@ -15,7 +15,10 @@ export default class HomePage extends React.Component {
   }
 
   componentWillMount = ()=>{
-    axios.get("http://localhost:1333/thing").then((response)=>{
+    const hostname = window.location.hostname;
+    const protocol = window.location.protocol;
+
+    axios.get(`${protocol}//${hostname}/thing`).then((response)=>{
       this.setState({
         pokemon: JSON.parse(response.data)
       });
