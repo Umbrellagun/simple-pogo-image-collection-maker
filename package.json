@@ -1,0 +1,50 @@
+{
+  "name": "simple-pogo-image-collection-maker",
+  "version": "1.0.0",
+  "description": "Create a collection of pogo images for trading or whatever else",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "export PORT=1333 && babel-watch server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Umbrellagun/simple-pogo-image-collection-maker.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Umbrellagun/simple-pogo-image-collection-maker/issues"
+  },
+  "homepage": "https://github.com/Umbrellagun/simple-pogo-image-collection-maker#readme",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "express": "^4.16.3",
+    "moment": "^2.22.2",
+    "path": "^0.12.7",
+    "prop-types": "^15.6.2",
+    "react": "^16.4.2",
+    "react-dom": "^16.4.2",
+    "react-router-dom": "^4.3.1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-eslint": "^9.0.0",
+    "babel-loader": "^7.1.4",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
+    "babel-register": "^6.26.0",
+    "babel-runtime": "^6.26.0",
+    "babel-watch": "^2.0.7",
+    "chokidar": "^2.0.4",
+    "eslint": "^5.4.0",
+    "eslint-plugin-babel": "^5.1.0",
+    "webpack": "^4.17.1",
+    "webpack-cli": "^3.1.0",
+    "webpack-dev-middleware": "^3.2.0",
+    "webpack-hot-middleware": "^2.22.3"
+  }
+}
