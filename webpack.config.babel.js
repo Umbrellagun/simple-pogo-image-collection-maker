@@ -9,7 +9,7 @@ const entry = (DEVELOPMENT) ? ([
   `webpack-hot-middleware/client?path=http://localhost:${PORT}/__webpack_hmr&timeout=20000`,
   "./client/js/app.js"
 ]) : ({
-  "dist/js/bundle.js": "./scripts/app.js",
+  "dist/js/bundle.js": "./client/js/app.js",
 });
 
 const output = (DEVELOPMENT) ? ({
