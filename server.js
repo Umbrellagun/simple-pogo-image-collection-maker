@@ -49,18 +49,22 @@ fs.readdir(path.join(__dirname, "client/images/live_pokemon_icons"), (err, files
 
     const shiny = file.includes("shiny");
 
-    console.log(splitFileName);
-
     let special = false;
     if ((splitFileName.length === 6 && shiny) || (splitFileName.length === 5 && !shiny)){
       special = true;
     }
+
+    const regular = (!special && !shiny);
+
+    // const gen = ;
 
     json.push({
       image: file,
       id: index,
       number: splitFileName[2],
       special,
+      regular,
+      // gen
       // gender
       shiny
     });

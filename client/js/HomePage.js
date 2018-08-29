@@ -18,7 +18,8 @@ export default class HomePage extends React.Component {
       pokemon: [],
       filters: {
         shiny: true,
-        special: true
+        special: true,
+        regular: true
       },
       panel: "selecting"
     }
@@ -27,11 +28,34 @@ export default class HomePage extends React.Component {
 
   componentWillMount = ()=>{
 
-    if (localStorage.pokemon && localStorage.filters){
-      this.setState({
-        pokemon: JSON.parse(localStorage.pokemon),
-        filters: JSON.parse(localStorage.filters)
-      });
+    if (localStorage.version){
+      if (JSON.parse(localStorage.version) !== 0){
+        const hostname = window.location.hostname;
+        const protocol = window.location.protocol;
+
+        const host = (hostname === "localhost") ? (`${protocol}//${hostname}:1333/thing`) : (`${protocol}//${hostname}/thing`);
+
+        axios.get(host).then((response)=>{
+          const oldPokemon = JSON.parse(localStorage.pokemon);
+
+          const updatedPokemon = JSON.parse(response.data).map((pokemon, key)=>{
+            return Object.assign({}, pokemon, oldPokemon[key]);
+          });
+
+          this.setState({
+            pokemon: updatedPokemon
+          }, this.syncLocalStorage);
+
+        }).catch((error)=>{
+          console.log(error);
+        });
+
+      } else {
+        this.setState({
+          pokemon: JSON.parse(localStorage.pokemon),
+          filters: JSON.parse(localStorage.filters)
+        });
+      }
     } else {
       const hostname = window.location.hostname;
       const protocol = window.location.protocol;
@@ -89,21 +113,25 @@ export default class HomePage extends React.Component {
       }
     }
 
-    if (shinyCheck){
-      if (specialCheck){
-        if (!pokemon.removed){
-          return (
-            <Pokemon
-              key={key}
-              pokemon={pokemon}
-              onClick={this.addRemovePokemon}
-              toggleFullyRemovePokemon={this.toggleFullyRemovePokemon}
-              showFullyRemoveButton={true}
-            />
-          );
-        }
+    let regularCheck = true;
+    if (!filters.regular){
+      if (pokemon.regular){
+        regularCheck = false;
+      } else {
+        regularCheck = true;
       }
+    }
 
+    if (shinyCheck && specialCheck && regularCheck && !pokemon.removed){
+      return (
+        <Pokemon
+          key={key}
+          pokemon={pokemon}
+          onClick={this.addRemovePokemon}
+          toggleFullyRemovePokemon={this.toggleFullyRemovePokemon}
+          showFullyRemoveButton={true}
+        />
+      );
     }
 
   };
@@ -151,12 +179,16 @@ export default class HomePage extends React.Component {
     } else if (filter === "toggle_special"){
       state.filters.special = !this.state.filters.special;
       this.setState(state);
+    } else if (filter === "toggle_regular"){
+      state.filters.regular = !this.state.filters.regular;
+      this.setState(state);
     }
   };
 
   syncLocalStorage = ()=>{
     localStorage.pokemon = JSON.stringify(this.state.pokemon);
     localStorage.filters = JSON.stringify(this.state.filters);
+    localStorage.version = JSON.stringify(0);
   }
 
   render(){
@@ -227,6 +259,45 @@ export default class HomePage extends React.Component {
       );
     }
 
+    const checked = (
+      <div style={{paddingRight: 8}}>
+        <FontAwesomeIcon icon={faCheckSquare} />
+      </div>
+    );
+
+    const unChecked = (
+      <div style={{paddingRight: 8}}>
+        <FontAwesomeIcon  icon={faSquare} />
+      </div>
+    );
+
+    const shinyFilter = (
+      <div style={filterStyle} onClick={()=>{this.toggleFilter("toggle_shiny");}}>
+        {(filters.shiny) ? (checked) : (unChecked)}
+        <div>
+          Shinys
+        </div>
+      </div>
+    );
+
+    const specialFilter = (
+      <div style={filterStyle} onClick={()=>{this.toggleFilter("toggle_special");}}>
+        {(filters.special) ? (checked) : (unChecked)}
+        <div>
+          Specials
+        </div>
+      </div>
+    );
+
+    const regularFilter = (
+      <div style={filterStyle} onClick={()=>{this.toggleFilter("toggle_regular");}}>
+        {(filters.regular) ? (checked) : (unChecked)}
+        <div>
+          Regular
+        </div>
+      </div>
+    );
+
     return (
       <div style={containerStyle}>
         <div style={{display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column", minHeight: "20vh"}}>
@@ -241,34 +312,9 @@ export default class HomePage extends React.Component {
             {navigationButton}
           </div>
           <div style={filterStyle}>
-            <div style={filterStyle} onClick={()=>{this.toggleFilter("toggle_shiny");}}>
-              {(filters.shiny) ? (
-                <div>
-                  <FontAwesomeIcon icon={faCheckSquare} />
-                </div>
-              ) : (
-                <div>
-                  <FontAwesomeIcon  icon={faSquare} />
-                </div>
-              )}
-              <div>
-                Shinys
-              </div>
-            </div>
-            <div style={filterStyle} onClick={()=>{this.toggleFilter("toggle_special");}}>
-              {(filters.special) ? (
-                <div>
-                  <FontAwesomeIcon  icon={faCheckSquare} />
-                </div>
-              ) : (
-                <div>
-                  <FontAwesomeIcon  icon={faSquare} />
-                </div>
-              )}
-              <div>
-                Specials
-              </div>
-            </div>
+            {regularFilter}
+            {shinyFilter}
+            {specialFilter}
           </div>
         </div>
         <div style={style}>
