@@ -37,12 +37,9 @@ export default class HomePage extends React.Component {
   };
 
   addRemovePokemon = (pokemon)=>{
-    // const selected_pokemon = JSON.parse(JSON.stringify(this.state.selected_pokemon));
     const newPokemon = JSON.parse(JSON.stringify(this.state.pokemon));
 
     newPokemon[pokemon.id].selected = !newPokemon[pokemon.id].selected;
-
-    // selected_pokemon.push(newPokemon[pokemon.id]);
 
     this.setState({
       pokemon: newPokemon
@@ -105,6 +102,15 @@ export default class HomePage extends React.Component {
       margin: 8
     };
 
+    const containerStyle = {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      flexDirection: "column",
+      color: "darkcyan",
+      fontWeight: 600
+    };
+
     let shownPokemon;
     let navigationButton;
     if (done){
@@ -120,7 +126,7 @@ export default class HomePage extends React.Component {
     }
 
     return (
-      <div style={{display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column", color: "darkcyan", fontWeight: 600}}>
+      <div style={containerStyle}>
         <div style={{fontSize: 21}}>
           PoGo Collector
         </div>
