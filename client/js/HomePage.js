@@ -1,8 +1,10 @@
-import React       from "react";
-import PropTypes   from "prop-types";
-import axios from "axios";
+import React     from "react";
+import PropTypes from "prop-types";
+import axios     from "axios";
 
-import styles      from "./styles.js";
+import Pokemon   from "./components/Pokemon.js";
+
+import styles    from "./styles.js";
 
 export default class HomePage extends React.Component {
 
@@ -34,37 +36,52 @@ export default class HomePage extends React.Component {
     });
   };
 
+  addRemovePokemon = (pokemon)=>{
+    // const selected_pokemon = JSON.parse(JSON.stringify(this.state.selected_pokemon));
+    const newPokemon = JSON.parse(JSON.stringify(this.state.pokemon));
+
+    newPokemon[pokemon.id].selected = !newPokemon[pokemon.id].selected;
+
+    // selected_pokemon.push(newPokemon[pokemon.id]);
+
+    this.setState({
+      pokemon: newPokemon
+    });
+  }
+
   renderPokemon = (pokemon, key)=>{
-    const style = {
-      width: 140,
-      height: 140,
-      background: `url(/../images/live_pokemon_icons/${pokemon.image}) center center / contain no-repeat`
-    };
 
     return (
-      <div key={key} style={style} onClick={()=>{
-
-        const selected_pokemon = JSON.parse(JSON.stringify(this.state.selected_pokemon));
-        selected_pokemon.push(pokemon);
-        console.log(selected_pokemon);
-        this.setState({
-          selected_pokemon
-        });
-      }}>
-      </div>
+      <Pokemon
+        key={key}
+        pokemon={pokemon}
+        onClick={this.addRemovePokemon}
+      />
     );
   };
 
   renderSelectedPokemon = (pokemon, key)=>{
-    const style = {
-      width: 140,
-      height: 140,
-      background: `url(/../images/live_pokemon_icons/${pokemon.image}) center center / contain no-repeat`
-    };
+    if (pokemon.selected){
+      return (
+        <Pokemon
+          key={key}
+          pokemon={pokemon}
+          onClick={this.addRemovePokemon}
+        />
+      );
+    }
+  }
 
-    return (
-      <div key={key} style={style}></div>
-    );
+  doneSelecting = ()=>{
+    this.setState({
+      done: true
+    });
+  };
+
+  backToSelecting = ()=>{
+    this.setState({
+      done: false
+    });
   }
 
   render(){
@@ -73,10 +90,20 @@ export default class HomePage extends React.Component {
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
-      flexWrap: "wrap"
+      flexWrap: "wrap",
+      maxHeight: "100vh",
+      overflow: "auto"
     };
 
-    const shownPokemon = (done) ? (selected_pokemon.map(this.renderSelectedPokemon)) : (pokemon.map(this.renderPokemon));
+    let shownPokemon;
+    let navigationButton;
+    if (done){
+      shownPokemon = pokemon.map(this.renderSelectedPokemon);
+      navigationButton = (<div onClick={this.backToSelecting}>Back</div>);
+    } else {
+      shownPokemon = pokemon.map(this.renderPokemon);
+      navigationButton = (<div onClick={this.doneSelecting}>Done Selecting</div>);
+    }
 
     return (
       <div style={{display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column"}}>
@@ -84,11 +111,7 @@ export default class HomePage extends React.Component {
           Select the Pokemon you would like
         </div>
         <div>
-          <div onClick={()=>{
-            this.setState({
-              done: true
-            });
-          }}>Done Selecting</div>
+          {navigationButton}
         </div>
         <div style={style}>
           {shownPokemon}

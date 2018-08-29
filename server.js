@@ -45,7 +45,8 @@ fs.readdir(path.join(__dirname, "client/images/live_pokemon_icons"), (err, files
 
   files.forEach((file, index)=>{
     json.push({
-      image: file
+      image: file,
+      id: index
     });
   });
 
