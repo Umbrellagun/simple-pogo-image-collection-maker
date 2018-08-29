@@ -17,15 +17,12 @@ export default class Pokemon extends React.Component {
     const style = {
       width: 120,
       height: 120,
-      // borderRadius: 2
-      // background: `url(/../images/live_pokemon_icons/${pokemon.image}) center center / contain no-repeat`,
-      // backgroundColor: (pokemon.selected) ? ("red") : ("grey"),
     };
 
     const className = (pokemon.selected) ? ("selected") : ("unselected");
 
     return (
-      <div>        
+      <div>
         <div style={{margin: 8, borderRadius: 2}} className={className} onClick={()=>{onClick(pokemon);}}>
           <img style={style} src={`/../images/live_pokemon_icons/${pokemon.image}`}/>
         </div>

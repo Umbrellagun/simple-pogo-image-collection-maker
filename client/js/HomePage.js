@@ -22,18 +22,24 @@ export default class HomePage extends React.Component {
   }
 
   componentWillMount = ()=>{
-    const hostname = window.location.hostname;
-    const protocol = window.location.protocol;
-
-    const host = (hostname === "localhost") ? (`${protocol}//${hostname}:1333/thing`) : (`${protocol}//${hostname}/thing`);
-
-    axios.get(host).then((response)=>{
+    if (localStorage.pokemon){
       this.setState({
-        pokemon: JSON.parse(response.data)
+        pokemon: JSON.parse(localStorage.pokemon)
       });
-    }).catch((error)=>{
-      console.log(error);
-    });
+    } else {
+      const hostname = window.location.hostname;
+      const protocol = window.location.protocol;
+
+      const host = (hostname === "localhost") ? (`${protocol}//${hostname}:1333/thing`) : (`${protocol}//${hostname}/thing`);
+
+      axios.get(host).then((response)=>{
+        this.setState({
+          pokemon: JSON.parse(response.data)
+        });
+      }).catch((error)=>{
+        console.log(error);
+      });
+    }
   };
 
   addRemovePokemon = (pokemon)=>{
@@ -43,7 +49,7 @@ export default class HomePage extends React.Component {
 
     this.setState({
       pokemon: newPokemon
-    });
+    }, this.syncLocalStorage);
   }
 
   renderPokemon = (pokemon, key)=>{
@@ -79,6 +85,10 @@ export default class HomePage extends React.Component {
     this.setState({
       done: false
     });
+  }
+
+  syncLocalStorage = ()=>{
+    localStorage.pokemon = JSON.stringify(this.state.pokemon);
   }
 
   render(){
