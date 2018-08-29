@@ -19,6 +19,10 @@
   },
   "homepage": "https://github.com/Umbrellagun/simple-pogo-image-collection-maker#readme",
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.0-14",
+    "@fortawesome/free-regular-svg-icons": "^5.1.0-11",
+    "@fortawesome/free-solid-svg-icons": "^5.1.0-11",
+    "@fortawesome/react-fontawesome": "0.1.0-11",
     "axios": "^0.18.0",
     "express": "^4.16.3",
     "moment": "^2.22.2",

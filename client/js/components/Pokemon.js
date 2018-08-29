@@ -32,17 +32,31 @@ export default class Pokemon extends React.Component {
       marginTop: 8
     };
 
+    const shinyStyle = {
+      background: `url(/../images/shiny.png) center center / contain no-repeat`,
+      width: 40,
+      height: 40,
+      position: "absolute",
+      bottom: 0,
+      right: 0
+    };
+
     const className = (pokemon.selected) ? ("selected") : ("unselected");
 
     const fullyRemoveButton = (showFullyRemoveButton) ? (
       <div style={xButton} onClick={()=>{toggleFullyRemovePokemon(pokemon);}}>X</div>
     ) : (null);
 
+    const shiny = (pokemon.shiny) ? (
+      <div style={shinyStyle}></div>
+    ) : (null);
+
     return (
       <div>
         {fullyRemoveButton}
-        <div style={{margin: 8, borderRadius: 2, cursor: "pointer"}} className={className} onClick={()=>{onClick(pokemon);}}>
+        <div style={{margin: 8, borderRadius: 2, cursor: "pointer", position: "relative"}} className={className} onClick={()=>{onClick(pokemon);}}>
           <img style={style} src={`/../images/live_pokemon_icons/${pokemon.image}`}/>
+          {shiny}
         </div>
       </div>
     );

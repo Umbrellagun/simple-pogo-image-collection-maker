@@ -44,10 +44,27 @@ fs.readdir(path.join(__dirname, "client/images/live_pokemon_icons"), (err, files
   }
 
   files.forEach((file, index)=>{
+
+    const splitFileName = file.split("_");
+
+    const shiny = file.includes("shiny");
+
+    console.log(splitFileName);
+
+    let special = false;
+    if ((splitFileName.length === 6 && shiny) || (splitFileName.length === 5 && !shiny)){
+      special = true;
+    }
+
     json.push({
       image: file,
-      id: index
+      id: index,
+      number: splitFileName[2],
+      special,
+      // gender
+      shiny
     });
+
   });
 
 });
