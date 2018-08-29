@@ -22,11 +22,13 @@ export default class Pokemon extends React.Component {
       // backgroundColor: (pokemon.selected) ? ("red") : ("grey"),
     };
 
-    const className = (pokemon.selected) ? ("selected") : (null);
+    const className = (pokemon.selected) ? ("selected") : ("unselected");
 
     return (
-      <div style={{margin: 8, borderRadius: 2}} className={className} onClick={()=>{onClick(pokemon);}}>
-        <img style={style} src={`/../images/live_pokemon_icons/${pokemon.image}`}/>
+      <div>        
+        <div style={{margin: 8, borderRadius: 2}} className={className} onClick={()=>{onClick(pokemon);}}>
+          <img style={style} src={`/../images/live_pokemon_icons/${pokemon.image}`}/>
+        </div>
       </div>
     );
   }

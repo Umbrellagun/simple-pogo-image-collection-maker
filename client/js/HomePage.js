@@ -88,25 +88,42 @@ export default class HomePage extends React.Component {
     const { done, pokemon, selected_pokemon } = this.state;
     const style = {
       display: "flex",
-      justifyContent: "center",
+      justifyContent: "space-around",
       alignItems: "center",
       flexWrap: "wrap",
       maxHeight: "100vh",
-      overflow: "auto"
+      overflow: "auto",
+      backgroundColor: "white",
+      borderRadius: 8
+    };
+
+    const buttonStyle = {
+      padding: 8,
+      backgroundColor: "darkcyan",
+      borderRadius: 4,
+      color: "white",
+      margin: 8
     };
 
     let shownPokemon;
     let navigationButton;
     if (done){
       shownPokemon = pokemon.map(this.renderSelectedPokemon);
-      navigationButton = (<div onClick={this.backToSelecting}>Back</div>);
+      navigationButton = (
+        <div style={buttonStyle} onClick={this.backToSelecting}>Back</div>
+      );
     } else {
       shownPokemon = pokemon.map(this.renderPokemon);
-      navigationButton = (<div onClick={this.doneSelecting}>Done Selecting</div>);
+      navigationButton = (
+        <div style={buttonStyle} onClick={this.doneSelecting}>Done Selecting</div>
+      );
     }
 
     return (
-      <div style={{display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column"}}>
+      <div style={{display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column", color: "darkcyan", fontWeight: 600}}>
+        <div style={{fontSize: 21}}>
+          PoGo Collector
+        </div>
         <div>
           Select the Pokemon you would like
         </div>
