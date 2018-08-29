@@ -12,7 +12,7 @@ export default class Pokemon extends React.Component {
   }
 
   render(){
-    const { pokemon, onClick, toggleFullyRemovePokemon } = this.props;
+    const { pokemon, onClick, toggleFullyRemovePokemon, showFullyRemoveButton } = this.props;
 
     const style = {
       width: 120,
@@ -34,9 +34,13 @@ export default class Pokemon extends React.Component {
 
     const className = (pokemon.selected) ? ("selected") : ("unselected");
 
+    const fullyRemoveButton = (showFullyRemoveButton) ? (
+      <div style={xButton} onClick={()=>{toggleFullyRemovePokemon(pokemon);}}>X</div>
+    ) : (null);
+
     return (
       <div>
-        <div style={xButton} onClick={()=>{toggleFullyRemovePokemon(pokemon);}}>X</div>
+        {fullyRemoveButton}
         <div style={{margin: 8, borderRadius: 2, cursor: "pointer"}} className={className} onClick={()=>{onClick(pokemon);}}>
           <img style={style} src={`/../images/live_pokemon_icons/${pokemon.image}`}/>
         </div>

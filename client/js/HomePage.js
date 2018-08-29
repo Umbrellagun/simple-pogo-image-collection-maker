@@ -70,6 +70,7 @@ export default class HomePage extends React.Component {
           pokemon={pokemon}
           onClick={this.addRemovePokemon}
           toggleFullyRemovePokemon={this.toggleFullyRemovePokemon}
+          showFullyRemoveButton={true}
         />
       );
     }
@@ -83,6 +84,7 @@ export default class HomePage extends React.Component {
           pokemon={pokemon}
           onClick={this.addRemovePokemon}
           toggleFullyRemovePokemon={this.toggleFullyRemovePokemon}
+          showFullyRemoveButton={true}
         />
       );
     }
