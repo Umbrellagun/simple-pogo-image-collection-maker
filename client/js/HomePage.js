@@ -16,7 +16,7 @@ export default class HomePage extends React.Component {
       exclude_shiny: false,
       exclude_special: false,
       show_only_shiny: false,
-      done: false
+      panel: "selecting"
     }
     this.selectedPokemon = [];
   }
@@ -50,18 +50,43 @@ export default class HomePage extends React.Component {
     this.setState({
       pokemon: newPokemon
     }, this.syncLocalStorage);
-  }
+  };
+
+  toggleFullyRemovePokemon = (pokemon)=>{
+    const newPokemon = JSON.parse(JSON.stringify(this.state.pokemon));
+
+    newPokemon[pokemon.id].removed = !newPokemon[pokemon.id].removed;
+
+    this.setState({
+      pokemon: newPokemon
+    }, this.syncLocalStorage);
+  };
 
   renderPokemon = (pokemon, key)=>{
-
-    return (
-      <Pokemon
-        key={key}
-        pokemon={pokemon}
-        onClick={this.addRemovePokemon}
-      />
-    );
+    if (!pokemon.removed){
+      return (
+        <Pokemon
+          key={key}
+          pokemon={pokemon}
+          onClick={this.addRemovePokemon}
+          toggleFullyRemovePokemon={this.toggleFullyRemovePokemon}
+        />
+      );
+    }
   };
+
+  renderFullyRemovedPokemon = (pokemon, key)=>{
+    if (pokemon.removed){
+      return (
+        <Pokemon
+          key={key}
+          pokemon={pokemon}
+          onClick={this.addRemovePokemon}
+          toggleFullyRemovePokemon={this.toggleFullyRemovePokemon}
+        />
+      );
+    }
+  }
 
   renderSelectedPokemon = (pokemon, key)=>{
     if (pokemon.selected){
@@ -77,22 +102,28 @@ export default class HomePage extends React.Component {
 
   doneSelecting = ()=>{
     this.setState({
-      done: true
+      panel: "done"
     });
   };
 
   backToSelecting = ()=>{
     this.setState({
-      done: false
+      panel: "selecting"
     });
-  }
+  };
+
+  veiwRemoved = ()=>{
+    this.setState({
+      panel: "removed"
+    });
+  };
 
   syncLocalStorage = ()=>{
     localStorage.pokemon = JSON.stringify(this.state.pokemon);
   }
 
   render(){
-    const { done, pokemon, selected_pokemon } = this.state;
+    const { panel, pokemon, selected_pokemon } = this.state;
     const style = {
       display: "flex",
       justifyContent: "space-around",
@@ -106,10 +137,11 @@ export default class HomePage extends React.Component {
 
     const buttonStyle = {
       padding: 8,
+      margin: 8,
       backgroundColor: "darkcyan",
       borderRadius: 4,
       color: "white",
-      margin: 8
+      cursor: "pointer"
     };
 
     const containerStyle = {
@@ -121,17 +153,35 @@ export default class HomePage extends React.Component {
       fontWeight: 600
     };
 
+    const buttonsStyle = {
+      display: "flex"
+    };
+
+    const removedStyle = {
+      padding: 8,
+      margin: 8,
+      borderRadius: 4,
+      color: "white",
+      cursor: "pointer",
+      backgroundColor: "red"
+    };
+
     let shownPokemon;
     let navigationButton;
-    if (done){
+    if (panel === "done"){
       shownPokemon = pokemon.map(this.renderSelectedPokemon);
       navigationButton = (
         <div style={buttonStyle} onClick={this.backToSelecting}>Back</div>
       );
-    } else {
+    } else if (panel === "selecting"){
       shownPokemon = pokemon.map(this.renderPokemon);
       navigationButton = (
         <div style={buttonStyle} onClick={this.doneSelecting}>Done Selecting</div>
+      );
+    } else if (panel === "removed"){
+      shownPokemon = pokemon.map(this.renderFullyRemovedPokemon);
+      navigationButton = (
+        <div style={buttonStyle} onClick={this.backToSelecting}>Back</div>
       );
     }
 
@@ -143,7 +193,8 @@ export default class HomePage extends React.Component {
         <div>
           Select the Pokemon you would like
         </div>
-        <div>
+        <div style={buttonsStyle}>
+          <div style={removedStyle} onClick={this.veiwRemoved}>Removed Pokemon</div>
           {navigationButton}
         </div>
         <div style={style}>
