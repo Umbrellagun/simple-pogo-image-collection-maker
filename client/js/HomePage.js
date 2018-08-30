@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import axios     from "axios";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheckSquare } from '@fortawesome/free-solid-svg-icons';
+import { faCheckSquare, faAngleRight, faAngleDown } from '@fortawesome/free-solid-svg-icons';
 import { faSquare } from '@fortawesome/free-regular-svg-icons';
 
 import Pokemon   from "./components/Pokemon.js";
@@ -21,7 +21,8 @@ export default class HomePage extends React.Component {
         special: true,
         regular: true
       },
-      panel: "selecting"
+      panel: "selecting",
+      menuOpen: false
     }
     this.selectedPokemon = [];
   }
@@ -194,7 +195,7 @@ export default class HomePage extends React.Component {
   }
 
   render(){
-    const { panel, pokemon, filters } = this.state;
+    const { panel, pokemon, filters, menuOpen } = this.state;
     const style = {
       display: "flex",
       justifyContent: "space-around",
@@ -203,7 +204,9 @@ export default class HomePage extends React.Component {
       maxHeight: "80vh",
       overflow: "auto",
       backgroundColor: "white",
-      borderRadius: 8
+      position: "relative",
+      borderRadius: 8,
+      width: "100%"
     };
 
     const buttonStyle = {
@@ -300,6 +303,16 @@ export default class HomePage extends React.Component {
       </div>
     );
 
+    const menuStyle = {
+      position: "absolute",
+      top: 0,
+      zIndex: 99,
+      backgroundColor: "white",
+      left: 0,
+      width: "100%",
+      boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
+    };
+
     return (
       <div style={containerStyle}>
         <div style={{display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column", minHeight: "20vh"}}>
@@ -310,16 +323,38 @@ export default class HomePage extends React.Component {
             Select the Pokemon you would like
           </div>
           <div style={buttonsStyle}>
-            <div style={removedStyle} onClick={()=>{this.toPanel("removed");}}>Removed Pokemon</div>
             {navigationButton}
           </div>
           <div style={filterStyle}>
-            {regularFilter}
-            {shinyFilter}
-            {specialFilter}
+            <div onClick={()=>{
+              this.setState({
+                menuOpen: !menuOpen
+              });
+            }}>
+              <span>
+                Filters and More
+              </span>
+              {(menuOpen) ? (
+                <span style={{paddingLeft: 8}}>
+                  <FontAwesomeIcon icon={faAngleDown} />
+                </span>
+              ) : (
+                <span style={{paddingLeft: 8}}>
+                  <FontAwesomeIcon icon={faAngleRight} />
+                </span>
+              )}
+            </div>
           </div>
         </div>
         <div style={style}>
+          {(menuOpen) ? (
+            <div style={menuStyle}>
+              <div style={removedStyle} onClick={()=>{this.toPanel("removed");}}>View Removed Pokemon</div>
+              {regularFilter}
+              {shinyFilter}
+              {specialFilter}
+            </div>
+          ) : (null)}
           {shownPokemon}
         </div>
       </div>
