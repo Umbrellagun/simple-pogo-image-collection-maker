@@ -157,6 +157,7 @@ export default class HomePage extends React.Component {
           key={key}
           pokemon={pokemon}
           onClick={this.addRemovePokemon}
+          selectedScreen={true}
         />
       );
     }
@@ -183,6 +184,7 @@ export default class HomePage extends React.Component {
       state.filters.regular = !this.state.filters.regular;
       this.setState(state);
     }
+
   };
 
   syncLocalStorage = ()=>{
