@@ -22,7 +22,8 @@ export default class HomePage extends React.Component {
         regular: true
       },
       panel: "selecting",
-      menuOpen: false
+      menuOpen: false,
+      showXButtons: true
     }
     this.selectedPokemon = [];
   }
@@ -73,6 +74,32 @@ export default class HomePage extends React.Component {
     }
   };
 
+  clearAllSelectedPokemon = ()=>{
+    const newPokemon = JSON.parse(JSON.stringify(this.state.pokemon));
+
+    const newNewPokemon = newPokemon.map((pokemon)=>{
+      pokemon.selected = false;
+      return pokemon;
+    });
+
+    this.setState({
+      pokemon: newNewPokemon
+    });
+  };
+
+  clearAllRemovedPokemon = ()=>{
+    const newPokemon = JSON.parse(JSON.stringify(this.state.pokemon));
+
+    const newNewPokemon = newPokemon.map((pokemon)=>{
+      pokemon.removed = false;
+      return pokemon;
+    });
+
+    this.setState({
+      pokemon: newNewPokemon
+    });
+  };
+
   addRemovePokemon = (pokemon)=>{
     const newPokemon = JSON.parse(JSON.stringify(this.state.pokemon));
 
@@ -94,7 +121,7 @@ export default class HomePage extends React.Component {
   };
 
   renderPokemon = (pokemon, key)=>{
-    const { filters } = this.state;
+    const { filters, showXButtons } = this.state;
 
     let shinyCheck = true;
     if (!filters.shiny){
@@ -130,7 +157,7 @@ export default class HomePage extends React.Component {
           pokemon={pokemon}
           onClick={this.addRemovePokemon}
           toggleFullyRemovePokemon={this.toggleFullyRemovePokemon}
-          showFullyRemoveButton={true}
+          showFullyRemoveButton={(showXButtons) ? (true) : (false)}
         />
       );
     }
@@ -194,8 +221,14 @@ export default class HomePage extends React.Component {
     localStorage.version = JSON.stringify(0);
   }
 
+  toggleXButtons = ()=>{
+    this.setState({
+      showXButtons: !this.state.showXButtons
+    });
+  };
+
   render(){
-    const { panel, pokemon, filters, menuOpen } = this.state;
+    const { panel, pokemon, filters, menuOpen, showXButtons } = this.state;
     const style = {
       display: "flex",
       justifyContent: "space-around",
@@ -231,13 +264,22 @@ export default class HomePage extends React.Component {
       display: "flex"
     };
 
-    const removedStyle = {
+    const redButtonStyle = {
       padding: 8,
       margin: 8,
       borderRadius: 4,
       color: "white",
       cursor: "pointer",
-      backgroundColor: "red"
+      backgroundColor: "red",
+      textAlign: "center"
+    };
+
+    const regularButtonStyle = {
+      padding: 8,
+      margin: 8,
+      borderRadius: 4,
+      cursor: "pointer",
+      textAlign: "center"
     };
 
     const filterStyle = {
@@ -349,10 +391,16 @@ export default class HomePage extends React.Component {
         <div style={style}>
           {(menuOpen) ? (
             <div style={menuStyle}>
-              <div style={removedStyle} onClick={()=>{this.toPanel("removed");}}>View Removed Pokemon</div>
-              {regularFilter}
-              {shinyFilter}
-              {specialFilter}
+              <div style={{padding: 8}}>Filters:</div>
+              <div style={{display: "flex", justifyContent: "center"}}>
+                {regularFilter}
+                {shinyFilter}
+                {specialFilter}
+              </div>
+              <div style={redButtonStyle} onClick={()=>{this.toPanel("removed");}}>View Removed Pokemon</div>
+              <div style={redButtonStyle} onClick={this.clearAllRemovedPokemon}>Clear All Removed Pokemon</div>
+              <div style={redButtonStyle} onClick={this.clearAllSelectedPokemon}>Clear All Selected Pokemon</div>
+              <div style={regularButtonStyle} onClick={this.toggleXButtons}>{(showXButtons) ? ("Hide") : ("Show")} 'Remove Pokemon' Buttons</div>
             </div>
           ) : (null)}
           {shownPokemon}
