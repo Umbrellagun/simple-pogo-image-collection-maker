@@ -51,8 +51,8 @@ export default class HomePage extends React.Component {
 
           this.setState({
             pokemon: updatedPokemon,
-            filters: JSON.parse(localStorage.filters),
-            options: JSON.parse(localStorage.options),
+            filters: (localStorage.filters) ? (JSON.parse(localStorage.filters)) : (this.state.filters),
+            options: (localStorage.options) ? (JSON.parse(localStorage.options)) : (this.state.options),
           }, this.syncLocalStorage);
 
         }).catch((error)=>{
