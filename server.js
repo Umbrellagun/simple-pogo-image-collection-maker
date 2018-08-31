@@ -56,7 +56,14 @@ fs.readdir(path.join(__dirname, "client/images/live_pokemon_icons"), (err, files
 
     const regular = (!special && !shiny);
 
-    // const gen = ;
+    let gen;
+    if (splitFileName[2] <= 151){
+      gen = 1;
+    } else if (splitFileName[2] <= 251){
+      gen = 2;
+    } else if (splitFileName[2] <= 386){
+      gen = 3;
+    }
 
     json.push({
       image: file,
@@ -64,7 +71,7 @@ fs.readdir(path.join(__dirname, "client/images/live_pokemon_icons"), (err, files
       number: splitFileName[2],
       special,
       regular,
-      // gen
+      gen,
       // gender
       shiny
     });

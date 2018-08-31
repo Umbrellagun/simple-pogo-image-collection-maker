@@ -15,8 +15,8 @@ export default class Pokemon extends React.Component {
     const { pokemon, onClick, toggleFullyRemovePokemon, showFullyRemoveButton, selectedScreen } = this.props;
 
     const style = {
-      width: (selectedScreen) ? (80) : (120),
-      height: (selectedScreen) ? (80) : (120),
+      width: (selectedScreen) ? (80) : (80),
+      height: (selectedScreen) ? (80) : (80),
     };
 
     const xButton = {
@@ -34,8 +34,8 @@ export default class Pokemon extends React.Component {
 
     const shinyStyle = {
       background: `url(/../images/shiny.png) center center / contain no-repeat`,
-      width: (selectedScreen) ? (26) : (40),
-      height: (selectedScreen) ? (26) : (40),
+      width: (selectedScreen) ? (26) : (26),
+      height: (selectedScreen) ? (26) : (26),
       position: "absolute",
       bottom: 0,
       right: 0

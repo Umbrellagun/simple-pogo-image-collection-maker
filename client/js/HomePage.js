@@ -14,24 +14,29 @@ export default class HomePage extends React.Component {
 
   constructor(props){
     super(props);
+    this.currentVersion = 1;
     this.state = {
       pokemon: [],
       filters: {
         shiny: true,
         special: true,
-        regular: true
+        regular: true,
+        gen_1: true,
+        gen_2: true,
+        gen_3: true,
       },
       panel: "selecting",
       menuOpen: false,
-      showXButtons: true
-    }
-    this.selectedPokemon = [];
+      options: {
+        showXButtons: true
+      }
+    };
   }
 
   componentWillMount = ()=>{
 
     if (localStorage.version){
-      if (JSON.parse(localStorage.version) !== 0){
+      if (JSON.parse(localStorage.version) !== this.currentVersion){
         const hostname = window.location.hostname;
         const protocol = window.location.protocol;
 
@@ -45,7 +50,9 @@ export default class HomePage extends React.Component {
           });
 
           this.setState({
-            pokemon: updatedPokemon
+            pokemon: updatedPokemon,
+            filters: JSON.parse(localStorage.filters),
+            options: JSON.parse(localStorage.options),
           }, this.syncLocalStorage);
 
         }).catch((error)=>{
@@ -55,7 +62,8 @@ export default class HomePage extends React.Component {
       } else {
         this.setState({
           pokemon: JSON.parse(localStorage.pokemon),
-          filters: JSON.parse(localStorage.filters)
+          filters: JSON.parse(localStorage.filters),
+          options: JSON.parse(localStorage.options),
         });
       }
     } else {
@@ -121,7 +129,7 @@ export default class HomePage extends React.Component {
   };
 
   renderPokemon = (pokemon, key)=>{
-    const { filters, showXButtons } = this.state;
+    const { filters, options } = this.state;
 
     let shinyCheck = true;
     if (!filters.shiny){
@@ -150,14 +158,41 @@ export default class HomePage extends React.Component {
       }
     }
 
-    if (shinyCheck && specialCheck && regularCheck && !pokemon.removed){
+    let genOneCheck = true;
+    if (!filters.gen_1){
+      if (pokemon.gen == 1){
+        genOneCheck = false;
+      } else {
+        genOneCheck = true;
+      }
+    }
+
+    let genTwoCheck = true;
+    if (!filters.gen_2){
+      if (pokemon.gen == 2){
+        genTwoCheck = false;
+      } else {
+        genTwoCheck = true;
+      }
+    }
+
+    let genThreeCheck = true;
+    if (!filters.gen_3){
+      if (pokemon.gen == 3){
+        genThreeCheck = false;
+      } else {
+        genThreeCheck = true;
+      }
+    }
+
+    if (shinyCheck && specialCheck && regularCheck && genOneCheck && genTwoCheck && genThreeCheck && !pokemon.removed){
       return (
         <Pokemon
           key={key}
           pokemon={pokemon}
           onClick={this.addRemovePokemon}
           toggleFullyRemovePokemon={this.toggleFullyRemovePokemon}
-          showFullyRemoveButton={(showXButtons) ? (true) : (false)}
+          showFullyRemoveButton={(options.showXButtons) ? (true) : (false)}
         />
       );
     }
@@ -204,13 +239,22 @@ export default class HomePage extends React.Component {
 
     if (filter === "toggle_shiny"){
       state.filters.shiny = !this.state.filters.shiny;
-      this.setState(state);
+      this.setState(state, this.syncLocalStorage);
     } else if (filter === "toggle_special"){
       state.filters.special = !this.state.filters.special;
-      this.setState(state);
+      this.setState(state, this.syncLocalStorage);
     } else if (filter === "toggle_regular"){
       state.filters.regular = !this.state.filters.regular;
-      this.setState(state);
+      this.setState(state, this.syncLocalStorage);
+    } else if (filter === "toggle_gen_1"){
+      state.filters.gen_1 = !this.state.filters.gen_1;
+      this.setState(state, this.syncLocalStorage);
+    } else if (filter === "toggle_gen_2"){
+      state.filters.gen_2 = !this.state.filters.gen_2;
+      this.setState(state, this.syncLocalStorage);
+    } else if (filter === "toggle_gen_3"){
+      state.filters.gen_3 = !this.state.filters.gen_3;
+      this.setState(state, this.syncLocalStorage);
     }
 
   };
@@ -218,17 +262,19 @@ export default class HomePage extends React.Component {
   syncLocalStorage = ()=>{
     localStorage.pokemon = JSON.stringify(this.state.pokemon);
     localStorage.filters = JSON.stringify(this.state.filters);
-    localStorage.version = JSON.stringify(0);
+    localStorage.options = JSON.stringify(this.state.options);
+    localStorage.version = JSON.stringify(this.currentVersion);
   }
 
   toggleXButtons = ()=>{
-    this.setState({
-      showXButtons: !this.state.showXButtons
-    });
+    let state = {};
+    state.options = Object.assign({}, this.state.options);
+    state.options.showXButtons = !this.state.options.showXButtons;
+    this.setState(state);
   };
 
   render(){
-    const { panel, pokemon, filters, menuOpen, showXButtons } = this.state;
+    const { panel, pokemon, filters, menuOpen, options } = this.state;
     const style = {
       display: "flex",
       justifyContent: "space-around",
@@ -345,6 +391,33 @@ export default class HomePage extends React.Component {
       </div>
     );
 
+    const genOneFilter = (
+      <div style={filterStyle} onClick={()=>{this.toggleFilter("toggle_gen_1");}}>
+        {(filters.gen_1) ? (checked) : (unChecked)}
+        <div>
+          Gen 1
+        </div>
+      </div>
+    );
+
+    const genTwoFilter = (
+      <div style={filterStyle} onClick={()=>{this.toggleFilter("toggle_gen_2");}}>
+        {(filters.gen_2) ? (checked) : (unChecked)}
+        <div>
+          Gen 2
+        </div>
+      </div>
+    );
+
+    const genThreeFilter = (
+      <div style={filterStyle} onClick={()=>{this.toggleFilter("toggle_gen_3");}}>
+        {(filters.gen_3) ? (checked) : (unChecked)}
+        <div>
+          Gen 3
+        </div>
+      </div>
+    );
+
     const menuStyle = {
       position: "absolute",
       top: 0,
@@ -389,20 +462,25 @@ export default class HomePage extends React.Component {
           </div>
         </div>
         <div style={style}>
+
           {(menuOpen) ? (
             <div style={menuStyle}>
               <div style={{padding: 8}}>Filters:</div>
-              <div style={{display: "flex", justifyContent: "center"}}>
+              <div style={{display: "flex", justifyContent: "center", flexWrap: "wrap"}}>
                 {regularFilter}
                 {shinyFilter}
                 {specialFilter}
+                {genOneFilter}
+                {genTwoFilter}
+                {genThreeFilter}
               </div>
               <div style={redButtonStyle} onClick={()=>{this.toPanel("removed");}}>View Removed Pokemon</div>
               <div style={redButtonStyle} onClick={this.clearAllRemovedPokemon}>Clear All Removed Pokemon</div>
               <div style={redButtonStyle} onClick={this.clearAllSelectedPokemon}>Clear All Selected Pokemon</div>
-              <div style={regularButtonStyle} onClick={this.toggleXButtons}>{(showXButtons) ? ("Hide") : ("Show")} 'Remove Pokemon' Buttons</div>
+              <div style={regularButtonStyle} onClick={this.toggleXButtons}>{(options.showXButtons) ? ("Hide") : ("Show")} 'Remove Pokemon' Buttons</div>
             </div>
           ) : (null)}
+
           {shownPokemon}
         </div>
       </div>
