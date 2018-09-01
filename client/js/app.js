@@ -6,6 +6,8 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 // import Nav                  from "./nav.js";
 import HomePage             from "./HomePage.js";
 
+import registerServiceWorker from './registerServiceWorker';
+
 // import styles from "./styles.js";
 
 const $container = document.getElementById("container");
@@ -23,5 +25,7 @@ ReactDOM.render(
       </Switch>
     </div>
   </Router>, $container);
+
+  registerServiceWorker();
 
   module.hot.accept();

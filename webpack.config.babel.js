@@ -1,6 +1,8 @@
 const webpack = require("webpack");
 const path    = require("path");
 
+const SWPrecacheWebpackPlugin = require("sw-precache-webpack-plugin");
+
 const PORT = process.env.PORT || 1333;
 
 const DEVELOPMENT = (process.env.NODE_ENV === "dev");
@@ -42,5 +44,18 @@ module.exports = {
   devtool: "#source-map",
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
+    new SWPrecacheWebpackPlugin({
+      dontCacheBustUrlsMatching: /\.\w{8}\./,
+      filename: 'service-worker.js',
+      logger(message) {
+        if (message.indexOf('Total precache size is') === 0) {
+          return;
+        }
+        console.log(message);
+      },
+      minify: true,
+      navigateFallback: '/index.html',
+      staticFileGlobsIgnorePatterns: [/\.map$/, /asset-manifest\.json$/],
+    })
   ]
 };
