@@ -26,7 +26,7 @@ const output = (DEVELOPMENT) ? ({
 }) : ({
   path: __dirname,
   publicPath: "/",
-  filename: "[name]"
+  filename: "[name]-[hash].js"
 });
 
 const mode = (DEVELOPMENT) ? ("development") : ("production");
