@@ -1,5 +1,7 @@
 
 export default function register (){
+  console.log(process.env.NODE_ENV);
+  console.log(navigator);
   if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator){
 
     window.addEventListener('load', ()=>{
@@ -9,6 +11,7 @@ export default function register (){
       navigator.serviceWorker
         .register(swUrl)
         .then((registration)=>{
+          
           registration.onupdatefound = ()=>{
 
             const installingWorker = registration.installing;
