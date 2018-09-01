@@ -2,6 +2,7 @@ const webpack = require("webpack");
 const path    = require("path");
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ServiceWorkerWebpackPlugin = require( 'serviceworker-webpack-plugin');
 // const ManifestPlugin = require('webpack-manifest-plugin');
 // const SWPrecacheWebpackPlugin = require("sw-precache-webpack-plugin");
 
@@ -73,6 +74,9 @@ module.exports = {
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: 'template.html',
+    }),
+    new ServiceWorkerWebpackPlugin({
+      entry: path.join(__dirname, 'client/js/service-worker.js'),
     }),
   ]
 };

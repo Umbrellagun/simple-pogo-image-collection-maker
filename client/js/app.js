@@ -6,8 +6,11 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 // import Nav                  from "./nav.js";
 import HomePage             from "./HomePage.js";
 
-// import registerServiceWorker from './registerServiceWorker';
+import runtime from 'serviceworker-webpack-plugin/lib/runtime';
 
+if ('serviceWorker' in navigator) {
+  const registration = runtime.register();
+}
 // import styles from "./styles.js";
 
 const $container = document.getElementById("container");
@@ -25,7 +28,5 @@ ReactDOM.render(
       </Switch>
     </div>
   </Router>, $container);
-
-  // registerServiceWorker();
 
   module.hot.accept();
