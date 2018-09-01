@@ -2,14 +2,12 @@ const webpack = require("webpack");
 const path    = require("path");
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ManifestPlugin = require('webpack-manifest-plugin');
-const SWPrecacheWebpackPlugin = require("sw-precache-webpack-plugin");
+// const ManifestPlugin = require('webpack-manifest-plugin');
+// const SWPrecacheWebpackPlugin = require("sw-precache-webpack-plugin");
 
 const PORT = process.env.PORT || 1333;
 
 const DEVELOPMENT = (process.env.NODE_ENV === "dev");
-
-const PUBLIC_PATH = 'https://pogo-image-collection-maker.herokuapp.com/';
 
 const entryPath = path.resolve(__dirname + "/client/js/app.js");
 
@@ -27,7 +25,7 @@ const output = (DEVELOPMENT) ? ({
 }) : ({
   path: __dirname,
   publicPath: "/",
-  filename: "[name]-[hash].js"
+  filename: "[name]"
 });
 
 const mode = (DEVELOPMENT) ? ("development") : ("production");
@@ -49,24 +47,24 @@ module.exports = {
   devtool: "#source-map",
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
-    new SWPrecacheWebpackPlugin({
-      cacheId: 'PoGo-Collector',
-      dontCacheBustUrlsMatching: /\.\w{8}\./,
-      filename: 'service-worker.js',
-      logger(message){
-        if (message.indexOf('Total precache size is') === 0){
-          return;
-        }
-        console.log("HELLOOO???!");
-        console.log(message);
-      },
-      minify: true,
-      navigateFallback: '/index.html',
-      staticFileGlobsIgnorePatterns: [/\.map$/, /asset-manifest\.json$/],
-    }),
-    new ManifestPlugin({
-      fileName: 'asset-manifest.json',
-    }),
+    // new SWPrecacheWebpackPlugin({
+    //   cacheId: 'PoGo-Collector',
+    //   dontCacheBustUrlsMatching: /\.\w{8}\./,
+    //   filename: 'service-worker.js',
+    //   logger(message){
+    //     if (message.indexOf('Total precache size is') === 0){
+    //       return;
+    //     }
+    //     console.log("HELLOOO???!");
+    //     console.log(message);
+    //   },
+    //   minify: true,
+    //   navigateFallback: '/index.html',
+    //   staticFileGlobsIgnorePatterns: [/\.map$/, /asset-manifest\.json$/],
+    // }),
+    // new ManifestPlugin({
+    //   fileName: 'asset-manifest.json',
+    // }),
     new webpack.DefinePlugin({
       'process.env': {
         'NODE_ENV': JSON.stringify(process.env.NODE_ENV),

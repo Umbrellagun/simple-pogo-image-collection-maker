@@ -1,5 +1,6 @@
 
 self.addEventListener('install', event => {
+  console.log("install");
   // event.waitUntil(
   //   caches.open(PRECACHE)
   //     .then(cache => cache.addAll(PRECACHE_URLS))
@@ -8,6 +9,7 @@ self.addEventListener('install', event => {
 });
 
 self.addEventListener('activate', event => {
+  console.log("activate");
   // const currentCaches = [PRECACHE, RUNTIME];
   // event.waitUntil(
   //   caches.keys().then(cacheNames => {
@@ -21,6 +23,7 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('fetch', event => {
+  console.log("fetch");
 
   // if (event.request.url.startsWith(self.location.origin)) {
   //   event.respondWith(

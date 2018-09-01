@@ -1,21 +1,30 @@
 
-export default function register (){
+(function (e) {
+  console.log("hi");
 
-  if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator){
-
+  if (
+    // process.env.NODE_ENV === 'production'
+    // &&
+    'serviceWorker' in navigator
+  ){
+console.log("ok");
     window.addEventListener('load', ()=>{
+    console.log("kkkkkk");
 
-      const swUrl = 'service-worker.js';
+      const swUrl = './service-worker.js';
 
       navigator.serviceWorker
         .register(swUrl)
         .then((registration)=>{
+          console.log("right");
 
           registration.onupdatefound = ()=>{
+            console.log("yr");
 
             const installingWorker = registration.installing;
 
             installingWorker.onstatechange = ()=>{
+              console.log("boo");
 
               if (installingWorker.state === 'installed'){
                 if (navigator.serviceWorker.controller){
@@ -32,12 +41,12 @@ export default function register (){
         });
     });
   }
-}
+}).call(this);
 
-export function unregister (){
-  if ('serviceWorker' in navigator){
-    navigator.serviceWorker.ready.then((registration)=>{
-      registration.unregister();
-    });
-  }
-}
+// export function unregister (){
+//   if ('serviceWorker' in navigator){
+//     navigator.serviceWorker.ready.then((registration)=>{
+//       registration.unregister();
+//     });
+//   }
+// }
