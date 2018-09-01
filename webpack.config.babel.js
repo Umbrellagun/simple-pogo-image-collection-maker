@@ -49,16 +49,18 @@ module.exports = {
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
     new SWPrecacheWebpackPlugin({
+      cacheId: 'PoGo-Collector',
       dontCacheBustUrlsMatching: /\.\w{8}\./,
       filename: 'service-worker.js',
       logger(message){
-        if (message.indexOf('Total precache size is') === 0) {
+        if (message.indexOf('Total precache size is') === 0){
           return;
         }
+        console.log("HELLOOO???!");
         console.log(message);
       },
       minify: true,
-      navigateFallback: PUBLIC_PATH + '/index.html',
+      navigateFallback: '/index.html',
       staticFileGlobsIgnorePatterns: [/\.map$/, /asset-manifest\.json$/],
     }),
     new ManifestPlugin({
