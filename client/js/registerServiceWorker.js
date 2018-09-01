@@ -4,7 +4,7 @@ export default function register (){
 
     window.addEventListener('load', ()=>{
 
-      const swUrl = '/service-worker.js';
+      const swUrl = '/upup.min.js';
 
       navigator.serviceWorker
         .register(swUrl)

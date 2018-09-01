@@ -11,7 +11,8 @@ const DEVELOPMENT = (process.env.NODE_ENV === "dev");
 
 const PUBLIC_PATH = 'https://pogo-image-collection-maker.herokuapp.com/';
 
-const entryPath = "./client/js/app.js";
+const entryPath = path.resolve(__dirname + "/client/js/app.js");
+
 const entry = (DEVELOPMENT) ? ([
   `webpack-hot-middleware/client?path=http://localhost:${PORT}/__webpack_hmr&timeout=20000`,
   entryPath
