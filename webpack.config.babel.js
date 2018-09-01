@@ -1,6 +1,7 @@
 const webpack = require("webpack");
 const path    = require("path");
 
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const SWPrecacheWebpackPlugin = require("sw-precache-webpack-plugin");
 
@@ -50,14 +51,14 @@ module.exports = {
     new SWPrecacheWebpackPlugin({
       dontCacheBustUrlsMatching: /\.\w{8}\./,
       filename: 'service-worker.js',
-      logger(message) {
+      logger(message){
         if (message.indexOf('Total precache size is') === 0) {
           return;
         }
         console.log(message);
       },
       minify: true,
-      navigateFallback: '/index.html',
+      navigateFallback: PUBLIC_PATH + '/index.html',
       staticFileGlobsIgnorePatterns: [/\.map$/, /asset-manifest\.json$/],
     }),
     new ManifestPlugin({
@@ -67,6 +68,10 @@ module.exports = {
       'process.env': {
         'NODE_ENV': JSON.stringify(process.env.NODE_ENV),
       },
+    }),
+    new HtmlWebpackPlugin({
+      filename: 'index.html',
+      template: 'template.html',
     }),
   ]
 };
