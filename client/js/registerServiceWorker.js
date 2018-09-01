@@ -1,10 +1,11 @@
 
 export default function register (){
+
   if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator){
 
     window.addEventListener('load', ()=>{
 
-      const swUrl = '/upup.sw.min.js';
+      const swUrl = 'service-worker.js';
 
       navigator.serviceWorker
         .register(swUrl)
