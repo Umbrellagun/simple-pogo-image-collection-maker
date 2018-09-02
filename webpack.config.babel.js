@@ -76,7 +76,7 @@ module.exports = {
       template: 'template.html',
     }),
     new ServiceWorkerWebpackPlugin({
-      entry: path.join(__dirname, 'client/js/service-worker.js'),
+      entry: path.join(__dirname, 'static/service-worker.js'),
     }),
   ]
 };
