@@ -1,7 +1,7 @@
 const webpack = require("webpack");
 const path    = require("path");
 
-// const HtmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const OfflinePlugin = require('offline-plugin');
 // const ServiceWorkerWebpackPlugin = require( 'serviceworker-webpack-plugin');
 
@@ -30,22 +30,8 @@ const output = (DEVELOPMENT) ? ({
 
 const mode = (DEVELOPMENT) ? ("development") : ("production");
 
-module.exports = {
-  context: __dirname,
-  entry,
-  mode,
-  output,
-  module: {
-    rules: [
-      {
-        exclude: /node_modules/,
-        test: /\.js$/,
-        use: "babel-loader"
-      }
-    ]
-  },
-  devtool: "#source-map",
-  plugins: [
+const plugins = (DEVELOPMENT) ? (
+  [
     new webpack.HotModuleReplacementPlugin(),
     new webpack.DefinePlugin({
       'process.env': {
@@ -62,4 +48,44 @@ module.exports = {
     // }),
     new OfflinePlugin(),
   ]
+) : (
+  [
+    new webpack.DefinePlugin({
+      'process.env': {
+        'NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+        "PORT": JSON.stringify(process.env.PORT),
+      },
+    }),
+    new HtmlWebpackPlugin({
+      filename: 'index.html',
+      template: 'template.html',
+      background: "client/images/bg_image.png"
+    }),
+    // new ServiceWorkerWebpackPlugin({
+    //   entry: path.join(__dirname, 'client/js/service-worker.js'),
+    // }),
+    new OfflinePlugin({
+      ServiceWorker: {
+        output: "dist/js/sw.js"
+      }
+    }),
+  ]
+);
+
+module.exports = {
+  context: __dirname,
+  entry,
+  mode,
+  output,
+  module: {
+    rules: [
+      {
+        exclude: /node_modules/,
+        test: /\.js$/,
+        use: "babel-loader"
+      }
+    ]
+  },
+  devtool: "#source-map",
+  plugins,
 };
