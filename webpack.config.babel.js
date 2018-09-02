@@ -59,7 +59,9 @@ const plugins = (DEVELOPMENT) ? (
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: 'template.html',
-      background: "client/images/bg_image.png"
+      background: "dist/bg_image.png",
+      selected: "dist/selected.png",
+      manifest: "dist/site.webmanifest"
     }),
     // new ServiceWorkerWebpackPlugin({
     //   entry: path.join(__dirname, 'client/js/service-worker.js'),

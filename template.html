@@ -15,7 +15,7 @@
     <link rel="icon" type="image/png" sizes="194x194" href="/dist/favicon-194x194.png">
     <link rel="icon" type="image/png" sizes="192x192" href="/dist/android-chrome-192x192.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/dist/favicon-16x16.png">
-    <link rel="manifest" href="/dist/site.webmanifest">
+    <link rel="manifest" href=<%= htmlWebpackPlugin.options.manifest %>>
     <link rel="mask-icon" href="/dist/safari-pinned-tab.svg" color="#5bbad5">
 
     <title>PoGo Collector</title>
@@ -27,7 +27,7 @@
         background-size: cover;
       }
       .selected {
-        background: url(/client/images/selected.png);
+        background: url(<%= htmlWebpackPlugin.options.selected %>);
         background-repeat: no-repeat;
         background-size: contain;
         background-position: bottom;
