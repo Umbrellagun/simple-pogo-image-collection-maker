@@ -40,7 +40,7 @@ export default class HomePage extends React.Component {
         const hostname = window.location.hostname;
         const protocol = window.location.protocol;
 
-        const host = (hostname === "localhost") ? (`${protocol}//${hostname}:1333/thing`) : (`${protocol}//${hostname}/thing`);
+        const host = (hostname === "localhost") ? (`${protocol}//${hostname}:${process.env.PORT}/pokemon`) : (`${protocol}//${hostname}/pokemon`);
 
         axios.get(host).then((response)=>{
           const oldPokemon = JSON.parse(localStorage.pokemon);
@@ -70,7 +70,7 @@ export default class HomePage extends React.Component {
       const hostname = window.location.hostname;
       const protocol = window.location.protocol;
 
-      const host = (hostname === "localhost") ? (`${protocol}//${hostname}:1333/thing`) : (`${protocol}//${hostname}/thing`);
+      const host = (hostname === "localhost") ? (`${protocol}//${hostname}:${process.env.PORT}/pokemon`) : (`${protocol}//${hostname}/pokemon`);
 
       axios.get(host).then((response)=>{
         this.setState({

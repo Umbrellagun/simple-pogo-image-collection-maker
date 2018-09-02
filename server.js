@@ -82,7 +82,7 @@ fs.readdir(path.join(__dirname, "client/images/live_pokemon_icons"), (err, files
 
 });
 
-app.get("/thing", (request, response)=>{
+app.get("/pokemon", (request, response)=>{
   response.json(JSON.stringify(json));
 });
 

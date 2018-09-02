@@ -1,10 +1,9 @@
 const webpack = require("webpack");
 const path    = require("path");
 
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ServiceWorkerWebpackPlugin = require( 'serviceworker-webpack-plugin');
-// const ManifestPlugin = require('webpack-manifest-plugin');
-// const SWPrecacheWebpackPlugin = require("sw-precache-webpack-plugin");
+// const HtmlWebpackPlugin = require('html-webpack-plugin');
+const OfflinePlugin = require('offline-plugin');
+// const ServiceWorkerWebpackPlugin = require( 'serviceworker-webpack-plugin');
 
 const PORT = process.env.PORT || 1333;
 
@@ -16,7 +15,7 @@ const entry = (DEVELOPMENT) ? ([
   `webpack-hot-middleware/client?path=http://localhost:${PORT}/__webpack_hmr&timeout=20000`,
   entryPath
 ]) : ({
-  "dist/js/bundle.js": entryPath,
+  "dist/js/bundle.js": entryPath
 });
 
 const output = (DEVELOPMENT) ? ({
@@ -48,35 +47,19 @@ module.exports = {
   devtool: "#source-map",
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
-    // new SWPrecacheWebpackPlugin({
-    //   cacheId: 'PoGo-Collector',
-    //   dontCacheBustUrlsMatching: /\.\w{8}\./,
-    //   filename: 'service-worker.js',
-    //   logger(message){
-    //     if (message.indexOf('Total precache size is') === 0){
-    //       return;
-    //     }
-    //     console.log("HELLOOO???!");
-    //     console.log(message);
-    //   },
-    //   minify: true,
-    //   navigateFallback: '/index.html',
-    //   staticFileGlobsIgnorePatterns: [/\.map$/, /asset-manifest\.json$/],
-    // }),
-    // new ManifestPlugin({
-    //   fileName: 'asset-manifest.json',
-    // }),
     new webpack.DefinePlugin({
       'process.env': {
         'NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+        "PORT": JSON.stringify(process.env.PORT),
       },
     }),
-    new HtmlWebpackPlugin({
-      filename: 'index.html',
-      template: 'template.html',
-    }),
-    new ServiceWorkerWebpackPlugin({
-      entry: path.join(__dirname, 'static/service-worker.js'),
-    }),
+    // new HtmlWebpackPlugin({
+    //   filename: 'index.html',
+    //   template: 'template.html',
+    // }),
+    // new ServiceWorkerWebpackPlugin({
+    //   entry: path.join(__dirname, 'client/js/service-worker.js'),
+    // }),
+    new OfflinePlugin(),
   ]
 };
