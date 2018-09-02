@@ -1,7 +1,7 @@
 {
     "name": "Pogo Collector Progressive Web App",
     "short_name": "Pogo Collector",
-    "start_url": "./",
+    "start_url": "https://pogo-image-collection-maker.herokuapp.com/",
     "description": "Progressive Web App that allows collection of pogo images",
     "icons": [
       {
