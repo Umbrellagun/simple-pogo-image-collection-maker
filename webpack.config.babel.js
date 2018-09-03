@@ -5,12 +5,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 // const OfflinePlugin = require('offline-plugin');
 // const ServiceWorkerWebpackPlugin = require('serviceworker-webpack-plugin');
 // const SWPrecacheWebpackPlugin = require("sw-precache-webpack-plugin");
-// const WorkboxPlugin = require('workbox-webpack-plugin');
-
-const ManifestPlugin = require('webpack-manifest-plugin');
-const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-
+const WorkboxPlugin = require('workbox-webpack-plugin');
 
 const PORT = process.env.PORT || 1333;
 
@@ -68,12 +63,12 @@ const plugins = (DEVELOPMENT) ? (
       // manifest: "dist/site.webmanifest"
     }),
 
-    // new WorkboxPlugin.GenerateSW({
-    //   // these options encourage the ServiceWorkers to get in there fast
-    //   // and not allow any straggling "old" SWs to hang around
-    //   clientsClaim: true,
-    //   skipWaiting: true
-    // }),
+    new WorkboxPlugin.GenerateSW({
+      // these options encourage the ServiceWorkers to get in there fast
+      // and not allow any straggling "old" SWs to hang around
+      clientsClaim: true,
+      skipWaiting: true
+    }),
 
     // new SWPrecacheWebpackPlugin({
     //   cacheId: 'my-project-name',
