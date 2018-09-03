@@ -34,52 +34,52 @@ export default class HomePage extends React.Component {
   }
 
   componentWillMount = ()=>{
-
-    if (localStorage.version){
-      if (JSON.parse(localStorage.version) !== this.currentVersion){
-        const hostname = window.location.hostname;
-        const protocol = window.location.protocol;
-
-        const host = (hostname === "localhost") ? (`${protocol}//${hostname}:${process.env.PORT}/pokemon`) : (`${protocol}//${hostname}/pokemon`);
-
-        axios.get(host).then((response)=>{
-          const oldPokemon = JSON.parse(localStorage.pokemon);
-
-          const updatedPokemon = JSON.parse(response.data).map((pokemon, key)=>{
-            return Object.assign({}, pokemon, oldPokemon[key]);
-          });
-
-          this.setState({
-            pokemon: updatedPokemon,
-            filters: (localStorage.filters) ? (JSON.parse(localStorage.filters)) : (this.state.filters),
-            options: (localStorage.options) ? (JSON.parse(localStorage.options)) : (this.state.options),
-          }, this.syncLocalStorage);
-
-        }).catch((error)=>{
-          console.log(error);
-        });
-
-      } else {
-        this.setState({
-          pokemon: JSON.parse(localStorage.pokemon),
-          filters: JSON.parse(localStorage.filters),
-          options: JSON.parse(localStorage.options),
-        });
-      }
-    } else {
-      const hostname = window.location.hostname;
-      const protocol = window.location.protocol;
-
-      const host = (hostname === "localhost") ? (`${protocol}//${hostname}:${process.env.PORT}/pokemon`) : (`${protocol}//${hostname}/pokemon`);
-
-      axios.get(host).then((response)=>{
-        this.setState({
-          pokemon: JSON.parse(response.data)
-        }, this.syncLocalStorage);
-      }).catch((error)=>{
-        console.log(error);
-      });
-    }
+    //
+    // if (localStorage.version){
+    //   if (JSON.parse(localStorage.version) !== this.currentVersion){
+    //     const hostname = window.location.hostname;
+    //     const protocol = window.location.protocol;
+    //
+    //     const host = (hostname === "localhost") ? (`${protocol}//${hostname}:${process.env.PORT}/pokemon`) : (`${protocol}//${hostname}/pokemon`);
+    //
+    //     axios.get(host).then((response)=>{
+    //       const oldPokemon = JSON.parse(localStorage.pokemon);
+    //
+    //       const updatedPokemon = JSON.parse(response.data).map((pokemon, key)=>{
+    //         return Object.assign({}, pokemon, oldPokemon[key]);
+    //       });
+    //
+    //       this.setState({
+    //         pokemon: updatedPokemon,
+    //         filters: (localStorage.filters) ? (JSON.parse(localStorage.filters)) : (this.state.filters),
+    //         options: (localStorage.options) ? (JSON.parse(localStorage.options)) : (this.state.options),
+    //       }, this.syncLocalStorage);
+    //
+    //     }).catch((error)=>{
+    //       console.log(error);
+    //     });
+    //
+    //   } else {
+    //     this.setState({
+    //       pokemon: JSON.parse(localStorage.pokemon),
+    //       filters: JSON.parse(localStorage.filters),
+    //       options: JSON.parse(localStorage.options),
+    //     });
+    //   }
+    // } else {
+    //   const hostname = window.location.hostname;
+    //   const protocol = window.location.protocol;
+    //
+    //   const host = (hostname === "localhost") ? (`${protocol}//${hostname}:${process.env.PORT}/pokemon`) : (`${protocol}//${hostname}/pokemon`);
+    //
+    //   axios.get(host).then((response)=>{
+    //     this.setState({
+    //       pokemon: JSON.parse(response.data)
+    //     }, this.syncLocalStorage);
+    //   }).catch((error)=>{
+    //     console.log(error);
+    //   });
+    // }
   };
 
   clearAllSelectedPokemon = ()=>{
