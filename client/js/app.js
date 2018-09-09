@@ -6,42 +6,14 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 // import Nav                  from "./nav.js";
 import HomePage             from "./HomePage.js";
 
-// import * as OfflinePluginRuntime from 'offline-plugin/runtime';
-// OfflinePluginRuntime.install({
-//   onInstalled: function onInstalled() {
-//     console.log('OfflinePluginRuntime.onInstalled');
-//   },
-//   onUpdateReady: function onUpdateReady() {
-//     console.log('OfflinePluginRuntime.onUpdateReady');
-//   },
-//   onUpdating: function onUpdating() {
-//     console.log('OfflinePluginRuntime.onUpdating');
-//   },
-//   onUpdated: function onUpdated() {
-//     console.log('OfflinePluginRuntime.onUpdated');
-//   },
-//   // onUpdateReady: () => OfflinePluginRuntime.applyUpdate(),
-//   // onUpdated: () => window.swUpdate = true,
-// });
-//  window.addEventListener('offline', () => {
-//   console.log('Went offline!');
-// });
+import "../../bg_image.png";
+import "../../site.webmanifest";
 
-// import runtime from 'serviceworker-webpack-plugin/lib/runtime';
-//
-// if ('serviceWorker' in navigator) {
-//   const registration = runtime.register();
-// }
-
-// if ('serviceWorker' in navigator) {
-//   window.addEventListener('load', () => {
-//     navigator.serviceWorker.register('../../dist/service-worker.js').then(registration => {
-//       console.log('SW registered: ', registration);
-//     }).catch(registrationError => {
-//       console.log('SW registration failed: ', registrationError);
-//     });
-//   });
-// }
+import "../../apple-touch-icon.png";
+import "../../android-chrome-192x192.png";
+import "../../favicon-16x16.png";
+import "../../favicon-32x32.png";
+import "../../favicon-194x194.png";
 
 if ('serviceWorker' in navigator){
   navigator.serviceWorker.register('../../service-worker.js');

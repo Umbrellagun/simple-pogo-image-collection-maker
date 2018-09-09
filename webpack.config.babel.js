@@ -2,12 +2,9 @@ const webpack = require("webpack");
 const path    = require("path");
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-// const OfflinePlugin = require('offline-plugin');
-// const ServiceWorkerWebpackPlugin = require('serviceworker-webpack-plugin');
 const SWPrecacheWebpackPlugin = require("sw-precache-webpack-plugin");
-// const WorkboxPlugin = require('workbox-webpack-plugin');
 
-// path.resolve vs. path.join?
+// path.resolve vs. path.join
 
 const PORT = process.env.PORT || 1333;
 
@@ -20,13 +17,17 @@ const entry = (DEVELOPMENT) ? ([
   `webpack-hot-middleware/client?path=http://localhost:${PORT}/__webpack_hmr&timeout=20000`,
   entryPath
 ]) : ({
-  bundle: "./client/js/app.js"
+  "bundle.js": "./client/js/app.js",
+  // "site.webmanifest": "./site.webmanifest",
+  // "bg_image.png": "./bg_image.png"
 });
 
 const output = {
-  path: path.resolve(__dirname, '/dist'),
+  // path: path.resolve(__dirname, '/dist'),
   // publicPath: "/",
-  filename: "[name].js"
+  filename: (chunkData)=>{
+    return "[name]";
+  }
 };
 
 // const mode = (DEVELOPMENT) ? ("development") : ("production");
@@ -62,34 +63,14 @@ const plugins = (DEVELOPMENT) ? (
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: path.join(__dirname, 'template.html'),
-      // hello: "Ehyo"
-      background: "/dist/bg_image.png",
-      selected: "/dist/selected.png",
-      manifest: "/dist/site.webmanifest"
+      // background: "/dist/bg_image.png",
+      // selected: "/dist/selected.png",
+      manifest: "/site.webmanifest",
+      cache: false,
+      // chunks: (wtf)=>{
+      //   console.log(wtf)
+      // }
     }),
-
-    // new WorkboxPlugin.GenerateSW({
-    //   // these options encourage the ServiceWorkers to get in there fast
-    //   // and not allow any straggling "old" SWs to hang around
-    //   // clientsClaim: true,
-    //   // skipWaiting: true,
-    //   navigateFallback: '/',
-    //   // directoryIndex: '/',
-    //   // globDirectory: '.',
-    //   // globPatterns: ['dist/*.{js,png,html}'],
-    //   modifyUrlPrefix: {
-    //     'dist': ''
-    //   },
-    //   // manifestTransforms: [
-    //   //   (manifestEntries) => manifestEntries.map((entry) => {
-    //   //     // if (entry.url in <some list of Webpack-managed URLs>) {
-    //   //       entry.url = "/dist/" + entry.url;
-    //   //     // }
-    //   //     return entry;
-    //   //   })
-    //   // ],
-    //   cacheId: "Pogo",
-    // }),
 
     new SWPrecacheWebpackPlugin({
       cacheId: 'PoGo-Collector',
@@ -97,56 +78,16 @@ const plugins = (DEVELOPMENT) ? (
       minify: true,
       // navigateFallback: "/index.html",
       mergeStaticsConfig: true,
-      // stripPrefix: "dist",
-      // replacePrefix: "",
-      // staticFileGlobs: [
-        // "dist/site.webmanifest"
+      stripPrefix: "dist",
+      replacePrefix: "",
+      staticFileGlobs: [
+        // "dist/site.webmanifest",
+        // "dist/bg_image.png",
         // "dist/index.html",
         // "dist/bundle.js"
-      // ],
+      ],
       staticFileGlobsIgnorePatterns: [/\.map$/, /asset-manifest\.json$/],
     }),
-
-    // new ServiceWorkerWebpackPlugin(),
-
-    // new OfflinePlugin({
-      // ServiceWorker: {
-      //   events: true,
-      //   // navigateFallbackURL: '/',
-      //   // publicPath: '/sw.js'
-      // },
-      // safeToUseOptionalCaches: true,
-      // caches: {
-      //   main: ["bundle.js", "index.html"],
-      //   additional: [':externals:'],
-      //   optional: [":rest:"]
-      // },
-      // externals: ["/dist/bundle.js", "/dist/", "/dist/site.webmanifest"],
-      // version: '[hash]',
-      // // appShell: "/dist/hs"
-      // name: "PoGo Collector Service Worker",
-      // // AppCache: {
-      // //   events: true,
-      // //   publicPath: '/appcache',
-      // //   FALLBACK: {
-      // //     '/': '/'
-      // //   },
-      // // },
-      //
-      // safeToUseOptionalCaches: true,
-      // // caches: {
-      // //   main: [
-      // //     'main.js',
-      // //     'index.html'
-      // //   ],
-      // //   optional: [
-      // //     ':rest:'
-      // //   ]
-      // // },
-      // AppCache: {
-      //   events: true
-      // }
-    // }),
   ]
 );
 
@@ -161,6 +102,28 @@ module.exports = {
         exclude: /node_modules/,
         test: /\.js$/,
         use: "babel-loader"
+      },
+      {
+        test: /\.webmanifest$/,
+        use: {
+          loader: 'file-loader',
+          options: {
+            name: '[name].[ext]'
+          }
+        },
+      },
+      {
+        exclude: /node_modules/,
+        test: /\.(png|jpg|gif)$/,
+        use: {
+          loader: 'file-loader',
+          options: {
+            name: '[name].[ext]',
+            // publicPath: path.join(__dirname, './dist'),
+            // outputPath: "dist/",
+            // emitFiles: false,
+          }
+        }
       }
     ]
   },

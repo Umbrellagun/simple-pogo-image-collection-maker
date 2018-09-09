@@ -86,6 +86,39 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./android-chrome-192x192.png":
+/*!************************************!*\
+  !*** ./android-chrome-192x192.png ***!
+  \************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "android-chrome-192x192.png";
+
+/***/ }),
+
+/***/ "./apple-touch-icon.png":
+/*!******************************!*\
+  !*** ./apple-touch-icon.png ***!
+  \******************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "apple-touch-icon.png";
+
+/***/ }),
+
+/***/ "./bg_image.png":
+/*!**********************!*\
+  !*** ./bg_image.png ***!
+  \**********************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "bg_image.png";
+
+/***/ }),
+
 /***/ "./client/js/HomePage.js":
 /*!*******************************!*\
   !*** ./client/js/HomePage.js ***!
@@ -145,52 +178,50 @@ var HomePage = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (HomePage.__proto__ || Object.getPrototypeOf(HomePage)).call(this, props));
 
     _this.componentWillMount = function () {
-      //
-      // if (localStorage.version){
-      //   if (JSON.parse(localStorage.version) !== this.currentVersion){
-      //     const hostname = window.location.hostname;
-      //     const protocol = window.location.protocol;
-      //
-      //     const host = (hostname === "localhost") ? (`${protocol}//${hostname}:${process.env.PORT}/pokemon`) : (`${protocol}//${hostname}/pokemon`);
-      //
-      //     axios.get(host).then((response)=>{
-      //       const oldPokemon = JSON.parse(localStorage.pokemon);
-      //
-      //       const updatedPokemon = JSON.parse(response.data).map((pokemon, key)=>{
-      //         return Object.assign({}, pokemon, oldPokemon[key]);
-      //       });
-      //
-      //       this.setState({
-      //         pokemon: updatedPokemon,
-      //         filters: (localStorage.filters) ? (JSON.parse(localStorage.filters)) : (this.state.filters),
-      //         options: (localStorage.options) ? (JSON.parse(localStorage.options)) : (this.state.options),
-      //       }, this.syncLocalStorage);
-      //
-      //     }).catch((error)=>{
-      //       console.log(error);
-      //     });
-      //
-      //   } else {
-      //     this.setState({
-      //       pokemon: JSON.parse(localStorage.pokemon),
-      //       filters: JSON.parse(localStorage.filters),
-      //       options: JSON.parse(localStorage.options),
-      //     });
-      //   }
-      // } else {
-      //   const hostname = window.location.hostname;
-      //   const protocol = window.location.protocol;
-      //
-      //   const host = (hostname === "localhost") ? (`${protocol}//${hostname}:${process.env.PORT}/pokemon`) : (`${protocol}//${hostname}/pokemon`);
-      //
-      //   axios.get(host).then((response)=>{
-      //     this.setState({
-      //       pokemon: JSON.parse(response.data)
-      //     }, this.syncLocalStorage);
-      //   }).catch((error)=>{
-      //     console.log(error);
-      //   });
-      // }
+
+      if (localStorage.version) {
+        if (JSON.parse(localStorage.version) !== _this.currentVersion) {
+          var hostname = window.location.hostname;
+          var protocol = window.location.protocol;
+
+          var host = hostname === "localhost" ? protocol + "//" + hostname + ":" + "1334" + "/pokemon" : protocol + "//" + hostname + "/pokemon";
+
+          _axios2.default.get(host).then(function (response) {
+            var oldPokemon = JSON.parse(localStorage.pokemon);
+
+            var updatedPokemon = JSON.parse(response.data).map(function (pokemon, key) {
+              return Object.assign({}, pokemon, oldPokemon[key]);
+            });
+
+            _this.setState({
+              pokemon: updatedPokemon,
+              filters: localStorage.filters ? JSON.parse(localStorage.filters) : _this.state.filters,
+              options: localStorage.options ? JSON.parse(localStorage.options) : _this.state.options
+            }, _this.syncLocalStorage);
+          }).catch(function (error) {
+            console.log(error);
+          });
+        } else {
+          _this.setState({
+            pokemon: JSON.parse(localStorage.pokemon),
+            filters: JSON.parse(localStorage.filters),
+            options: JSON.parse(localStorage.options)
+          });
+        }
+      } else {
+        var _hostname = window.location.hostname;
+        var _protocol = window.location.protocol;
+
+        var _host = _hostname === "localhost" ? _protocol + "//" + _hostname + ":" + "1334" + "/pokemon" : _protocol + "//" + _hostname + "/pokemon";
+
+        _axios2.default.get(_host).then(function (response) {
+          _this.setState({
+            pokemon: JSON.parse(response.data)
+          }, _this.syncLocalStorage);
+        }).catch(function (error) {
+          console.log(error);
+        });
+      }
     };
 
     _this.clearAllSelectedPokemon = function () {
@@ -730,52 +761,29 @@ var _HomePage = __webpack_require__(/*! ./HomePage.js */ "./client/js/HomePage.j
 
 var _HomePage2 = _interopRequireDefault(_HomePage);
 
+__webpack_require__(/*! ../../bg_image.png */ "./bg_image.png");
+
+__webpack_require__(/*! ../../site.webmanifest */ "./site.webmanifest");
+
+__webpack_require__(/*! ../../apple-touch-icon.png */ "./apple-touch-icon.png");
+
+__webpack_require__(/*! ../../android-chrome-192x192.png */ "./android-chrome-192x192.png");
+
+__webpack_require__(/*! ../../favicon-16x16.png */ "./favicon-16x16.png");
+
+__webpack_require__(/*! ../../favicon-32x32.png */ "./favicon-32x32.png");
+
+__webpack_require__(/*! ../../favicon-194x194.png */ "./favicon-194x194.png");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// import * as OfflinePluginRuntime from 'offline-plugin/runtime';
-// OfflinePluginRuntime.install({
-//   onInstalled: function onInstalled() {
-//     console.log('OfflinePluginRuntime.onInstalled');
-//   },
-//   onUpdateReady: function onUpdateReady() {
-//     console.log('OfflinePluginRuntime.onUpdateReady');
-//   },
-//   onUpdating: function onUpdating() {
-//     console.log('OfflinePluginRuntime.onUpdating');
-//   },
-//   onUpdated: function onUpdated() {
-//     console.log('OfflinePluginRuntime.onUpdated');
-//   },
-//   // onUpdateReady: () => OfflinePluginRuntime.applyUpdate(),
-//   // onUpdated: () => window.swUpdate = true,
-// });
-//  window.addEventListener('offline', () => {
-//   console.log('Went offline!');
-// });
-
-// import runtime from 'serviceworker-webpack-plugin/lib/runtime';
-//
-// if ('serviceWorker' in navigator) {
-//   const registration = runtime.register();
-// }
-
-// if ('serviceWorker' in navigator) {
-//   window.addEventListener('load', () => {
-//     navigator.serviceWorker.register('../../dist/service-worker.js').then(registration => {
-//       console.log('SW registered: ', registration);
-//     }).catch(registrationError => {
-//       console.log('SW registration failed: ', registrationError);
-//     });
-//   });
-// }
-
+// import Nav                  from "./nav.js";
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('../../service-worker.js');
 }
 
 // import styles from "./styles.js";
 
-// import Nav                  from "./nav.js";
 var $container = document.getElementById("container");
 
 // <Route path="*" component={ConfirmationDialog}/>
@@ -813,6 +821,8 @@ if (false) {}
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -878,7 +888,7 @@ var Pokemon = function (_React$Component) {
       };
 
       var shinyStyle = {
-        background: "url(/../images/shiny.png) center center / contain no-repeat",
+        background: "url(../images/shiny.png) center center / contain no-repeat",
         width: selectedScreen ? 26 : 26,
         height: selectedScreen ? 26 : 26,
         position: "absolute",
@@ -886,7 +896,15 @@ var Pokemon = function (_React$Component) {
         right: 0
       };
 
-      var className = pokemon.selected ? "selected" : "unselected";
+      var selected = {
+        background: "url(\"../images/selected.png\")",
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "contain",
+        backgroundPosition: "bottom",
+        borderBottom: "1px solid #f2f2f2"
+      };
+
+      var selectedStyle = pokemon.selected ? selected : {};
 
       var fullyRemoveButton = showFullyRemoveButton ? _react2.default.createElement(
         "div",
@@ -904,7 +922,7 @@ var Pokemon = function (_React$Component) {
         fullyRemoveButton,
         _react2.default.createElement(
           "div",
-          { style: { margin: 8, borderRadius: 2, cursor: "pointer", position: "relative" }, className: className, onClick: function onClick() {
+          { style: _extends({ margin: 8, borderRadius: 2, cursor: "pointer", position: "relative" }, selectedStyle), onClick: function onClick() {
               _onClick(pokemon);
             } },
           _react2.default.createElement("img", { style: style, src: "/../images/live_pokemon_icons/" + pokemon.image }),
@@ -930,6 +948,39 @@ exports.default = Pokemon;
 
 "use strict";
 
+
+/***/ }),
+
+/***/ "./favicon-16x16.png":
+/*!***************************!*\
+  !*** ./favicon-16x16.png ***!
+  \***************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "favicon-16x16.png";
+
+/***/ }),
+
+/***/ "./favicon-194x194.png":
+/*!*****************************!*\
+  !*** ./favicon-194x194.png ***!
+  \*****************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "favicon-194x194.png";
+
+/***/ }),
+
+/***/ "./favicon-32x32.png":
+/*!***************************!*\
+  !*** ./favicon-32x32.png ***!
+  \***************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "favicon-32x32.png";
 
 /***/ }),
 
@@ -12146,6 +12197,17 @@ try {
 
 module.exports = g;
 
+
+/***/ }),
+
+/***/ "./site.webmanifest":
+/*!**************************!*\
+  !*** ./site.webmanifest ***!
+  \**************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "site.webmanifest";
 
 /***/ })
 

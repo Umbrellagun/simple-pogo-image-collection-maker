@@ -33,7 +33,7 @@ export default class Pokemon extends React.Component {
     };
 
     const shinyStyle = {
-      background: `url(/../images/shiny.png) center center / contain no-repeat`,
+      background: `url(../images/shiny.png) center center / contain no-repeat`,
       width: (selectedScreen) ? (26) : (26),
       height: (selectedScreen) ? (26) : (26),
       position: "absolute",
@@ -41,7 +41,15 @@ export default class Pokemon extends React.Component {
       right: 0
     };
 
-    const className = (pokemon.selected) ? ("selected") : ("unselected");
+    const selected = {
+      background: `url("../images/selected.png")`,
+      backgroundRepeat: "no-repeat",
+      backgroundSize: "contain",
+      backgroundPosition: "bottom",
+      borderBottom: "1px solid #f2f2f2",
+    };
+
+    const selectedStyle = (pokemon.selected) ? (selected) : ({});
 
     const fullyRemoveButton = (showFullyRemoveButton) ? (
       <div style={xButton} onClick={()=>{toggleFullyRemovePokemon(pokemon);}}>X</div>
@@ -54,7 +62,7 @@ export default class Pokemon extends React.Component {
     return (
       <div>
         {fullyRemoveButton}
-        <div style={{margin: 8, borderRadius: 2, cursor: "pointer", position: "relative"}} className={className} onClick={()=>{onClick(pokemon);}}>
+        <div style={{...{margin: 8, borderRadius: 2, cursor: "pointer", position: "relative"}, ...selectedStyle}} onClick={()=>{onClick(pokemon);}}>
           <img style={style} src={`/../images/live_pokemon_icons/${pokemon.image}`}/>
           {shiny}
         </div>
