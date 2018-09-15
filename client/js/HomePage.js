@@ -1,14 +1,34 @@
 import React     from "react";
 import PropTypes from "prop-types";
+
 import axios     from "axios";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheckSquare, faAngleRight, faAngleDown } from '@fortawesome/free-solid-svg-icons';
+import { faCheckSquare } from '@fortawesome/free-solid-svg-icons';
 import { faSquare } from '@fortawesome/free-regular-svg-icons';
+
+import SideNav   from 'react-simple-sidenav';
 
 import Pokemon   from "./components/Pokemon.js";
 
 import styles    from "./styles.js";
+
+// <div style={styles.filterStyle}>
+//   <div onClick={this.toggleOptionsModal}>
+//     <span>
+//       Filters and More
+//     </span>
+//     {(menuOpen) ? (
+//       <span style={{paddingLeft: 8}}>
+//         <FontAwesomeIcon icon={faAngleDown} />
+//       </span>
+//     ) : (
+//       <span style={{paddingLeft: 8}}>
+//         <FontAwesomeIcon icon={faAngleRight} />
+//       </span>
+//     )}
+//   </div>
+// </div>
 
 export default class HomePage extends React.Component {
 
@@ -26,15 +46,25 @@ export default class HomePage extends React.Component {
         gen_3: true,
       },
       panel: "selecting",
-      menuOpen: false,
       options: {
         showXButtons: true
-      }
+      },
+      searchedPokemon: "",
+      checked: (
+        <div style={{paddingRight: 8}}>
+          <FontAwesomeIcon icon={faCheckSquare} />
+        </div>
+      ),
+      unChecked: (
+        <div style={{paddingRight: 8}}>
+          <FontAwesomeIcon icon={faSquare} />
+        </div>
+      )
     };
   }
 
   componentWillMount = ()=>{
-    
+
     if (localStorage.version){
       if (JSON.parse(localStorage.version) !== this.currentVersion){
         const hostname = window.location.hostname;
@@ -80,6 +110,13 @@ export default class HomePage extends React.Component {
         console.log(error);
       });
     }
+  };
+
+  componentDidMount = ()=>{
+    let stupidUl = document.getElementsByTagName("ul")[0];
+    stupidUl.style.padding = 0;
+    stupidUl.style.margin = 0;
+    stupidUl.style.listStyle = "none";
   };
 
   clearAllSelectedPokemon = ()=>{
@@ -129,7 +166,7 @@ export default class HomePage extends React.Component {
   };
 
   renderPokemon = (pokemon, key)=>{
-    const { filters, options } = this.state;
+    const { filters, options, searchedPokemon } = this.state;
 
     let shinyCheck = true;
     if (!filters.shiny){
@@ -185,7 +222,24 @@ export default class HomePage extends React.Component {
       }
     }
 
-    if (shinyCheck && specialCheck && regularCheck && genOneCheck && genTwoCheck && genThreeCheck && !pokemon.removed){
+    let stringCheck = true;
+    if (searchedPokemon != ""){
+
+      let searchedPokemonNumber;
+      if (searchedPokemon.length == 3){
+        searchedPokemonNumber = searchedPokemon;
+      } else if (searchedPokemon.length == 2){
+        searchedPokemonNumber = "0" + searchedPokemon;
+      } else {
+        searchedPokemonNumber = "00" + searchedPokemon;
+      }
+
+      if (pokemon.number != searchedPokemonNumber){
+        stringCheck = false;
+      }
+    }
+
+    if (stringCheck && shinyCheck && specialCheck && regularCheck && genOneCheck && genTwoCheck && genThreeCheck && !pokemon.removed){
       return (
         <Pokemon
           key={key}
@@ -273,214 +327,135 @@ export default class HomePage extends React.Component {
     this.setState(state);
   };
 
+  onChange = (e)=>{
+    const state = {};
+    state[e.target.name] = e.target.value;
+    this.setState(state);
+  };
+
+  getFilters = ()=>{
+    const { checked, unChecked, filters } = this.state;
+
+    return Object.keys(filters).map((filter, key)=>{
+      let filterName;
+
+      if (filter[3] == "_" ){
+        let newFilterName = filter;
+        newFilterName = newFilterName.substr(0, 3) + " " + newFilterName.substr(3 + " ".length);
+        filterName = newFilterName.charAt(0).toUpperCase() + newFilterName.slice(1);
+      } else {
+        filterName = filter.charAt(0).toUpperCase() + filter.slice(1);
+      }
+
+      return (
+        <div key={key} style={styles.filterStyle} onClick={()=>{this.toggleFilter(`toggle_${filter}`);}}>
+          {(filters[filter]) ? (checked) : (unChecked)}
+          <div>
+            {filterName}
+          </div>
+        </div>
+      );
+    });
+
+  };
+
   render(){
-    const { panel, pokemon, filters, menuOpen, options } = this.state;
-    const style = {
-      display: "flex",
-      justifyContent: "space-around",
-      alignItems: "center",
-      flexWrap: "wrap",
-      maxHeight: "80vh",
-      overflow: "auto",
-      backgroundColor: "white",
-      position: "relative",
-      borderRadius: 8,
-      width: "100%"
-    };
+    const { panel, pokemon, filters, options, showNav, searchedPokemon, checked, unchecked } = this.state;
 
-    const buttonStyle = {
-      padding: 8,
-      margin: 8,
-      backgroundColor: "darkcyan",
-      borderRadius: 4,
-      color: "white",
-      cursor: "pointer"
-    };
+    const Filters = this.getFilters();
 
-    const containerStyle = {
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      flexDirection: "column",
-      color: "darkcyan",
-      fontWeight: 600
-    };
-
-    const buttonsStyle = {
-      display: "flex"
-    };
-
-    const redButtonStyle = {
-      padding: 8,
-      margin: 8,
-      borderRadius: 4,
-      color: "white",
-      cursor: "pointer",
-      backgroundColor: "red",
-      textAlign: "center"
-    };
-
-    const regularButtonStyle = {
-      padding: 8,
-      margin: 8,
-      borderRadius: 4,
-      cursor: "pointer",
-      textAlign: "center"
-    };
-
-    const filterStyle = {
-      display: "flex",
-      padding: 8
-    };
-
+    let message;
     let shownPokemon;
     let navigationButton;
     if (panel === "done"){
+      message = "These are your selected Pokemon";
       shownPokemon = pokemon.map(this.renderSelectedPokemon);
       navigationButton = (
-        <div style={buttonStyle} onClick={()=>{this.toPanel("selecting");}}>Back</div>
+        <div style={styles.buttonStyle} onClick={()=>{this.toPanel("selecting");}}>Back</div>
       );
     } else if (panel === "selecting"){
+      message = "Select the Pokemon you would like";
       shownPokemon = pokemon.map(this.renderPokemon);
       navigationButton = (
-        <div style={buttonStyle} onClick={()=>{this.toPanel("done");}}>Done Selecting</div>
+        <div style={styles.buttonStyle} onClick={()=>{this.toPanel("done");}}>Done Selecting</div>
       );
     } else if (panel === "removed"){
+      message = <span style={{color: "red"}}>Removed Pokemon</span>;
       shownPokemon = pokemon.map(this.renderFullyRemovedPokemon);
       navigationButton = (
-        <div style={buttonStyle} onClick={()=>{this.toPanel("selecting");}}>Back</div>
+        <div style={styles.buttonStyle} onClick={()=>{this.toPanel("selecting");}}>Back</div>
       );
     }
 
-    const checked = (
-      <div style={{paddingRight: 8}}>
-        <FontAwesomeIcon icon={faCheckSquare} />
-      </div>
-    );
-
-    const unChecked = (
-      <div style={{paddingRight: 8}}>
-        <FontAwesomeIcon  icon={faSquare} />
-      </div>
-    );
-
-    const shinyFilter = (
-      <div style={filterStyle} onClick={()=>{this.toggleFilter("toggle_shiny");}}>
-        {(filters.shiny) ? (checked) : (unChecked)}
-        <div>
-          Shinys
-        </div>
-      </div>
-    );
-
-    const specialFilter = (
-      <div style={filterStyle} onClick={()=>{this.toggleFilter("toggle_special");}}>
-        {(filters.special) ? (checked) : (unChecked)}
-        <div>
-          Specials
-        </div>
-      </div>
-    );
-
-    const regularFilter = (
-      <div style={filterStyle} onClick={()=>{this.toggleFilter("toggle_regular");}}>
-        {(filters.regular) ? (checked) : (unChecked)}
-        <div>
-          Regular
-        </div>
-      </div>
-    );
-
-    const genOneFilter = (
-      <div style={filterStyle} onClick={()=>{this.toggleFilter("toggle_gen_1");}}>
-        {(filters.gen_1) ? (checked) : (unChecked)}
-        <div>
-          Gen 1
-        </div>
-      </div>
-    );
-
-    const genTwoFilter = (
-      <div style={filterStyle} onClick={()=>{this.toggleFilter("toggle_gen_2");}}>
-        {(filters.gen_2) ? (checked) : (unChecked)}
-        <div>
-          Gen 2
-        </div>
-      </div>
-    );
-
-    const genThreeFilter = (
-      <div style={filterStyle} onClick={()=>{this.toggleFilter("toggle_gen_3");}}>
-        {(filters.gen_3) ? (checked) : (unChecked)}
-        <div>
-          Gen 3
-        </div>
-      </div>
-    );
-
-    const menuStyle = {
-      position: "absolute",
-      top: 0,
-      zIndex: 99,
-      backgroundColor: "white",
-      left: 0,
-      width: "100%",
-      boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
-    };
-
     return (
-      <div style={containerStyle}>
-        <div style={{display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column", minHeight: "20vh"}}>
-          <div style={{fontSize: 21}}>
-            PoGo Collector
-          </div>
-          <div>
-            Select the Pokemon you would like
-          </div>
-          <div style={buttonsStyle}>
-            {navigationButton}
-          </div>
-          <div style={filterStyle}>
-            <div onClick={()=>{
-              this.setState({
-                menuOpen: !menuOpen
-              });
-            }}>
-              <span>
-                Filters and More
-              </span>
-              {(menuOpen) ? (
-                <span style={{paddingLeft: 8}}>
-                  <FontAwesomeIcon icon={faAngleDown} />
-                </span>
-              ) : (
-                <span style={{paddingLeft: 8}}>
-                  <FontAwesomeIcon icon={faAngleRight} />
-                </span>
-              )}
-            </div>
-          </div>
-        </div>
-        <div style={style}>
+      <div style={styles.containerStyle}>
 
-          {(menuOpen) ? (
-            <div style={menuStyle}>
+        <svg
+          onClick={() => this.setState({showNav: true})}
+          fill="darkcyan"
+          xmlns="http://www.w3.org/2000/svg"
+          cursor="pointer"
+          height="24"
+          viewBox="0 0 24 24"
+          width="24"
+          style={{position: 'absolute', top: 0, left: 0, padding: 16}}
+        >
+          <path d="M0 0h24v24H0z" fill="none"></path>
+          <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"></path>
+        </svg>
+
+        <SideNav
+          showNav={showNav}
+          onHideNav={() => this.setState({showNav: false})}
+          title="PoGo Collector"
+          items={[
+            <div style={styles.menuStyle}>
               <div style={{padding: 8}}>Filters:</div>
               <div style={{display: "flex", justifyContent: "center", flexWrap: "wrap"}}>
-                {regularFilter}
-                {shinyFilter}
-                {specialFilter}
-                {genOneFilter}
-                {genTwoFilter}
-                {genThreeFilter}
+                {Filters}
               </div>
-              <div style={redButtonStyle} onClick={()=>{this.toPanel("removed");}}>View Removed Pokemon</div>
-              <div style={redButtonStyle} onClick={this.clearAllRemovedPokemon}>Clear All Removed Pokemon</div>
-              <div style={redButtonStyle} onClick={this.clearAllSelectedPokemon}>Clear All Selected Pokemon</div>
-              <div style={regularButtonStyle} onClick={this.toggleXButtons}>{(options.showXButtons) ? ("Hide") : ("Show")} 'Remove Pokemon' Buttons</div>
+              <div style={{padding: 8}}>More:</div>
+              <div style={styles.redButtonStyle} onClick={()=>{
+                  this.setState({
+                    showNav: false
+                  }, ()=>{
+                    this.toPanel("removed");
+                  });
+                }}>View Removed Pokemon</div>
+              <div style={styles.redButtonStyle} onClick={this.clearAllRemovedPokemon}>Clear All Removed Pokemon</div>
+              <div style={styles.redButtonStyle} onClick={this.clearAllSelectedPokemon}>Clear All Selected Pokemon</div>
+              <div style={styles.regularButtonStyle} onClick={this.toggleXButtons}>{(options.showXButtons) ? ("Hide") : ("Show")} 'Remove Pokemon' Buttons</div>
             </div>
-          ) : (null)}
+          ]}
+          navStyle={styles.navStyle}
+          titleStyle={styles.navTitleStyle}
+          itemStyle={styles.navItemStyle}
+          itemHoverStyle={styles.navItemHoverStyle}
+        />
 
+      <div style={styles.header}>
+          <div style={{fontSize: 21, marginTop: 16}}>
+            PoGo Collector
+          </div>
+          <div style={{marginTop: 8}}>
+            {message}
+          </div>
+          <div style={{display: "flex", width: "100%"}}>
+            <input
+              placeholder="Search by Pokemon #"
+              style={styles.inputStyle}
+              name="searchedPokemon"
+              ref="searchedPokemon"
+              type="text"
+              value={searchedPokemon}
+              onChange={this.onChange}
+              />
+            <div style={styles.buttonsStyle}>
+              {navigationButton}
+            </div>
+          </div>
+        </div>
+        <div style={styles.style}>
           {shownPokemon}
         </div>
       </div>

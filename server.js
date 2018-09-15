@@ -85,9 +85,9 @@ app.get("/pokemon", (request, response)=>{
   response.json(JSON.stringify(json));
 });
 
-// app.get("*", (request, response)=>{
-//   response.sendFile(__dirname + index)
-// });
+app.get("*", (request, response)=>{
+  response.sendFile(__dirname + index)
+});
 
 const currentDateTime = moment().format("MMMM Do YYYY, h:mm:ss a");
 

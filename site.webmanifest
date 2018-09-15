@@ -1,5 +1,5 @@
 {
-    "name": "Pogo Collector Progressive Web App",
+    "name": "Pogo Collector",
     "short_name": "Pogo Collector",
     "start_url": "./",
     "description": "Progressive Web App that allows collection of pogo images",

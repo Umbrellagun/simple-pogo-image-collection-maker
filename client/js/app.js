@@ -15,8 +15,10 @@ import "../../favicon-16x16.png";
 import "../../favicon-32x32.png";
 import "../../favicon-194x194.png";
 
-if ('serviceWorker' in navigator){
-  navigator.serviceWorker.register('../../service-worker.js');
+if (process.env.NODE_ENV == "production"){
+  if ('serviceWorker' in navigator){
+    navigator.serviceWorker.register('../../service-worker.js');
+  }
 }
 
 // import styles from "./styles.js";

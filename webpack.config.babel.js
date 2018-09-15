@@ -4,34 +4,38 @@ const path    = require("path");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const SWPrecacheWebpackPlugin = require("sw-precache-webpack-plugin");
 
-// path.resolve vs. path.join
+// path.resolve vs. path.join?
 
 const PORT = process.env.PORT || 1333;
 
-// const DEVELOPMENT = (process.env.NODE_ENV === "dev");
-const DEVELOPMENT = false;
+const DEVELOPMENT = (process.env.NODE_ENV === "dev");
 
 const entryPath = path.resolve(__dirname + "/client/js/app.js");
 
 const entry = (DEVELOPMENT) ? ([
   `webpack-hot-middleware/client?path=http://localhost:${PORT}/__webpack_hmr&timeout=20000`,
-  entryPath
+  "./client/js/app.js"
 ]) : ({
-  "bundle.js": "./client/js/app.js",
-  // "site.webmanifest": "./site.webmanifest",
-  // "bg_image.png": "./bg_image.png"
+  "bundle.js": "./client/js/app.js"
 });
 
-const output = {
-  // path: path.resolve(__dirname, '/dist'),
-  // publicPath: "/",
-  filename: (chunkData)=>{
-    return "[name]";
-  }
-};
+// const output = {
+//   filename: (chunkData)=>{
+//     return "[name]";
+//   }
+// };
 
-// const mode = (DEVELOPMENT) ? ("development") : ("production");
-const mode = "development"
+const output = (DEVELOPMENT) ? ({
+  path: __dirname,
+  publicPath: "/",
+  filename: "bundle.js"
+}) : ({
+  path: __dirname,
+  publicPath: "/",
+  filename: "[name]"
+});
+
+const mode = (DEVELOPMENT) ? ("development") : ("production");
 
 const plugins = (DEVELOPMENT) ? (
   [
@@ -42,14 +46,6 @@ const plugins = (DEVELOPMENT) ? (
         "PORT": JSON.stringify(process.env.PORT),
       },
     }),
-    // new HtmlWebpackPlugin({
-    //   filename: 'index.html',
-    //   template: 'template.html',
-    // }),
-    // new ServiceWorkerWebpackPlugin({
-    //   entry: path.join(__dirname, 'client/js/service-worker.js'),
-    // }),
-    // new OfflinePlugin(),
   ]
 ) : (
   [
@@ -63,13 +59,8 @@ const plugins = (DEVELOPMENT) ? (
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: path.join(__dirname, 'template.html'),
-      // background: "/dist/bg_image.png",
-      // selected: "/dist/selected.png",
       manifest: "/site.webmanifest",
       cache: false,
-      // chunks: (wtf)=>{
-      //   console.log(wtf)
-      // }
     }),
 
     new SWPrecacheWebpackPlugin({
@@ -80,12 +71,7 @@ const plugins = (DEVELOPMENT) ? (
       mergeStaticsConfig: true,
       stripPrefix: "dist",
       replacePrefix: "",
-      staticFileGlobs: [
-        // "dist/site.webmanifest",
-        // "dist/bg_image.png",
-        // "dist/index.html",
-        // "dist/bundle.js"
-      ],
+      staticFileGlobs: [],
       staticFileGlobsIgnorePatterns: [/\.map$/, /asset-manifest\.json$/],
     }),
   ]
@@ -119,9 +105,6 @@ module.exports = {
           loader: 'file-loader',
           options: {
             name: '[name].[ext]',
-            // publicPath: path.join(__dirname, './dist'),
-            // outputPath: "dist/",
-            // emitFiles: false,
           }
         }
       }

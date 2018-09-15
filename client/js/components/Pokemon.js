@@ -29,7 +29,8 @@ export default class Pokemon extends React.Component {
       justifyContent: "center",
       alignItems: "center",
       cursor: "pointer",
-      marginTop: 8
+      marginTop: 8,
+      position: "absolute"
     };
 
     const shinyStyle = {
@@ -60,9 +61,9 @@ export default class Pokemon extends React.Component {
     ) : (null);
 
     return (
-      <div>
+      <div style={{position: 'relative'}}>
         {fullyRemoveButton}
-        <div style={{...{margin: 8, borderRadius: 2, cursor: "pointer", position: "relative"}, ...selectedStyle}} onClick={()=>{onClick(pokemon);}}>
+        <div style={{...{margin: 8, borderRadius: 2, cursor: "pointer"}, ...selectedStyle}} onClick={()=>{onClick(pokemon);}}>
           <img style={style} src={`/../images/live_pokemon_icons/${pokemon.image}`}/>
           {shiny}
         </div>
