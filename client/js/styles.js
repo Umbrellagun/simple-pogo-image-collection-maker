@@ -36,7 +36,8 @@ export default {
     margin: 8,
     borderRadius: 4,
     cursor: "pointer",
-    textAlign: "center"
+    textAlign: "center",
+    display: "flex"
   },
 
   style: {

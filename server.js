@@ -37,7 +37,7 @@ if (process.env.NODE_ENV !== "production"){
 }
 
 let json = [];
-fs.readdir(path.join(__dirname, "client/images/live_pokemon_icons"), (err, files)=>{
+fs.readdir(path.join(__dirname, "client/images/pokemon_icons"), (err, files)=>{
 
   if (err){
     console.error("Could not list the directory.", err);

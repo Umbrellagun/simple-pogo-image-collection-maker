@@ -9,6 +9,7 @@ import { faSquare } from '@fortawesome/free-regular-svg-icons';
 
 import SideNav   from 'react-simple-sidenav';
 
+import Thing from "./live-shinys.js";
 import Pokemon   from "./components/Pokemon.js";
 
 import styles    from "./styles.js";
@@ -47,7 +48,8 @@ export default class HomePage extends React.Component {
       },
       panel: "selecting",
       options: {
-        showXButtons: true
+        showXButtons: true,
+        showAllShiny: false,
       },
       searchedPokemon: "",
       checked: (
@@ -168,57 +170,45 @@ export default class HomePage extends React.Component {
   renderPokemon = (pokemon, key)=>{
     const { filters, options, searchedPokemon } = this.state;
 
-    let shinyCheck = true;
     if (!filters.shiny){
       if (pokemon.shiny){
-        shinyCheck = false;
-      } else {
-        shinyCheck = true;
+        return;
       }
     }
 
-    let specialCheck = true;
     if (!filters.special){
       if (pokemon.special){
-        specialCheck = false;
-      } else {
-        specialCheck = true;
+        return;
       }
     }
 
-    let regularCheck = true;
     if (!filters.regular){
       if (pokemon.regular){
-        regularCheck = false;
-      } else {
-        regularCheck = true;
+        return;
       }
     }
 
-    let genOneCheck = true;
     if (!filters.gen_1){
       if (pokemon.gen == 1){
-        genOneCheck = false;
-      } else {
-        genOneCheck = true;
+        return;
       }
     }
 
-    let genTwoCheck = true;
     if (!filters.gen_2){
       if (pokemon.gen == 2){
-        genTwoCheck = false;
-      } else {
-        genTwoCheck = true;
+        return;
       }
     }
 
-    let genThreeCheck = true;
     if (!filters.gen_3){
       if (pokemon.gen == 3){
-        genThreeCheck = false;
-      } else {
-        genThreeCheck = true;
+        return;
+      }
+    }
+
+    if (!options.showAllShiny && pokemon.shiny){
+      if (!Thing.some((pokemonNumber)=>{return pokemonNumber == pokemon.number;})){
+        return;
       }
     }
 
@@ -239,7 +229,7 @@ export default class HomePage extends React.Component {
       }
     }
 
-    if (stringCheck && shinyCheck && specialCheck && regularCheck && genOneCheck && genTwoCheck && genThreeCheck && !pokemon.removed){
+    if (!pokemon.removed){
       return (
         <Pokemon
           key={key}
@@ -327,6 +317,13 @@ export default class HomePage extends React.Component {
     this.setState(state);
   };
 
+  toggleAllShiny = ()=>{
+    let state = {};
+    state.options = Object.assign({}, this.state.options);
+    state.options.showAllShiny = !this.state.options.showAllShiny;
+    this.setState(state);
+  };
+
   onChange = (e)=>{
     const state = {};
     state[e.target.name] = e.target.value;
@@ -360,7 +357,7 @@ export default class HomePage extends React.Component {
   };
 
   render(){
-    const { panel, pokemon, filters, options, showNav, searchedPokemon, checked, unchecked } = this.state;
+    const { panel, pokemon, filters, options, showNav, searchedPokemon, checked, unChecked } = this.state;
 
     const Filters = this.getFilters();
 
@@ -415,6 +412,12 @@ export default class HomePage extends React.Component {
                 {Filters}
               </div>
               <div style={{padding: 8}}>More:</div>
+              <div style={styles.regularButtonStyle} onClick={this.toggleXButtons}>
+                {(options.showXButtons) ? (checked) : (unChecked)} Show 'Remove Pokemon' Buttons
+              </div>
+              <div style={styles.regularButtonStyle} onClick={this.toggleAllShiny}>
+                {(options.showAllShiny) ? (checked) : (unChecked)} Show Shiny Pokemon Not In Game
+              </div>
               <div style={styles.redButtonStyle} onClick={()=>{
                   this.setState({
                     showNav: false
@@ -424,7 +427,6 @@ export default class HomePage extends React.Component {
                 }}>View Removed Pokemon</div>
               <div style={styles.redButtonStyle} onClick={this.clearAllRemovedPokemon}>Clear All Removed Pokemon</div>
               <div style={styles.redButtonStyle} onClick={this.clearAllSelectedPokemon}>Clear All Selected Pokemon</div>
-              <div style={styles.regularButtonStyle} onClick={this.toggleXButtons}>{(options.showXButtons) ? ("Hide") : ("Show")} 'Remove Pokemon' Buttons</div>
             </div>
           ]}
           navStyle={styles.navStyle}
