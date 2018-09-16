@@ -443,6 +443,7 @@ export default class HomePage extends React.Component {
             {message}
           </div>
           <div style={{display: "flex", width: "100%"}}>
+            <label for="searchedPokemon" style={{display: "none"}}>Search by Pokemon #</label>
             <input
               placeholder="Search by Pokemon #"
               style={styles.inputStyle}

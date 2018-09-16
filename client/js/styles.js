@@ -61,7 +61,7 @@ export default {
     borderRadius: 4,
     color: "white",
     cursor: "pointer",
-    minWidth: 106,
+    minWidth: 110,
     display: "flex",
     alignItems: "center",
     justifyContent: "center"
