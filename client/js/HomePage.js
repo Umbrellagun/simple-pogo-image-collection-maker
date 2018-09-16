@@ -1,18 +1,19 @@
-import React     from "react";
-import PropTypes from "prop-types";
+import React          from "react";
+import PropTypes      from "prop-types";
 
-import axios     from "axios";
+import axios          from "axios";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckSquare } from '@fortawesome/free-solid-svg-icons';
-import { faSquare } from '@fortawesome/free-regular-svg-icons';
+import { faSquare }   from '@fortawesome/free-regular-svg-icons';
 
-import SideNav   from 'react-simple-sidenav';
+import SideNav        from 'react-simple-sidenav';
 
-import Thing from "./live-shinys.js";
-import Pokemon   from "./components/Pokemon.js";
+import nonLivePokemon from "./non-live-pokemon.js";
+import liveShinys     from "./live-shinys.js";
+import Pokemon        from "./components/Pokemon.js";
 
-import styles    from "./styles.js";
+import styles         from "./styles.js";
 
 // <div style={styles.filterStyle}>
 //   <div onClick={this.toggleOptionsModal}>
@@ -42,6 +43,7 @@ export default class HomePage extends React.Component {
         shiny: true,
         special: true,
         regular: true,
+        additional_gender: false,
         gen_1: true,
         gen_2: true,
         gen_3: true,
@@ -50,6 +52,7 @@ export default class HomePage extends React.Component {
       options: {
         showXButtons: true,
         showAllShiny: false,
+        showAllPokemon: false,
       },
       searchedPokemon: "",
       checked: (
@@ -188,6 +191,12 @@ export default class HomePage extends React.Component {
       }
     }
 
+    if (!filters.additional_gender){
+      if (pokemon.additional_gender){
+        return;
+      }
+    }
+
     if (!filters.gen_1){
       if (pokemon.gen == 1){
         return;
@@ -207,7 +216,13 @@ export default class HomePage extends React.Component {
     }
 
     if (!options.showAllShiny && pokemon.shiny){
-      if (!Thing.some((pokemonNumber)=>{return pokemonNumber == pokemon.number;})){
+      if (!liveShinys.some((pokemonNumber)=>{return pokemonNumber == pokemon.number;})){
+        return;
+      }
+    }
+
+    if (!options.showAllPokemon){
+      if (nonLivePokemon.some((pokemonNumber)=>{return pokemonNumber == pokemon.number;})){
         return;
       }
     }
@@ -290,6 +305,9 @@ export default class HomePage extends React.Component {
     } else if (filter === "toggle_regular"){
       state.filters.regular = !this.state.filters.regular;
       this.setState(state, this.syncLocalStorage);
+    } else if (filter === "toggle_additional_gender"){
+      state.filters.additional_gender = !this.state.filters.additional_gender;
+      this.setState(state, this.syncLocalStorage);
     } else if (filter === "toggle_gen_1"){
       state.filters.gen_1 = !this.state.filters.gen_1;
       this.setState(state, this.syncLocalStorage);
@@ -304,9 +322,11 @@ export default class HomePage extends React.Component {
   };
 
   syncLocalStorage = ()=>{
-    localStorage.pokemon = JSON.stringify(this.state.pokemon);
-    localStorage.filters = JSON.stringify(this.state.filters);
-    localStorage.options = JSON.stringify(this.state.options);
+    const { pokemon, filters, options } = this.state;
+
+    localStorage.pokemon = JSON.stringify(pokemon);
+    localStorage.filters = JSON.stringify(filters);
+    localStorage.options = JSON.stringify(options);
     localStorage.version = JSON.stringify(this.currentVersion);
   }
 
@@ -324,6 +344,13 @@ export default class HomePage extends React.Component {
     this.setState(state);
   };
 
+  toggleAllPokemon = ()=>{
+    let state = {};
+    state.options = Object.assign({}, this.state.options);
+    state.options.showAllPokemon = !this.state.options.showAllPokemon;
+    this.setState(state);
+  };
+
   onChange = (e)=>{
     const state = {};
     state[e.target.name] = e.target.value;
@@ -335,19 +362,23 @@ export default class HomePage extends React.Component {
 
     return Object.keys(filters).map((filter, key)=>{
       let filterName;
+      let additionalStyle = {};
 
-      if (filter[3] == "_" ){
+      if (filter[3] == "_"){//for the "Gen x" filters
         let newFilterName = filter;
         newFilterName = newFilterName.substr(0, 3) + " " + newFilterName.substr(3 + " ".length);
         filterName = newFilterName.charAt(0).toUpperCase() + newFilterName.slice(1);
+      } else if (filter[10] == "_"){
+        filterName = "Additional Genders";
+        additionalStyle.width = "100%";
       } else {
         filterName = filter.charAt(0).toUpperCase() + filter.slice(1);
       }
 
       return (
-        <div key={key} style={styles.filterStyle} onClick={()=>{this.toggleFilter(`toggle_${filter}`);}}>
+        <div key={key} style={{...styles.filterStyle, ...additionalStyle}} onClick={()=>{this.toggleFilter(`toggle_${filter}`);}}>
           {(filters[filter]) ? (checked) : (unChecked)}
-          <div>
+          <div style={{paddingTop: 2}}>
             {filterName}
           </div>
         </div>
@@ -413,10 +444,22 @@ export default class HomePage extends React.Component {
               </div>
               <div style={{padding: 8}}>More:</div>
               <div style={styles.regularButtonStyle} onClick={this.toggleXButtons}>
-                {(options.showXButtons) ? (checked) : (unChecked)} Show 'Remove Pokemon' Buttons
+                {(options.showXButtons) ? (checked) : (unChecked)}
+                <span style={{paddingTop: 2}}>
+                  Show 'Remove Pokemon' Buttons
+                </span>
+              </div>
+              <div style={styles.regularButtonStyle} onClick={this.toggleAllPokemon}>
+                {(options.showAllPokemon) ? (checked) : (unChecked)}
+                <span style={{paddingTop: 2}}>
+                  Show Pokemon From Gen 3 Not In Game Yet
+                </span>
               </div>
               <div style={styles.regularButtonStyle} onClick={this.toggleAllShiny}>
-                {(options.showAllShiny) ? (checked) : (unChecked)} Show Shiny Pokemon Not In Game
+                {(options.showAllShiny) ? (checked) : (unChecked)}
+                <span style={{paddingTop: 2}}>
+                  Show Shiny Pokemon Not In Game Yet
+                </span>
               </div>
               <div style={styles.redButtonStyle} onClick={()=>{
                   this.setState({

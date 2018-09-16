@@ -33,7 +33,7 @@ export default {
 
   regularButtonStyle: {
     padding: 8,
-    margin: 8,
+    margin: "8px 0px",
     borderRadius: 4,
     cursor: "pointer",
     textAlign: "center",
