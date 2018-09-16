@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "webpack && node server.js",
+    "start": "node server.js",
+    "bundle": "export NODE_ENV=production && webpack",
     "dev": "export PORT=1333 && export NODE_ENV=dev && babel-watch server.js"
   },
   "repository": {

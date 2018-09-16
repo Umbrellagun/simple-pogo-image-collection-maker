@@ -10,7 +10,8 @@ const app = express();
 app.use(express.static("dist"));
 app.use(express.static(path.join(__dirname, "client")));
 
-var index = (process.env.NODE_ENV == "production") ? ("/index.html") : ("/dev.html");
+// var index = (process.env.NODE_ENV == "production") ? ("/index.html") : ("/dev.html");
+var index = "/dist/index.html";
 
 if (process.env.NODE_ENV !== "production"){
 
@@ -85,9 +86,9 @@ app.get("/pokemon", (request, response)=>{
   response.json(JSON.stringify(json));
 });
 
-// app.get("*", (request, response)=>{
-//   response.sendFile(__dirname + index)
-// });
+app.get("*", (request, response)=>{
+  response.sendFile(__dirname + index)
+});
 
 const currentDateTime = moment().format("MMMM Do YYYY, h:mm:ss a");
 
