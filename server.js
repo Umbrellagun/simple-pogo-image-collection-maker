@@ -56,6 +56,17 @@ fs.readdir(path.join(__dirname, "client/images/pokemon_icons"), (err, files)=>{
       special = true;
     }
 
+    let additional_gender = false;
+    if (shiny || special){//gender at 3 = "00"
+      if (splitFileName[3] != "00"){
+        additional_gender = true;
+      }
+    } else {// regular gender at 3 = "00.png"
+      if (!splitFileName[3].includes("00")){
+        additional_gender = true;
+      }
+    }
+
     const regular = (!special && !shiny);
 
     let gen;
@@ -74,7 +85,7 @@ fs.readdir(path.join(__dirname, "client/images/pokemon_icons"), (err, files)=>{
       special,
       regular,
       gen,
-      // gender
+      additional_gender
       shiny
     });
 

@@ -35,7 +35,7 @@ export default class HomePage extends React.Component {
 
   constructor(props){
     super(props);
-    this.currentVersion = 2;
+    this.currentVersion = 3;
     this.state = {
       pokemon: [],
       filters: {
