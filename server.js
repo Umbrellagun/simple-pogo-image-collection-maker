@@ -10,8 +10,8 @@ const app = express();
 app.use(express.static("dist"));
 app.use(express.static(path.join(__dirname, "client")));
 
-// var index = (process.env.NODE_ENV == "production") ? ("/index.html") : ("/dev.html");
-var index = "/dist/index.html";
+var index = (process.env.NODE_ENV == "production") ? ("/dist/index.html") : ("/dev.html");
+// var index = "/dist/index.html";
 
 if (process.env.NODE_ENV !== "production"){
 

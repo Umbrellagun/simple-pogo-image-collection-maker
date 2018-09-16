@@ -3,8 +3,7 @@ import ReactDOM from "react-dom";
 
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
-// import Nav                  from "./nav.js";
-import HomePage             from "./HomePage.js";
+import HomePage from "./HomePage.js";
 
 import "../../bg_image.png";
 import "../../site.webmanifest";
@@ -21,13 +20,8 @@ if (process.env.NODE_ENV == "production"){
   }
 }
 
-// import styles from "./styles.js";
-
 const $container = document.getElementById("container");
 
-// <Route path="*" component={ConfirmationDialog}/>
-
-// <Nav/>
 ReactDOM.render(
   <Router>
     <div>

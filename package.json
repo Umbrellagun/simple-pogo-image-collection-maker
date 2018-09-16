@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
-    "bundle": "export NODE_ENV=production && webpack",
+    "bundle": "export NODE_ENV=production && rm ./dist/bundle.js && rm ./dist/bundle.js.map && rm ./dist/service-worker.js && webpack && mv ./bundle.js ./dist/ && mv ./bundle.js.map ./dist/ && mv ./service-worker.js ./dist/",
     "dev": "export PORT=1333 && export NODE_ENV=dev && babel-watch server.js"
   },
   "repository": {
@@ -34,6 +34,7 @@
     "prop-types": "^15.6.2",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
+    "react-lazy-load": "^3.0.13",
     "react-modal": "^3.5.1",
     "react-router-dom": "^4.3.1",
     "react-simple-sidenav": "^1.0.1",

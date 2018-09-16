@@ -61,7 +61,7 @@ export default {
     borderRadius: 4,
     color: "white",
     cursor: "pointer",
-    minWidth: 104,
+    minWidth: 106,
     display: "flex",
     alignItems: "center",
     justifyContent: "center"
@@ -92,7 +92,8 @@ export default {
   },
 
   navItemStyle: {
-    backgroundColor: '#fff'
+    backgroundColor: '#fff',
+    padding: 16,
   },
 
   navItemHoverStyle: {

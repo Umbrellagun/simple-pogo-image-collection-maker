@@ -1,6 +1,8 @@
 import React     from "react";
 import PropTypes from "prop-types";
 
+import LazyLoad  from "react-lazy-load";
+
 import styles    from "../styles.js";
 
 export default class Pokemon extends React.Component {
@@ -61,13 +63,15 @@ export default class Pokemon extends React.Component {
     ) : (null);
 
     return (
-      <div style={{position: 'relative'}}>
-        {fullyRemoveButton}
-        <div style={{...{margin: 8, borderRadius: 2, cursor: "pointer"}, ...selectedStyle}} onClick={()=>{onClick(pokemon);}}>
-          <img style={style} src={`/../images/pokemon_icons/${pokemon.image}`}/>
-          {shiny}
+      <LazyLoad>        
+        <div style={{position: 'relative'}}>
+          {fullyRemoveButton}
+          <div style={{...{margin: 8, borderRadius: 2, cursor: "pointer"}, ...selectedStyle}} onClick={()=>{onClick(pokemon);}}>
+            <img style={style} src={`/../images/pokemon_icons/${pokemon.image}`}/>
+            {shiny}
+          </div>
         </div>
-      </div>
+      </LazyLoad>
     );
   }
 }
