@@ -449,6 +449,7 @@ export default class HomePage extends React.Component {
               style={styles.inputStyle}
               name="searchedPokemon"
               ref="searchedPokemon"
+              id="searchedPokemon"
               type="text"
               value={searchedPokemon}
               onChange={this.onChange}

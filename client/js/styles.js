@@ -64,7 +64,8 @@ export default {
     minWidth: 110,
     display: "flex",
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
+    fontSize: 16,
   },
 
   containerStyle: {
