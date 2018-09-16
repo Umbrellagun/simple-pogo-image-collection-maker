@@ -4,8 +4,8 @@ import PropTypes      from "prop-types";
 import axios          from "axios";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheckSquare } from '@fortawesome/free-solid-svg-icons';
-import { faSquare }   from '@fortawesome/free-regular-svg-icons';
+import { faCheckSquare, faAngleDown, faAngleRight } from '@fortawesome/free-solid-svg-icons';
+import { faSquare } from '@fortawesome/free-regular-svg-icons';
 
 import SideNav        from 'react-simple-sidenav';
 
@@ -14,23 +14,6 @@ import liveShinys     from "./live-shinys.js";
 import Pokemon        from "./components/Pokemon.js";
 
 import styles         from "./styles.js";
-
-// <div style={styles.filterStyle}>
-//   <div onClick={this.toggleOptionsModal}>
-//     <span>
-//       Filters and More
-//     </span>
-//     {(menuOpen) ? (
-//       <span style={{paddingLeft: 8}}>
-//         <FontAwesomeIcon icon={faAngleDown} />
-//       </span>
-//     ) : (
-//       <span style={{paddingLeft: 8}}>
-//         <FontAwesomeIcon icon={faAngleRight} />
-//       </span>
-//     )}
-//   </div>
-// </div>
 
 export default class HomePage extends React.Component {
 
@@ -55,6 +38,9 @@ export default class HomePage extends React.Component {
         showAllPokemon: false,
       },
       searchedPokemon: "",
+      filtersMenuOpen: true,
+      moreMenuOpen: false,
+      aboutMenuOpen: false,
       checked: (
         <div style={{paddingRight: 8}}>
           <FontAwesomeIcon icon={faCheckSquare} />
@@ -64,6 +50,16 @@ export default class HomePage extends React.Component {
         <div style={{paddingRight: 8}}>
           <FontAwesomeIcon icon={faSquare} />
         </div>
+      ),
+      ArrowDown: (
+        <span style={{paddingLeft: 8}}>
+          <FontAwesomeIcon icon={faAngleDown} />
+        </span>
+      ),
+      ArrowRight: (
+        <span style={{paddingLeft: 8}}>
+          <FontAwesomeIcon icon={faAngleRight} />
+        </span>
       )
     };
   }
@@ -378,7 +374,7 @@ export default class HomePage extends React.Component {
       return (
         <div key={key} style={{...styles.filterStyle, ...additionalStyle}} onClick={()=>{this.toggleFilter(`toggle_${filter}`);}}>
           {(filters[filter]) ? (checked) : (unChecked)}
-          <div style={{paddingTop: 2}}>
+          <div style={{paddingTop: 1}}>
             {filterName}
           </div>
         </div>
@@ -387,8 +383,26 @@ export default class HomePage extends React.Component {
 
   };
 
+  toggleFilterMenu = ()=>{
+    this.setState({
+      filtersMenuOpen: !this.state.filtersMenuOpen
+    });
+  };
+
+  toggleMoreMenu = ()=>{
+    this.setState({
+      moreMenuOpen: !this.state.moreMenuOpen
+    });
+  };
+
+  toggleAboutMenu = ()=>{
+    this.setState({
+      aboutMenuOpen: !this.state.aboutMenuOpen
+    });
+  };
+
   render(){
-    const { panel, pokemon, filters, options, showNav, searchedPokemon, checked, unChecked } = this.state;
+    const { panel, pokemon, filters, options, showNav, searchedPokemon, checked, unChecked, ArrowDown, ArrowRight, filtersMenuOpen, moreMenuOpen, aboutMenuOpen } = this.state;
 
     const Filters = this.getFilters();
 
@@ -438,38 +452,69 @@ export default class HomePage extends React.Component {
           title="PoGo Collector"
           items={[
             <div style={styles.menuStyle}>
-              <div style={{padding: 8}}>Filters:</div>
-              <div style={{display: "flex", flexWrap: "wrap"}}>
-                {Filters}
+
+              <div style={{padding: 8}} onClick={this.toggleFilterMenu}>
+                Filters
+                {(filtersMenuOpen) ? (ArrowDown) : (ArrowRight)}
               </div>
-              <div style={{padding: 8}}>More:</div>
-              <div style={styles.regularButtonStyle} onClick={this.toggleXButtons}>
-                {(options.showXButtons) ? (checked) : (unChecked)}
-                <span style={{paddingTop: 2}}>
-                  Show 'Remove Pokemon' Buttons
-                </span>
+
+              {(filtersMenuOpen) ? (
+                <div style={{display: "flex", flexWrap: "wrap"}}>
+                  {Filters}
+                </div>
+              ) : (null)}
+
+              <div style={{padding: 8, borderBottom: "1px solid", borderTop: "1px solid"}} onClick={this.toggleMoreMenu}>
+                More
+                {(moreMenuOpen) ? (ArrowDown) : (ArrowRight)}
               </div>
-              <div style={styles.regularButtonStyle} onClick={this.toggleAllPokemon}>
-                {(options.showAllPokemon) ? (checked) : (unChecked)}
-                <span style={{paddingTop: 2}}>
-                  Show Pokemon From Gen 3 Not In Game Yet
-                </span>
+
+              {(moreMenuOpen) ? (
+                <div style={{borderBottom: "1px solid"}}>
+                  <div style={styles.regularButtonStyle} onClick={this.toggleXButtons}>
+                    {(options.showXButtons) ? (checked) : (unChecked)}
+                    <span style={{paddingTop: 1}}>
+                      Show 'Remove Pokemon' Buttons
+                    </span>
+                  </div>
+                  <div style={styles.regularButtonStyle} onClick={this.toggleAllPokemon}>
+                    {(options.showAllPokemon) ? (checked) : (unChecked)}
+                    <span style={{paddingTop: 1}}>
+                      Show Pokemon From Gen 3 Not In Game Yet
+                    </span>
+                  </div>
+                  <div style={styles.regularButtonStyle} onClick={this.toggleAllShiny}>
+                    {(options.showAllShiny) ? (checked) : (unChecked)}
+                    <span style={{paddingTop: 1}}>
+                      Show Shiny Pokemon Not In Game Yet
+                    </span>
+                  </div>
+                  <div style={styles.redButtonStyle} onClick={()=>{
+                      this.setState({
+                        showNav: false
+                      }, ()=>{
+                        this.toPanel("removed");
+                      });
+                    }}>View Removed Pokemon</div>
+                    <div style={styles.redButtonStyle} onClick={this.clearAllRemovedPokemon}>Clear All Removed Pokemon</div>
+                    <div style={styles.redButtonStyle} onClick={this.clearAllSelectedPokemon}>Clear All Selected Pokemon</div>
+                </div>
+              ) : (null)}
+
+              <div style={{padding: 8}} onClick={this.toggleAboutMenu}>
+                About
+                {(aboutMenuOpen) ? (ArrowDown) : (ArrowRight)}
               </div>
-              <div style={styles.regularButtonStyle} onClick={this.toggleAllShiny}>
-                {(options.showAllShiny) ? (checked) : (unChecked)}
-                <span style={{paddingTop: 2}}>
-                  Show Shiny Pokemon Not In Game Yet
-                </span>
-              </div>
-              <div style={styles.redButtonStyle} onClick={()=>{
-                  this.setState({
-                    showNav: false
-                  }, ()=>{
-                    this.toPanel("removed");
-                  });
-                }}>View Removed Pokemon</div>
-              <div style={styles.redButtonStyle} onClick={this.clearAllRemovedPokemon}>Clear All Removed Pokemon</div>
-              <div style={styles.redButtonStyle} onClick={this.clearAllSelectedPokemon}>Clear All Selected Pokemon</div>
+
+              {(aboutMenuOpen) ? (
+                <div style={{padding: 8, lineHeight: 1.5}}>
+                  Pogo Collector is a tool for helping show friends what Pokemon you are looking for in Pokemon Go! This app remembers your Pokemon selections* and the filters you have active.
+                  <br/>
+                  <br/>
+                  *Unless you clear your browser's data / cache
+                </div>
+              ) : (null)}
+
             </div>
           ]}
           navStyle={styles.navStyle}
