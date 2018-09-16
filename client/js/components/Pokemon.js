@@ -63,15 +63,15 @@ export default class Pokemon extends React.Component {
     ) : (null);
 
     return (
-      <LazyLoad>
-        <div style={{position: 'relative'}}>
-          {fullyRemoveButton}
-          <div style={{...{margin: 8, borderRadius: 2, cursor: "pointer"}, ...selectedStyle}} onClick={()=>{onClick(pokemon);}}>
+      <div style={{position: 'relative'}}>
+        {fullyRemoveButton}
+        <div style={{...{margin: 8, borderRadius: 2, cursor: "pointer"}, ...selectedStyle}} onClick={()=>{onClick(pokemon);}}>
+          <LazyLoad>
             <img style={style} src={`/../images/pokemon_icons/${pokemon.image}`} alt={`pokemon ${pokemon.number}`}/>
-            {shiny}
-          </div>
+          </LazyLoad>
+          {shiny}
         </div>
-      </LazyLoad>
+      </div>
     );
   }
 }
