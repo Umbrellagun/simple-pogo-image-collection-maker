@@ -65,7 +65,7 @@ export default {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    fontSize: 16,
+    fontSize: 12,
   },
 
   containerStyle: {
