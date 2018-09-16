@@ -19,7 +19,7 @@ export default class HomePage extends React.Component {
 
   constructor(props){
     super(props);
-    this.currentVersion = 4;
+    this.currentVersion = 5;
     this.state = {
       pokemon: [],
       filters: {
@@ -82,8 +82,8 @@ export default class HomePage extends React.Component {
 
           this.setState({
             pokemon: updatedPokemon,
-            filters: (localStorage.filters) ? (JSON.parse(localStorage.filters)) : (this.state.filters),
-            options: (localStorage.options) ? (JSON.parse(localStorage.options)) : (this.state.options),
+            filters: (localStorage.filters) ? (JSON.parse(localStorage.filters)) : (this.state.filters), //not dynamically checking local storage versions
+            options: (localStorage.options) ? (JSON.parse(localStorage.options)) : (this.state.options), //not dynamically checking local storage versions
           }, this.syncLocalStorage);
 
         }).catch((error)=>{
