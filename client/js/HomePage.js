@@ -117,6 +117,8 @@ export default class HomePage extends React.Component {
     let stupidUl = document.getElementsByTagName("ul")[0];
     stupidUl.style.padding = 0;
     stupidUl.style.margin = 0;
+    stupidUl.style.overflow = "auto";
+    stupidUl.style.height = "100vh";
     stupidUl.style.listStyle = "none";
   };
 
