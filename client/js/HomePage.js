@@ -455,7 +455,7 @@ export default class HomePage extends React.Component {
           items={[
             <div style={styles.menuStyle}>
 
-              <div style={{padding: 8}} onClick={this.toggleFilterMenu}>
+              <div style={{padding: 8, fontSize: 16}} onClick={this.toggleFilterMenu}>
                 Filters
                 {(filtersMenuOpen) ? (ArrowDown) : (ArrowRight)}
               </div>
@@ -466,7 +466,7 @@ export default class HomePage extends React.Component {
                 </div>
               ) : (null)}
 
-              <div style={{padding: 8, borderBottom: "1px solid", borderTop: "1px solid"}} onClick={this.toggleMoreMenu}>
+              <div style={{padding: 8, borderBottom: "1px solid", borderTop: "1px solid", fontSize: 16}} onClick={this.toggleMoreMenu}>
                 More
                 {(moreMenuOpen) ? (ArrowDown) : (ArrowRight)}
               </div>
@@ -503,7 +503,7 @@ export default class HomePage extends React.Component {
                 </div>
               ) : (null)}
 
-              <div style={{padding: 8}} onClick={this.toggleAboutMenu}>
+              <div style={{padding: 8, fontSize: 16}} onClick={this.toggleAboutMenu}>
                 About
                 {(aboutMenuOpen) ? (ArrowDown) : (ArrowRight)}
               </div>
