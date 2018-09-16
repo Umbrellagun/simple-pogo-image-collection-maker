@@ -85,7 +85,7 @@ fs.readdir(path.join(__dirname, "client/images/pokemon_icons"), (err, files)=>{
       special,
       regular,
       gen,
-      additional_gender
+      additional_gender,
       shiny
     });
 
