@@ -408,7 +408,7 @@ export default class HomePage extends React.Component {
           items={[
             <div style={styles.menuStyle}>
               <div style={{padding: 8}}>Filters:</div>
-              <div style={{display: "flex", justifyContent: "center", flexWrap: "wrap"}}>
+              <div style={{display: "flex", flexWrap: "wrap"}}>
                 {Filters}
               </div>
               <div style={{padding: 8}}>More:</div>
