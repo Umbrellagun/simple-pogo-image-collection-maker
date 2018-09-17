@@ -238,7 +238,7 @@ export default class HomePage extends React.Component {
       }
 
       if (pokemon.number != searchedPokemonNumber){
-        stringCheck = false;
+        return;
       }
     }
 
