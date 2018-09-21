@@ -113,4 +113,40 @@ export default {
     width: "100%",
     outline: "none"
   },
+
+  imgStyle: {
+    width: 80,
+    height: 80,
+  },
+
+   xButton: {
+    color: "white",
+    backgroundColor: "red",
+    borderRadius: "50%",
+    width: 20,
+    height: 20,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    cursor: "pointer",
+    marginTop: 8,
+    position: "absolute"
+  },
+
+  shinyStyle: {
+    background: `url(../images/shiny.png) center center / contain no-repeat`,
+    width: 26,
+    height: 26,
+    position: "absolute",
+    bottom: 0,
+    right: 0
+  },
+
+  selected: {
+    background: `url("../images/selected.png")`,
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "contain",
+    backgroundPosition: "bottom",
+    borderBottom: "1px solid #f2f2f2",
+  },
 }

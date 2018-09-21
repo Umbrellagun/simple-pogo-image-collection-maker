@@ -5,7 +5,7 @@ import axios          from "axios";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckSquare, faAngleDown, faAngleRight } from '@fortawesome/free-solid-svg-icons';
-import { faSquare } from '@fortawesome/free-regular-svg-icons';
+import { faSquare }   from '@fortawesome/free-regular-svg-icons';
 
 import SideNav        from 'react-simple-sidenav';
 
@@ -122,95 +122,69 @@ export default class HomePage extends React.Component {
     stupidUl.style.listStyle = "none";
   };
 
-  clearAllSelectedPokemon = ()=>{
+  handlePokemonChange = (action, pokemon)=>{
     const newPokemon = JSON.parse(JSON.stringify(this.state.pokemon));
 
-    const newNewPokemon = newPokemon.map((pokemon)=>{
-      pokemon.selected = false;
-      return pokemon;
-    });
+    switch (action){
+      case "clearAllSelectedPokemon": {
+        newPokemon = this.clearAllSelectedPokemon(newPokemon);
+      }
+      case "clearAllRemovedPokemon": {
+        newPokemon = this.clearAllRemovedPokemon(newPokemon);
+      }
+      case "addRemovePokemon": {
+        newPokemon = this.addRemovePokemon(newPokemon, pokemon.id);
+      }
+      case "toggleFullyRemovePokemon": {
+        newPokemon = this.toggleFullyRemovePokemon(newPokemon, pokemon.id);
+      }
+
+    }
 
     this.setState({
       pokemon: newNewPokemon
-    });
-  };
-
-  clearAllRemovedPokemon = ()=>{
-    const newPokemon = JSON.parse(JSON.stringify(this.state.pokemon));
-
-    const newNewPokemon = newPokemon.map((pokemon)=>{
-      pokemon.removed = false;
-      return pokemon;
-    });
-
-    this.setState({
-      pokemon: newNewPokemon
-    });
-  };
-
-  addRemovePokemon = (pokemon)=>{
-    const newPokemon = JSON.parse(JSON.stringify(this.state.pokemon));
-
-    newPokemon[pokemon.id].selected = !newPokemon[pokemon.id].selected;
-
-    this.setState({
-      pokemon: newPokemon
     }, this.syncLocalStorage);
   };
 
-  toggleFullyRemovePokemon = (pokemon)=>{
-    const newPokemon = JSON.parse(JSON.stringify(this.state.pokemon));
+  clearAllSelectedPokemon = (pokemon)=>{
+    return pokemon.map((single_pokemon)=>{
+      single_pokemon.selected = false;
+      return single_pokemon;
+    });
+  };
 
-    newPokemon[pokemon.id].removed = !newPokemon[pokemon.id].removed;
+  clearAllRemovedPokemon = (pokemon)=>{
+    return pokemon.map((single_pokemon)=>{
+      single_pokemon.removed = false;
+      return single_pokemon;
+    });
+  };
 
-    this.setState({
-      pokemon: newPokemon
-    }, this.syncLocalStorage);
+  addRemovePokemon = (pokemon, pokemon_id)=>{
+    pokemon[pokemon_id].selected = !pokemon[pokemon_id].selected;
+    return pokemon;
+  };
+
+  toggleFullyRemovePokemon = (pokemon, pokemon_id)=>{
+    pokemon[pokemon_id].removed = !pokemon[pokemon_id].removed;
+    return pokemon;
   };
 
   renderPokemon = (pokemon, key)=>{
     const { filters, options, searchedPokemon } = this.state;
 
-    if (!filters.shiny){
-      if (pokemon.shiny){
-        return;
+    let dontRender = Object.keys(filters).some((filter, key)=>{
+      if (!filters[filter]){
+        if (filter[4] === pokemon.gen){
+          return true;
+        } else if (pokemon[filter]){
+          return true;
+        }
       }
-    }
+    });
 
-    if (!filters.special){
-      if (pokemon.special){
-        return;
-      }
-    }
-
-    if (!filters.regular){
-      if (pokemon.regular){
-        return;
-      }
-    }
-
-    if (!filters.additional_gender){
-      if (pokemon.additional_gender){
-        return;
-      }
-    }
-
-    if (!filters.gen_1){
-      if (pokemon.gen == 1){
-        return;
-      }
-    }
-
-    if (!filters.gen_2){
-      if (pokemon.gen == 2){
-        return;
-      }
-    }
-
-    if (!filters.gen_3){
-      if (pokemon.gen == 3){
-        return;
-      }
+    if (dontRender){
+      return;
     }
 
     if (!options.showAllShiny && pokemon.shiny){
@@ -247,8 +221,8 @@ export default class HomePage extends React.Component {
         <Pokemon
           key={key}
           pokemon={pokemon}
-          onClick={this.addRemovePokemon}
-          toggleFullyRemovePokemon={this.toggleFullyRemovePokemon}
+          onClick={(pokemon)=>{this.handlePokemonChange("addRemovePokemon", pokemon);}}
+          toggleFullyRemovePokemon={(pokemon)=>{this.handlePokemonChange("toggleFullyRemovePokemon");}}
           showFullyRemoveButton={(options.showXButtons) ? (true) : (false)}
         />
       );
@@ -262,8 +236,8 @@ export default class HomePage extends React.Component {
         <Pokemon
           key={key}
           pokemon={pokemon}
-          onClick={this.addRemovePokemon}
-          toggleFullyRemovePokemon={this.toggleFullyRemovePokemon}
+          onClick={(pokemon)=>{this.handlePokemonChange("addRemovePokemon");}}
+          toggleFullyRemovePokemon={(pokemon)=>{this.handlePokemonChange("toggleFullyRemovePokemon", pokemon);}}
           showFullyRemoveButton={true}
         />
       );
@@ -276,7 +250,7 @@ export default class HomePage extends React.Component {
         <Pokemon
           key={key}
           pokemon={pokemon}
-          onClick={this.addRemovePokemon}
+          onClick={(pokemon)=>{this.handlePokemonChange("addRemovePokemon", pokemon);}}
           selectedScreen={true}
         />
       );
@@ -289,33 +263,19 @@ export default class HomePage extends React.Component {
     });
   };
 
-  toggleFilter = (filter)=>{
+  toggleFilter = (toggled_filter)=>{
 
     const filters = Object.assign({}, this.state.filters);
     let state = {filters};
 
-    if (filter === "toggle_shiny"){
-      state.filters.shiny = !this.state.filters.shiny;
-      this.setState(state, this.syncLocalStorage);
-    } else if (filter === "toggle_special"){
-      state.filters.special = !this.state.filters.special;
-      this.setState(state, this.syncLocalStorage);
-    } else if (filter === "toggle_regular"){
-      state.filters.regular = !this.state.filters.regular;
-      this.setState(state, this.syncLocalStorage);
-    } else if (filter === "toggle_additional_gender"){
-      state.filters.additional_gender = !this.state.filters.additional_gender;
-      this.setState(state, this.syncLocalStorage);
-    } else if (filter === "toggle_gen_1"){
-      state.filters.gen_1 = !this.state.filters.gen_1;
-      this.setState(state, this.syncLocalStorage);
-    } else if (filter === "toggle_gen_2"){
-      state.filters.gen_2 = !this.state.filters.gen_2;
-      this.setState(state, this.syncLocalStorage);
-    } else if (filter === "toggle_gen_3"){
-      state.filters.gen_3 = !this.state.filters.gen_3;
-      this.setState(state, this.syncLocalStorage);
-    }
+    Object.keys(filters).some((filter)=>{
+      if (toggled_filter === filter){
+        state.filters[filter] = !state.filters[filter];
+        return true;
+      }
+    });
+
+    this.setState(state, this.syncLocalStorage);
 
   };
 
@@ -374,7 +334,7 @@ export default class HomePage extends React.Component {
       }
 
       return (
-        <div key={key} style={{...styles.filterStyle, ...additionalStyle}} onClick={()=>{this.toggleFilter(`toggle_${filter}`);}}>
+        <div key={key} style={{...styles.filterStyle, ...additionalStyle}} onClick={()=>{this.toggleFilter(filter);}}>
           {(filters[filter]) ? (checked) : (unChecked)}
           <div style={{paddingTop: 1}}>
             {filterName}
@@ -498,8 +458,8 @@ export default class HomePage extends React.Component {
                         this.toPanel("removed");
                       });
                     }}>View Removed Pokemon</div>
-                    <div style={styles.redButtonStyle} onClick={this.clearAllRemovedPokemon}>Clear All Removed Pokemon</div>
-                    <div style={styles.redButtonStyle} onClick={this.clearAllSelectedPokemon}>Clear All Selected Pokemon</div>
+                  <div style={styles.redButtonStyle} onClick={()=>{this.handlePokemonChange("clearAllRemovedPokemon");}}>Clear All Removed Pokemon</div>
+                    <div style={styles.redButtonStyle} onClick={()=>{this.handlePokemonChange("clearAllSelectedPokemon");}}>Clear All Selected Pokemon</div>
                 </div>
               ) : (null)}
 
