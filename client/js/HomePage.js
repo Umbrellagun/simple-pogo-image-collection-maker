@@ -19,7 +19,7 @@ export default class HomePage extends React.Component {
 
   constructor(props){
     super(props);
-    this.currentVersion = 5;
+    this.currentVersion = 6;
     this.state = {
       pokemon: [],
       filters: {
@@ -123,7 +123,7 @@ export default class HomePage extends React.Component {
   };
 
   handlePokemonChange = (action, pokemon)=>{
-    const newPokemon = JSON.parse(JSON.stringify(this.state.pokemon));
+    let newPokemon = JSON.parse(JSON.stringify(this.state.pokemon));
 
     switch (action){
       case "clearAllSelectedPokemon": {
@@ -138,7 +138,6 @@ export default class HomePage extends React.Component {
       case "toggleFullyRemovePokemon": {
         newPokemon = this.toggleFullyRemovePokemon(newPokemon, pokemon.id);
       }
-
     }
 
     this.setState({
