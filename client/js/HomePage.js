@@ -19,7 +19,7 @@ export default class HomePage extends React.Component {
 
   constructor(props){
     super(props);
-    this.currentVersion = 6;
+    this.currentVersion = 7;
     this.state = {
       pokemon: [],
       filters: {
@@ -30,6 +30,7 @@ export default class HomePage extends React.Component {
         gen_1: true,
         gen_2: true,
         gen_3: true,
+        gen_4: true,
       },
       panel: "selecting",
       options: {
@@ -41,6 +42,8 @@ export default class HomePage extends React.Component {
       filtersMenuOpen: true,
       moreMenuOpen: false,
       aboutMenuOpen: false,
+      featuresMenuOpen: false,
+      contactMenuOpen: false,
       checked: (
         <div style={{paddingRight: 8}}>
           <FontAwesomeIcon icon={faCheckSquare} />
@@ -68,22 +71,28 @@ export default class HomePage extends React.Component {
 
     if (localStorage.version){
       if (JSON.parse(localStorage.version) !== this.currentVersion){
+
         const hostname = window.location.hostname;
         const protocol = window.location.protocol;
 
-        const host = (hostname === "localhost") ? (`${protocol}//${hostname}:${process.env.PORT}/pokemon`) : (`${protocol}//${hostname}/pokemon`);
+        const host = (hostname === "localhost") ? (`${protocol}//${hostname}:${window.location.port}/pokemon`) : (`${protocol}//${hostname}/pokemon`);
 
         axios.get(host).then((response)=>{
+
           const oldPokemon = JSON.parse(localStorage.pokemon);
 
           const updatedPokemon = JSON.parse(response.data).map((pokemon, key)=>{
             return Object.assign({}, pokemon, oldPokemon[key]);
           });
 
+          const filters= Object.assign({}, this.state.filters, JSON.parse(localStorage.filters));
+
+          const options = Object.assign({}, this.state.options, JSON.parse(localStorage.options));
+
           this.setState({
             pokemon: updatedPokemon,
-            filters: (localStorage.filters) ? (JSON.parse(localStorage.filters)) : (this.state.filters), //not dynamically checking local storage versions
-            options: (localStorage.options) ? (JSON.parse(localStorage.options)) : (this.state.options), //not dynamically checking local storage versions
+            filters,
+            options
           }, this.syncLocalStorage);
 
         }).catch((error)=>{
@@ -101,7 +110,7 @@ export default class HomePage extends React.Component {
       const hostname = window.location.hostname;
       const protocol = window.location.protocol;
 
-      const host = (hostname === "localhost") ? (`${protocol}//${hostname}:${process.env.PORT}/pokemon`) : (`${protocol}//${hostname}/pokemon`);
+      const host = (hostname === "localhost") ? (`${protocol}//${hostname}:${window.location.port}/pokemon`) : (`${protocol}//${hostname}/pokemon`);
 
       axios.get(host).then((response)=>{
         this.setState({
@@ -128,20 +137,24 @@ export default class HomePage extends React.Component {
     switch (action){
       case "clearAllSelectedPokemon": {
         newPokemon = this.clearAllSelectedPokemon(newPokemon);
+        break;
       }
       case "clearAllRemovedPokemon": {
         newPokemon = this.clearAllRemovedPokemon(newPokemon);
+        break;
       }
       case "addRemovePokemon": {
         newPokemon = this.addRemovePokemon(newPokemon, pokemon.id);
+        break;
       }
       case "toggleFullyRemovePokemon": {
         newPokemon = this.toggleFullyRemovePokemon(newPokemon, pokemon.id);
+        break;
       }
     }
 
     this.setState({
-      pokemon: newNewPokemon
+      pokemon: newPokemon
     }, this.syncLocalStorage);
   };
 
@@ -173,12 +186,15 @@ export default class HomePage extends React.Component {
     const { filters, options, searchedPokemon } = this.state;
 
     let dontRender = Object.keys(filters).some((filter, key)=>{
-      if (!filters[filter]){
-        if (filter[4] === pokemon.gen){
+
+      if (!filters[filter]){//if filter is unchecked
+        if (filter[4] == pokemon.gen){
           return true;
         } else if (pokemon[filter]){
           return true;
         }
+      } else {
+        return false;
       }
     });
 
@@ -221,7 +237,7 @@ export default class HomePage extends React.Component {
           key={key}
           pokemon={pokemon}
           onClick={(pokemon)=>{this.handlePokemonChange("addRemovePokemon", pokemon);}}
-          toggleFullyRemovePokemon={(pokemon)=>{this.handlePokemonChange("toggleFullyRemovePokemon");}}
+          toggleFullyRemovePokemon={(pokemon)=>{this.handlePokemonChange("toggleFullyRemovePokemon", pokemon);}}
           showFullyRemoveButton={(options.showXButtons) ? (true) : (false)}
         />
       );
@@ -362,8 +378,20 @@ export default class HomePage extends React.Component {
     });
   };
 
+  toggleFeatureMenu = ()=>{
+    this.setState({
+      featuresMenuOpen: !this.state.featuresMenuOpen
+    });
+  };
+
+  toggleContactMenu = ()=>{
+    this.setState({
+      contactMenuOpen: !this.state.contactMenuOpen
+    });
+  };
+
   render(){
-    const { panel, pokemon, filters, options, showNav, searchedPokemon, checked, unChecked, ArrowDown, ArrowRight, filtersMenuOpen, moreMenuOpen, aboutMenuOpen } = this.state;
+    const { panel, pokemon, filters, options, showNav, searchedPokemon, checked, unChecked, ArrowDown, ArrowRight, filtersMenuOpen, moreMenuOpen, aboutMenuOpen, contactMenuOpen, featuresMenuOpen } = this.state;
 
     const Filters = this.getFilters();
 
@@ -441,7 +469,7 @@ export default class HomePage extends React.Component {
                   <div style={styles.regularButtonStyle} onClick={this.toggleAllPokemon}>
                     {(options.showAllPokemon) ? (checked) : (unChecked)}
                     <span style={{paddingTop: 1}}>
-                      Show Pokemon From Gen 3 Not In Game Yet
+                      Show Pokemon Not In Game Yet
                     </span>
                   </div>
                   <div style={styles.regularButtonStyle} onClick={this.toggleAllShiny}>
@@ -458,11 +486,11 @@ export default class HomePage extends React.Component {
                       });
                     }}>View Removed Pokemon</div>
                   <div style={styles.redButtonStyle} onClick={()=>{this.handlePokemonChange("clearAllRemovedPokemon");}}>Clear All Removed Pokemon</div>
-                    <div style={styles.redButtonStyle} onClick={()=>{this.handlePokemonChange("clearAllSelectedPokemon");}}>Clear All Selected Pokemon</div>
+                  <div style={styles.redButtonStyle} onClick={()=>{this.handlePokemonChange("clearAllSelectedPokemon");}}>Clear All Selected Pokemon</div>
                 </div>
               ) : (null)}
 
-              <div style={{padding: 8, fontSize: 16}} onClick={this.toggleAboutMenu}>
+              <div style={{padding: 8, fontSize: 16, borderBottom: (aboutMenuOpen) ? ("1px solid") : ("0px")}} onClick={this.toggleAboutMenu}>
                 About
                 {(aboutMenuOpen) ? (ArrowDown) : (ArrowRight)}
               </div>
@@ -476,6 +504,32 @@ export default class HomePage extends React.Component {
                 </div>
               ) : (null)}
 
+              <div style={{padding: 8, borderBottom: "1px solid", borderTop: "1px solid", fontSize: 16}} onClick={this.toggleFeatureMenu}>
+                Upcoming Features
+                {(featuresMenuOpen) ? (ArrowDown) : (ArrowRight)}
+              </div>
+
+              {(featuresMenuOpen) ? (
+                <div style={{padding: 8, lineHeight: 1.5}}>
+                  - The ability to save specific collections and name them, not just one default collection.
+                  <br/>
+                  <br/>
+                  - The ability to share collections via a url, not just by taking a screenshot of the collection or showing the collection to someone in person.
+                  <br/>
+                </div>
+              ) : (null)}
+
+              <div style={{padding: 8, fontSize: 16, borderTop: (featuresMenuOpen) ? ("1px solid") : ("0px"), borderBottom: (contactMenuOpen) ? ("1px solid") : ("0px")}} onClick={this.toggleContactMenu}>
+                Contact
+                {(contactMenuOpen) ? (ArrowDown) : (ArrowRight)}
+              </div>
+
+              {(contactMenuOpen) ? (
+                <div style={{padding: 8, lineHeight: 1.5}}>
+                  If you notice anything off, mistakes, bugs, or have suggestions for features, feel free to contact me at calebsundance3@gmail.com
+                </div>
+              ) : (null)}
+
             </div>
           ]}
           navStyle={styles.navStyle}
@@ -484,13 +538,16 @@ export default class HomePage extends React.Component {
           itemHoverStyle={styles.navItemHoverStyle}
         />
 
-      <div style={styles.header}>
+        <div style={styles.header}>
+
           <div style={{fontSize: 21, marginTop: 16}}>
             PoGo Collector
           </div>
+
           <div style={{marginTop: 8}}>
             {message}
           </div>
+
           <div style={{display: "flex", width: "100%"}}>
             <label for="searchedPokemon" style={{display: "none"}}>Search by Pokemon #</label>
             <input
@@ -502,15 +559,19 @@ export default class HomePage extends React.Component {
               type="text"
               value={searchedPokemon}
               onChange={this.onChange}
-              />
+            />
+
             <div style={styles.buttonsStyle}>
               {navigationButton}
             </div>
+
           </div>
         </div>
+
         <div style={styles.style}>
           {shownPokemon}
         </div>
+
       </div>
     );
   }

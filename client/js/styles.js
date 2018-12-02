@@ -89,12 +89,15 @@ export default {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    lineHeight: "56px"
+    lineHeight: "56px",
+    position: "absolute",
+    width: "90%"
   },
 
   navItemStyle: {
     backgroundColor: '#fff',
     padding: 16,
+    marginTop: 88
   },
 
   navItemHoverStyle: {
@@ -147,6 +150,6 @@ export default {
     backgroundRepeat: "no-repeat",
     backgroundSize: "contain",
     backgroundPosition: "bottom",
-    borderBottom: "1px solid #f2f2f2",
+    borderBottom: "2px solid #aacee2",
   },
 }

@@ -76,6 +76,14 @@ fs.readdir(path.join(__dirname, "client/images/pokemon_icons"), (err, files)=>{
       gen = 2;
     } else if (splitFileName[2] <= 386){
       gen = 3;
+    } else if (splitFileName[2] <= 493){
+      gen = 4;
+    } else if (splitFileName[2] <= 649){
+      gen = 5;
+    } else if (splitFileName[2] <= 721){
+      gen = 6;
+    } else if (splitFileName[2] <= 809){
+      gen = 7;
     }
 
     json.push({

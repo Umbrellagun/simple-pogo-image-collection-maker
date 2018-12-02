@@ -16,10 +16,12 @@ export default class Pokemon extends React.Component {
   render(){
     const { pokemon, onClick, toggleFullyRemovePokemon, showFullyRemoveButton, selectedScreen } = this.props;
 
-    const selectedStyle = (pokemon.selected) ? (selected) : ({});
+    const selectedStyle = (pokemon.selected) ? (styles.selected) : ({});
 
     const fullyRemoveButton = (showFullyRemoveButton) ? (
-      <div style={styles.xButton} onClick={()=>{toggleFullyRemovePokemon(pokemon);}}>X</div>
+      <div style={styles.xButton} onClick={()=>{
+        toggleFullyRemovePokemon(pokemon);
+      }}>X</div>
     ) : (null);
 
     const shiny = (pokemon.shiny) ? (
@@ -29,7 +31,7 @@ export default class Pokemon extends React.Component {
     return (
       <div style={{position: 'relative'}}>
         {fullyRemoveButton}
-        <div style={{...{margin: 8, borderRadius: 2, cursor: "pointer"}, ...styles.selectedStyle}} onClick={()=>{onClick(pokemon);}}>
+        <div style={{...{margin: 8, borderRadius: 6, cursor: "pointer"}, ...selectedStyle}} onClick={()=>{onClick(pokemon);}}>
           <LazyLoad offset={600}>
             <img style={styles.imgStyle} src={`/../images/pokemon_icons/${pokemon.image}`} alt={`pokemon ${pokemon.number}`}/>
           </LazyLoad>
