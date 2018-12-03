@@ -46,6 +46,32 @@ fs.readdir(path.join(__dirname, "client/images/pokemon_icons"), (err, files)=>{
   }
 
   files.forEach((file, index)=>{
+    // console.log(file);
+
+    const weirdPokemonImg = [
+      "pokemon_icon_026_61_01.png",
+      "pokemon_icon_026_61_02.png",
+      "pokemon_icon_026_61_02_shiny.png",
+      "pokemon_icon_026_61_03.png",
+      "pokemon_icon_026_61_03_shiny.png",
+      "pokemon_icon_026_61_04.png",
+      "pokemon_icon_026_61_04_shiny.png",
+      "pokemon_icon_026_61_05.png",
+      "pokemon_icon_026_61_05_shiny.png",
+      "pokemon_icon_026_61_shiny.png",
+      "pokemon_icon_386_12.png",
+      "pokemon_icon_386_12_shiny.png",
+      "pokemon_icon_386_13.png",
+      "pokemon_icon_386_13_shiny.png",
+      "pokemon_icon_386_14.png",
+      "pokemon_icon_386_14_shiny.png",
+      "pokemon_icon_487_12.png",
+      "pokemon_icon_487_12_shiny.png",
+    ];
+
+    if (weirdPokemonImg.some((pokemonFileName)=>{return pokemonFileName == file;})){
+      return;
+    }
 
     const splitFileName = file.split("_");
 

@@ -19,7 +19,7 @@ export default class HomePage extends React.Component {
 
   constructor(props){
     super(props);
-    this.currentVersion = 7;
+    this.currentVersion = 9;
     this.state = {
       pokemon: [],
       filters: {
@@ -516,6 +516,11 @@ export default class HomePage extends React.Component {
                   <br/>
                   - The ability to share collections via a url, not just by taking a screenshot of the collection or showing the collection to someone in person.
                   <br/>
+                  <br/>
+                  - The ability to search by pokemon's name
+                  <br/>
+                  <br/>
+                  - Better gender sorting
                 </div>
               ) : (null)}
 
@@ -526,7 +531,7 @@ export default class HomePage extends React.Component {
 
               {(contactMenuOpen) ? (
                 <div style={{padding: 8, lineHeight: 1.5}}>
-                  If you notice anything off, mistakes, bugs, or have suggestions for features, feel free to contact me at calebsundance3@gmail.com
+                  If you notice anything off, mistakes, bugs, or have suggestions for features (please take a look at the upcoming features list first), feel free to contact me at calebsundance3@gmail.com
                 </div>
               ) : (null)}
 
