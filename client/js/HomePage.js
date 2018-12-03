@@ -19,7 +19,7 @@ export default class HomePage extends React.Component {
 
   constructor(props){
     super(props);
-    this.currentVersion = 9;
+    this.currentVersion = 11;
     this.state = {
       pokemon: [],
       filters: {
@@ -229,6 +229,31 @@ export default class HomePage extends React.Component {
       if (pokemon.number != searchedPokemonNumber){
         return;
       }
+    }
+
+    const weirdPokemonImageNames = [
+      "pokemon_icon_026_61_01.png",
+      "pokemon_icon_026_61_02.png",
+      "pokemon_icon_026_61_02_shiny.png",
+      "pokemon_icon_026_61_03.png",
+      "pokemon_icon_026_61_03_shiny.png",
+      "pokemon_icon_026_61_04.png",
+      "pokemon_icon_026_61_04_shiny.png",
+      "pokemon_icon_026_61_05.png",
+      "pokemon_icon_026_61_05_shiny.png",
+      "pokemon_icon_026_61_shiny.png",
+      "pokemon_icon_386_12.png",
+      "pokemon_icon_386_12_shiny.png",
+      "pokemon_icon_386_13.png",
+      "pokemon_icon_386_13_shiny.png",
+      "pokemon_icon_386_14.png",
+      "pokemon_icon_386_14_shiny.png",
+      "pokemon_icon_487_12.png",
+      "pokemon_icon_487_12_shiny.png",
+    ];
+
+    if (weirdPokemonImageNames.some((imageName)=>{return imageName == pokemon.image;})){
+      return;
     }
 
     if (!pokemon.removed){
