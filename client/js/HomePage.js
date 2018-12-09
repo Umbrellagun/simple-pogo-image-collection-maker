@@ -2,6 +2,7 @@ import React          from "react";
 import PropTypes      from "prop-types";
 
 import axios          from "axios";
+import queryString    from "query-string";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckSquare, faAngleDown, faAngleRight } from '@fortawesome/free-solid-svg-icons';
@@ -22,6 +23,13 @@ export default class HomePage extends React.Component {
     this.currentVersion = 11;
     this.state = {
       pokemon: [],
+      collections: {
+        default: {
+          name: "My Collection",
+          pokemon_ids: {}
+        }
+      },
+      current_collection: "default",
       filters: {
         shiny: true,
         special: true,
@@ -66,6 +74,10 @@ export default class HomePage extends React.Component {
       )
     };
   }
+
+  static contextTypes = {
+    router: PropTypes.object.isRequired
+  };
 
   componentWillMount = ()=>{
 
@@ -129,6 +141,19 @@ export default class HomePage extends React.Component {
     stupidUl.style.overflow = "auto";
     stupidUl.style.height = "100vh";
     stupidUl.style.listStyle = "none";
+
+    const query = queryString.parse(this.props.location.search);
+    if (query.collection_name){
+      const current_pokemon = query.pokemon.split(",");
+      this.setState({
+        panel: "shared_collection",
+        current_pokemon,
+        shared_collection: {
+          name: query.collection_name,
+          pokemon: current_pokemon
+        }
+      })
+    }
   };
 
   handlePokemonChange = (action, pokemon)=>{
@@ -175,6 +200,10 @@ export default class HomePage extends React.Component {
   addRemovePokemon = (pokemon, pokemon_id)=>{
     pokemon[pokemon_id].selected = !pokemon[pokemon_id].selected;
     return pokemon;
+  };
+
+  getSharingUrl = ()=>{
+
   };
 
   toggleFullyRemovePokemon = (pokemon, pokemon_id)=>{
@@ -416,28 +445,47 @@ export default class HomePage extends React.Component {
   };
 
   render(){
-    const { panel, pokemon, filters, options, showNav, searchedPokemon, checked, unChecked, ArrowDown, ArrowRight, filtersMenuOpen, moreMenuOpen, aboutMenuOpen, contactMenuOpen, featuresMenuOpen } = this.state;
+    const { panel, pokemon, filters, options, showNav, searchedPokemon, checked, unChecked, ArrowDown, ArrowRight, filtersMenuOpen, moreMenuOpen, aboutMenuOpen, contactMenuOpen, featuresMenuOpen, collections, current_collection } = this.state;
 
     const Filters = this.getFilters();
 
     let message;
+    let searchbar;
     let shownPokemon;
     let navigationButton;
-    if (panel === "done"){
-      message = "These are your selected Pokemon";
-      shownPokemon = pokemon.map(this.renderSelectedPokemon);
+    if (panel === "removed"){
+      message = <span style={{color: "red"}}>Removed Pokemon</span>;
+      shownPokemon = pokemon.map(this.renderFullyRemovedPokemon);
       navigationButton = (
         <div style={styles.buttonStyle} onClick={()=>{this.toPanel("selecting");}}>Back</div>
       );
     } else if (panel === "selecting"){
-      message = "Select the Pokemon you would like";
+      message = `Selecting for ${collections[current_collection].name}`;
       shownPokemon = pokemon.map(this.renderPokemon);
       navigationButton = (
         <div style={styles.buttonStyle} onClick={()=>{this.toPanel("done");}}>Done Selecting</div>
       );
-    } else if (panel === "removed"){
-      message = <span style={{color: "red"}}>Removed Pokemon</span>;
-      shownPokemon = pokemon.map(this.renderFullyRemovedPokemon);
+      searchbar = (
+        <input
+          placeholder="Search by Pokemon #"
+          style={styles.inputStyle}
+          name="searchedPokemon"
+          ref="searchedPokemon"
+          id="searchedPokemon"
+          type="text"
+          value={searchedPokemon}
+          onChange={this.onChange}
+        />
+      );
+    } else if (panel === "shared_collection"){
+      message = shared_collection.name;
+      shownPokemon = pokemon.map(this.renderSelectedPokemon);
+      navigationButton = (
+        <div style={styles.buttonStyle} onClick={()=>{this.toPanel("selecting");}}>Back</div>
+      );
+    } else {
+      message = collections[current_collection].name;
+      shownPokemon = pokemon.map(this.renderSelectedPokemon);
       navigationButton = (
         <div style={styles.buttonStyle} onClick={()=>{this.toPanel("selecting");}}>Back</div>
       );
@@ -580,16 +628,7 @@ export default class HomePage extends React.Component {
 
           <div style={{display: "flex", width: "100%"}}>
             <label for="searchedPokemon" style={{display: "none"}}>Search by Pokemon #</label>
-            <input
-              placeholder="Search by Pokemon #"
-              style={styles.inputStyle}
-              name="searchedPokemon"
-              ref="searchedPokemon"
-              id="searchedPokemon"
-              type="text"
-              value={searchedPokemon}
-              onChange={this.onChange}
-            />
+            {searchbar}
 
             <div style={styles.buttonsStyle}>
               {navigationButton}

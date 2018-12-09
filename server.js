@@ -45,7 +45,7 @@ fs.readdir(path.join(__dirname, "client/images/pokemon_icons"), (err, files)=>{
     process.exit(1);
   }
 
-  files.forEach((file, index)=>{
+  files.forEach((file)=>{
 
     const splitFileName = file.split("_");
 
@@ -86,9 +86,17 @@ fs.readdir(path.join(__dirname, "client/images/pokemon_icons"), (err, files)=>{
       gen = 7;
     }
 
+    const id = splitFileName.map((fragment, key)=>{
+      if (key === (splitFileName.length - 1)){
+        return fragment.split('.')[0];
+      } else if (key !== 0 && key !== 1){
+        return fragment;
+      }
+    }).filter((f)=>{return f;}).join("_");
+
     json.push({
       image: file,
-      id: index,
+      id,
       number: splitFileName[2],
       special,
       regular,
