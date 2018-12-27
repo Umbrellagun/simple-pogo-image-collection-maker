@@ -22,12 +22,14 @@
     <title>PoGo Collector</title>
 
     <style>
+    
       body {
         background: url("/bg_image.png");
         background-repeat: no-repeat;
         background-size: cover;
         margin: 0px;
       }
+
       .selected {
         background: url(<%= htmlWebpackPlugin.options.selected %>);
         background-repeat: no-repeat;
@@ -35,6 +37,20 @@
         background-position: bottom;
         border-bottom: 1px solid #f2f2f2;
       }
+
+      .dropdown {
+        display: inline-block;
+      }
+
+      .dropdown__content {
+        display: none;
+        position: absolute;
+      }
+
+      .dropdown--active .dropdown__content {
+        display: block;
+      }
+
     </style>
   </head>
 

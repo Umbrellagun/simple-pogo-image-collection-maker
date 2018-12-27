@@ -27,6 +27,10 @@ export default class HomePage extends React.Component {
         default: {
           name: "My Collection",
           pokemon_ids: {}
+        },
+        extra: {
+          name: "My Other Collection",
+          pokemon_ids: {}
         }
       },
       current_collection: "default",
@@ -52,6 +56,7 @@ export default class HomePage extends React.Component {
       aboutMenuOpen: false,
       featuresMenuOpen: false,
       contactMenuOpen: false,
+      dropdownOpen: false,
       checked: (
         <div style={{paddingRight: 8}}>
           <FontAwesomeIcon icon={faCheckSquare} />
@@ -444,26 +449,70 @@ export default class HomePage extends React.Component {
     });
   };
 
+  dropdownSelect = (e)=>{
+    console.log(e);
+  };
+
+  dropdownToggle = ()=>{
+    this.setState({
+      dropdownOpen: !this.state.dropdownOpen
+    });
+  }
+
   render(){
-    const { panel, pokemon, filters, options, showNav, searchedPokemon, checked, unChecked, ArrowDown, ArrowRight, filtersMenuOpen, moreMenuOpen, aboutMenuOpen, contactMenuOpen, featuresMenuOpen, collections, current_collection } = this.state;
+    const { panel, pokemon, filters, options, showNav, searchedPokemon, checked, unChecked, ArrowDown, ArrowRight, filtersMenuOpen, moreMenuOpen, aboutMenuOpen, contactMenuOpen, featuresMenuOpen, collections, current_collection, dropdownOpen } = this.state;
 
     const Filters = this.getFilters();
 
-    let message;
+    let DropdownMenu;
     let searchbar;
     let shownPokemon;
     let navigationButton;
     if (panel === "removed"){
-      message = <span style={{color: "red"}}>Removed Pokemon</span>;
+      DropdownMenu = <span style={{color: "red"}}>Removed Pokemon</span>;
       shownPokemon = pokemon.map(this.renderFullyRemovedPokemon);
       navigationButton = (
         <div style={styles.buttonStyle} onClick={()=>{this.toPanel("selecting");}}>Back</div>
       );
     } else if (panel === "selecting"){
-      message = `Selecting for ${collections[current_collection].name}`;
+      DropdownMenu = (
+        <div>
+          <span>Selecting for </span>
+          <span onClick={this.dropdownToggle}>
+            <span style={styles.dropdownTriggerStyle}>
+              <span>
+                {(editingName) ? (
+                  <input 
+                    name='collection-name'
+                    onChange={this.collectionNameChange} value={collections[current_collection].name}
+                  />
+                ) : (
+                  collections[current_collection].name
+                )}
+              </span>
+              {(dropdownOpen) ? (ArrowDown) : (ArrowRight)}
+              {(dropdownOpen) ? (
+                <div style={styles.dropdownMenuStyle}>
+                  {Object.keys(collections).map((key)=>{
+                    return (
+                      <div onClick={()=>{
+                        this.setState({
+                          current_collection: key,
+                          dropdownOpen: false
+                        })
+                      }}>{collections[key].name}</div>
+                    );
+                  })}
+                </div>
+              ) : (null)}
+            </span>
+          </span>
+
+        </div>
+      );
       shownPokemon = pokemon.map(this.renderPokemon);
       navigationButton = (
-        <div style={styles.buttonStyle} onClick={()=>{this.toPanel("done");}}>Done Selecting</div>
+        <div style={styles.buttonStyle} onClick={()=>{this.toPanel("done");}}>View Selected</div>
       );
       searchbar = (
         <input
@@ -478,13 +527,13 @@ export default class HomePage extends React.Component {
         />
       );
     } else if (panel === "shared_collection"){
-      message = shared_collection.name;
+      DropdownMenu = shared_collection.name;
       shownPokemon = pokemon.map(this.renderSelectedPokemon);
       navigationButton = (
         <div style={styles.buttonStyle} onClick={()=>{this.toPanel("selecting");}}>Back</div>
       );
     } else {
-      message = collections[current_collection].name;
+      DropdownMenu = collections[current_collection].name;
       shownPokemon = pokemon.map(this.renderSelectedPokemon);
       navigationButton = (
         <div style={styles.buttonStyle} onClick={()=>{this.toPanel("selecting");}}>Back</div>
@@ -623,7 +672,7 @@ export default class HomePage extends React.Component {
           </div>
 
           <div style={{marginTop: 8}}>
-            {message}
+            {DropdownMenu}
           </div>
 
           <div style={{display: "flex", width: "100%"}}>

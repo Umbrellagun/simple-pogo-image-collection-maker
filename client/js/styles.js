@@ -152,4 +152,14 @@ export default {
     backgroundPosition: "bottom",
     borderBottom: "2px solid #aacee2",
   },
+
+  dropdownTriggerStyle: {
+    position: "relative"
+  },
+
+  dropdownMenuStyle: {
+    backgroundColor: 'white',
+    position: "absolute",
+    right: 0
+  },
 }

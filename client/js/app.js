@@ -34,5 +34,6 @@ ReactDOM.render(
   </Router>, $container);
 
 if (process.env.NODE_ENV != "production"){
+  console.log("good?");
   module.hot.accept();
 }
