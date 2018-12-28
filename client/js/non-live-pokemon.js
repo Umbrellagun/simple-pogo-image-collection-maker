@@ -23,8 +23,6 @@ export default [
   "431",//Glameow
   "432",//Purugly
   "433",//Chingling
-  "436",//Bronzor
-  "437",//Bronzong
   "438",//Bonsly
   "439",//Mime Jr.
   "440",//Happiny
@@ -34,15 +32,7 @@ export default [
   "446",//Munchlax
   "449",//Hippopotas
   "450",//Hippowdon
-  "451",//Skorupi
-  "452",//Drapion
-  "453",//Croagunk
-  "454",//Toxicroak
-  "456",//Finneon
-  "457",//Lumineon
   "458",//Mantyke
-  "459",//Snover
-  "460",//Abomasnow
   "462",//Magnezone
   "463",//Lickilicky
   "465",//Tangrowth

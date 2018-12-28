@@ -242,8 +242,6 @@ export default class HomePage extends React.Component {
       "pokemon_icon_026_61_05.png",
       "pokemon_icon_026_61_05_shiny.png",
       "pokemon_icon_026_61_shiny.png",
-      "pokemon_icon_386_12.png",
-      "pokemon_icon_386_12_shiny.png",
       "pokemon_icon_386_13.png",
       "pokemon_icon_386_13_shiny.png",
       "pokemon_icon_386_14.png",
