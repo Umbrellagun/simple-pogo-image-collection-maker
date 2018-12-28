@@ -70,6 +70,8 @@ export default [
   "179",//Mareep
   "180",//Flaaffy
   "181",//Ampharos
+  "183",//Azurill
+  "184",//Azumarill
   "191",//Sunkern
   "192",//Sunflora
   "196",//Espeon
@@ -80,6 +82,7 @@ export default [
   "205",//Forretress
   "209",//Snubbull
   "210",//Granbull
+  "225",//Delibird
   "228",//Houndour
   "229",//Houndoom
   "239",//Elekid
@@ -95,6 +98,7 @@ export default [
   "279",//Pelipper
   "296",//Makuhita
   "297",//Hariyama
+  "298",//Azurill
   "302",//Sableye
   "303",//Mawile
   "304",//Aron
