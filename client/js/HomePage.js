@@ -19,7 +19,7 @@ export default class HomePage extends React.Component {
 
   constructor(props){
     super(props);
-    this.currentVersion = 13;
+    this.currentVersion = 18;
     this.state = {
       pokemon: [],
       filters: {
@@ -82,7 +82,15 @@ export default class HomePage extends React.Component {
           const oldPokemon = JSON.parse(localStorage.pokemon);
 
           const updatedPokemon = JSON.parse(response.data).map((pokemon, key)=>{
-            return Object.assign({}, pokemon, oldPokemon[key]);
+            if (pokemon.number === "453"){
+              if (pokemon.shiny){
+                return Object.assign({}, pokemon, oldPokemon[key], {image: "pokemon_icon_453_00_shiny.png", id: "453_00", additional_gender: false});
+              } else {
+                return Object.assign({}, pokemon, oldPokemon[key], {image: "pokemon_icon_453_00.png", id: "453_00_shiny", additional_gender: false});
+              }
+            } else {
+              return Object.assign({}, pokemon, oldPokemon[key]);
+            }
           });
 
           const filters= Object.assign({}, this.state.filters, JSON.parse(localStorage.filters));
