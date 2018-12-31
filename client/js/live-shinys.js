@@ -23,6 +23,8 @@ export default [
   "076",//Golem
   "077",//Ponyta
   "078",//Rapidash
+  "081",//Magnemite
+  "082",//Magneton
   "088",//Grimer
   "089",//Muk
   "090",//Shellder

@@ -23,7 +23,7 @@ export default class HomePage extends React.Component {
 
   constructor(props){
     super(props);
-    this.currentVersion = 19;
+    this.currentVersion = 23;
     this.state = {
       pokemon: [],
       collections: {
@@ -106,12 +106,12 @@ export default class HomePage extends React.Component {
           const updatedPokemon = JSON.parse(response.data).map((pokemon, key)=>{
             if (pokemon.number === "453"){
               if (pokemon.shiny){
-                return Object.assign({}, pokemon, oldPokemon[key], {image: "pokemon_icon_453_00_shiny.png", id: "453_00", additional_gender: false});
+                return Object.assign({}, pokemon, {image: "pokemon_icon_453_00_shiny.png", id: "453_00", additional_gender: false});
               } else {
-                return Object.assign({}, pokemon, oldPokemon[key], {image: "pokemon_icon_453_00.png", id: "453_00_shiny", additional_gender: false});
+                return Object.assign({}, pokemon, {image: "pokemon_icon_453_00.png", id: "453_00_shiny", additional_gender: false});
               }
             } else {
-              return Object.assign({}, pokemon, oldPokemon[key]);
+              return pokemon;
             }
           });
 
@@ -119,11 +119,16 @@ export default class HomePage extends React.Component {
 
           const options = Object.assign({}, this.state.options, JSON.parse(localStorage.getItem("options")));
 
-          const collections = Object.assign({}, this.state.collections, JSON.parse(localStorage.getItem("collections")));
-
           const removed_pokemon = JSON.parse(localStorage.getItem("removed_pokemon")) || {};
 
-          const current_collection =  JSON.parse(localStorage.getItem("current_collection")) || "default";
+          let current_collection =  JSON.parse(localStorage.getItem("current_collection")) || "default";
+
+          let collections = Object.assign({}, this.state.collections, JSON.parse(localStorage.getItem("collections")));
+
+          if (JSON.parse(localStorage.version) < 23 ){
+            collections = this.state.collections;
+            current_collection = "default";
+          }
 
           this.setState({
             pokemon: updatedPokemon,
@@ -342,7 +347,7 @@ export default class HomePage extends React.Component {
         <Pokemon
           key={key}
           pokemon={pokemon}
-          selected={collections[current_collection].pokemon_ids[pokemon.id]}
+          selected={(collections[current_collection]) ? (collections[current_collection].pokemon_ids[pokemon.id]) : (false)}
           onClick={(pokemon)=>{this.handlePokemonChange("addRemovePokemon", pokemon);}}
           toggleFullyRemovePokemon={(pokemon)=>{this.handlePokemonChange("toggleFullyRemovePokemon", pokemon);}}
           showFullyRemoveButton={(options.showXButtons) ? (true) : (false)}
@@ -360,7 +365,7 @@ export default class HomePage extends React.Component {
         <Pokemon
           key={key}
           pokemon={pokemon}
-          selected={collections[current_collection].pokemon_ids[pokemon.id]}
+          selected={(collections[current_collection]) ? (collections[current_collection].pokemon_ids[pokemon.id]) : (false)}
           onClick={(pokemon)=>{this.handlePokemonChange("addRemovePokemon");}}
           toggleFullyRemovePokemon={(pokemon)=>{this.handlePokemonChange("toggleFullyRemovePokemon", pokemon);}}
           showFullyRemoveButton={true}
@@ -372,17 +377,21 @@ export default class HomePage extends React.Component {
   renderSelectedPokemon = (pokemon, key)=>{
      const { collections, current_collection } = this.state;
 
-    if (collections[current_collection].pokemon_ids[pokemon.id]){
-      return (
-        <Pokemon
-          key={key}
-          pokemon={pokemon}
-          selected={collections[current_collection].pokemon_ids[pokemon.id]}
-          onClick={(pokemon)=>{this.handlePokemonChange("addRemovePokemon", pokemon);}}
-          selectedScreen={true}
-        />
-      );
-    }
+     const collection = collections[current_collection];
+
+     if (collection){
+       if (collection.pokemon_ids[pokemon.id]){
+         return (
+           <Pokemon
+             key={key}
+             pokemon={pokemon}
+             selected={collection.pokemon_ids[pokemon.id]}
+             onClick={(pokemon)=>{this.handlePokemonChange("addRemovePokemon", pokemon);}}
+             selectedScreen={true}
+            />
+         );
+       }
+     }
   }
 
   renderSharedPokemon = (pokemon, key)=>{
@@ -426,7 +435,6 @@ export default class HomePage extends React.Component {
   syncLocalStorage = ()=>{
     const { pokemon, filters, options, collections, current_collection, removed_pokemon } = this.state;
 
-    // localStorage.pokemon = JSON.stringify(pokemon);
     localStorage.filters = JSON.stringify(filters);
     localStorage.options = JSON.stringify(options);
     localStorage.removed_pokemon = JSON.stringify(removed_pokemon);
@@ -573,11 +581,7 @@ export default class HomePage extends React.Component {
       <Modal
         isOpen={deleteCollectionModal}
         closeTimeoutMS={150}
-        onRequestClose={()=>{
-          this.setState({
-            deleteCollectionModal: false
-          });
-        }}
+        onRequestClose={this.closeModal}
       >
         <div>
           {(deleted) ? (
@@ -585,12 +589,7 @@ export default class HomePage extends React.Component {
           ) : (
             <div>
               <div style={styles.closeX}>
-                <FontAwesomeIcon onClick={()=>{
-                  this.setState({
-                    deleteCollectionModal: false,
-                    deleted: false,
-                  });
-                }} icon={faTimes} />
+                <FontAwesomeIcon onClick={this.closeModal} icon={faTimes} />
               </div>
               <div style={{marginTop: 16, textAlign: "center"}}>Are you sure you want to delete the {(collections[focused_collection]) ? (collections[focused_collection].name) : (null)} collection?</div>
               <div className="shadow" style={{...styles.buttonStyle, marginTop: 16, marginBottom: 16, backgroundColor: "red", fontWeight: 600, fontSize: 16}} onClick={this.deleteCollection}>DELETE</div>
@@ -599,6 +598,15 @@ export default class HomePage extends React.Component {
         </div>
       </Modal>
     );
+  };
+
+  closeModal = ()=>{
+    this.setState({
+      copied: false,
+      deleted: false,
+      shareCollectionModal: false,
+      deleteCollectionModal: false,
+    });
   };
 
   getShareCollectionModal = ()=>{
@@ -613,21 +621,11 @@ export default class HomePage extends React.Component {
       <Modal
         isOpen={shareCollectionModal}
         closeTimeoutMS={150}
-        onRequestClose={()=>{
-          this.setState({
-            shareCollectionModal: false,
-            copied: false,
-          });
-        }}
+        onRequestClose={this.closeModal}
       >
         <div>
           <div style={styles.closeX}>
-            <FontAwesomeIcon onClick={()=>{
-              this.setState({
-                shareCollectionModal: false,
-                copied: false,
-              });
-            }} icon={faTimes} />
+            <FontAwesomeIcon onClick={this.closeModal} icon={faTimes} />
           </div>
           <div className="shadow" style={{...styles.buttonStyle, marginTop: 16, marginBottom: 16, fontWeight: 600}} onClick={()=>{
             copy(url);
@@ -673,11 +671,12 @@ export default class HomePage extends React.Component {
 
   getSharingUrl = ()=>{
     const { focused_collection, collections } = this.state;
-
-    let url = `https://pogocollector.com/?collection_name=${collections[focused_collection].name}&pokemon=`;
+    console.log("thing ".replace(/ /g, "%20"));
+    let url = `https://pogocollector.com/?collection_name=${collections[focused_collection].name.replace(/ /g, "%20")}&pokemon=`;
 
     Object.keys(collections[focused_collection].pokemon_ids).forEach((id, key)=>{
       const comma = (key !== 0) ? (",") : ("");
+      const pokemon_id = (id.length === 3) ? (id + "_00") : (id);
       url = `${url}${comma}${id}`;
     });
 
@@ -725,10 +724,10 @@ export default class HomePage extends React.Component {
       DropdownMenu = (
         <div style={{display: "flex", alignItems: "center", justifyContent: "center", width: "100%"}}>
           <div onClick={()=>{
-              this.setState({
-                editingName: !editingName
-              });
-            }} style={{paddingRight: 8}}>
+            this.setState({
+              editingName: !editingName
+            });
+          }} style={{paddingRight: 8}}>
             <FontAwesomeIcon icon={faPencilAlt} />
           </div>
           <div style={{marginRight: 8}}>Selecting for </div>
@@ -744,10 +743,10 @@ export default class HomePage extends React.Component {
                       editingName: false
                     });
                   }}
-                  value={collections[current_collection].name}
+                  value={(collections[current_collection]) ? (collections[current_collection].name) : ("")}
                 />
               ) : (
-                collections[current_collection].name
+                (collections[current_collection]) ? (collections[current_collection].name) : ("")
               )}
             </div>
             <div onClick={this.dropdownToggle}>
@@ -819,10 +818,10 @@ export default class HomePage extends React.Component {
                   <input
                     name='collection-name'
                     style={styles.inputStyle}
-                    onChange={this.collectionNameChange} value={collections[current_collection].name}
+                    onChange={this.collectionNameChange} value={(collections[current_collection]) ? (collections[current_collection].name) : ("")}
                   />
                 ) : (
-                  collections[current_collection].name
+                  (collections[current_collection]) ? (collections[current_collection].name) : ("")
                 )}
               </span>
               <span onClick={this.dropdownToggle}>
