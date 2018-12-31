@@ -1,11 +1,14 @@
 import React          from "react";
 import PropTypes      from "prop-types";
 
+import Modal          from "react-modal";
+
 import axios          from "axios";
 import queryString    from "query-string";
+import copy           from "copy-to-clipboard";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheckSquare, faAngleDown, faAngleRight } from '@fortawesome/free-solid-svg-icons';
+import { faCheckSquare, faAngleDown, faAngleRight, faPencilAlt, faShareAlt, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { faSquare }   from '@fortawesome/free-regular-svg-icons';
 
 import SideNav        from 'react-simple-sidenav';
@@ -20,19 +23,16 @@ export default class HomePage extends React.Component {
 
   constructor(props){
     super(props);
-    this.currentVersion = 11;
+    this.currentVersion = 12;
     this.state = {
       pokemon: [],
       collections: {
         default: {
           name: "My Collection",
           pokemon_ids: {}
-        },
-        extra: {
-          name: "My Other Collection",
-          pokemon_ids: {}
         }
       },
+      removed_pokemon: {},
       current_collection: "default",
       filters: {
         shiny: true,
@@ -57,6 +57,11 @@ export default class HomePage extends React.Component {
       featuresMenuOpen: false,
       contactMenuOpen: false,
       dropdownOpen: false,
+      deleted: false,
+      copied: false,
+      focused_collection: "default",
+      deleteCollectionModal: false,
+      shareCollectionModal: false,
       checked: (
         <div style={{paddingRight: 8}}>
           <FontAwesomeIcon icon={faCheckSquare} />
@@ -96,21 +101,33 @@ export default class HomePage extends React.Component {
 
         axios.get(host).then((response)=>{
 
-          const oldPokemon = JSON.parse(localStorage.pokemon);
+          const oldPokemon = JSON.parse(localStorage.getItem("pokemon"));
 
           const updatedPokemon = JSON.parse(response.data).map((pokemon, key)=>{
             return Object.assign({}, pokemon, oldPokemon[key]);
           });
 
-          const filters= Object.assign({}, this.state.filters, JSON.parse(localStorage.filters));
+          const filters = Object.assign({}, this.state.filters, JSON.parse(localStorage.getItem("filters")));
 
-          const options = Object.assign({}, this.state.options, JSON.parse(localStorage.options));
+          const options = Object.assign({}, this.state.options, JSON.parse(localStorage.getItem("options")));
+
+          const collections = Object.assign({}, this.state.collections, JSON.parse(localStorage.getItem("collections")));
+
+          const removed_pokemon = JSON.parse(localStorage.getItem("removed_pokemon")) || {};
+
+          const current_collection =  JSON.parse(localStorage.getItem("current_collection")) || "default";
 
           this.setState({
             pokemon: updatedPokemon,
             filters,
-            options
-          }, this.syncLocalStorage);
+            options,
+            removed_pokemon,
+            collections,
+            current_collection
+          }, ()=>{
+            localStorage.pokemon = JSON.stringify(this.state.pokemon);
+            this.syncLocalStorage();
+          });
 
         }).catch((error)=>{
           console.log(error);
@@ -118,9 +135,12 @@ export default class HomePage extends React.Component {
 
       } else {
         this.setState({
-          pokemon: JSON.parse(localStorage.pokemon),
-          filters: JSON.parse(localStorage.filters),
-          options: JSON.parse(localStorage.options),
+          pokemon: JSON.parse(localStorage.getItem("pokemon")),
+          filters: JSON.parse(localStorage.getItem("filters")),
+          options: JSON.parse(localStorage.getItem("options")),
+          collections: JSON.parse(localStorage.getItem("collections")),
+          removed_pokemon: JSON.parse(localStorage.getItem("removed_pokemon")),
+          current_collection: JSON.parse(localStorage.getItem("current_collection"))
         });
       }
     } else {
@@ -132,7 +152,9 @@ export default class HomePage extends React.Component {
       axios.get(host).then((response)=>{
         this.setState({
           pokemon: JSON.parse(response.data)
-        }, this.syncLocalStorage);
+        }, ()=>{
+          localStorage.pokemon = JSON.stringify(this.state.pokemon);
+        });
       }).catch((error)=>{
         console.log(error);
       });
@@ -149,75 +171,94 @@ export default class HomePage extends React.Component {
 
     const query = queryString.parse(this.props.location.search);
     if (query.collection_name){
-      const current_pokemon = query.pokemon.split(",");
+      let current_pokemon = {};
+      query.pokemon.split(",").forEach((pokemon_id)=>{
+        current_pokemon[pokemon_id] = pokemon_id;
+      });
       this.setState({
         panel: "shared_collection",
         current_pokemon,
         shared_collection: {
           name: query.collection_name,
-          pokemon: current_pokemon
+          pokemon_ids: current_pokemon
         }
       })
     }
   };
 
   handlePokemonChange = (action, pokemon)=>{
-    let newPokemon = JSON.parse(JSON.stringify(this.state.pokemon));
+    let new_collections;
+    let new_removed_pokemon;
 
     switch (action){
       case "clearAllSelectedPokemon": {
-        newPokemon = this.clearAllSelectedPokemon(newPokemon);
+        new_collections = JSON.parse(JSON.stringify(this.state.collections));
+        new_collections = this.clearAllSelectedPokemon(new_collections);
         break;
       }
       case "clearAllRemovedPokemon": {
-        newPokemon = this.clearAllRemovedPokemon(newPokemon);
+        new_removed_pokemon = {};
         break;
       }
       case "addRemovePokemon": {
-        newPokemon = this.addRemovePokemon(newPokemon, pokemon.id);
+        new_collections = JSON.parse(JSON.stringify(this.state.collections));
+        new_collections = this.addRemovePokemon(new_collections, pokemon.id);
         break;
       }
       case "toggleFullyRemovePokemon": {
-        newPokemon = this.toggleFullyRemovePokemon(newPokemon, pokemon.id);
+        new_removed_pokemon = JSON.parse(JSON.stringify(this.state.removed_pokemon));
+        new_removed_pokemon = this.toggleFullyRemovePokemon(new_removed_pokemon, pokemon.id);
         break;
       }
     }
 
-    this.setState({
-      pokemon: newPokemon
-    }, this.syncLocalStorage);
+    let state;
+    if (new_collections){
+      state = {
+        collections: new_collections,
+      };
+    } else {
+      state = {
+        removed_pokemon: new_removed_pokemon
+      };
+    }
+
+    this.setState(state, this.syncLocalStorage);
   };
 
-  clearAllSelectedPokemon = (pokemon)=>{
-    return pokemon.map((single_pokemon)=>{
-      single_pokemon.selected = false;
-      return single_pokemon;
-    });
+  clearAllSelectedPokemon = (new_collections)=>{
+    const { current_collection } = this.state;
+
+    new_collections[current_collection].pokemon_ids = {};
+
+    return new_collections;
   };
 
-  clearAllRemovedPokemon = (pokemon)=>{
-    return pokemon.map((single_pokemon)=>{
-      single_pokemon.removed = false;
-      return single_pokemon;
-    });
+  addRemovePokemon = (new_collections, pokemon_id)=>{
+    const { current_collection } = this.state;
+
+    if (new_collections[current_collection].pokemon_ids[pokemon_id]){
+      delete new_collections[current_collection].pokemon_ids[pokemon_id];
+    } else {
+      new_collections[current_collection].pokemon_ids[pokemon_id] = pokemon_id;
+    }
+
+    return new_collections;
   };
 
-  addRemovePokemon = (pokemon, pokemon_id)=>{
-    pokemon[pokemon_id].selected = !pokemon[pokemon_id].selected;
-    return pokemon;
-  };
+  toggleFullyRemovePokemon = (new_removed_pokemon, pokemon_id)=>{
 
-  getSharingUrl = ()=>{
+    if (new_removed_pokemon[pokemon_id]){
+      delete new_removed_pokemon[pokemon_id];
+    } else {
+      new_removed_pokemon[pokemon_id] = pokemon_id;
+    }
 
-  };
-
-  toggleFullyRemovePokemon = (pokemon, pokemon_id)=>{
-    pokemon[pokemon_id].removed = !pokemon[pokemon_id].removed;
-    return pokemon;
+    return new_removed_pokemon;
   };
 
   renderPokemon = (pokemon, key)=>{
-    const { filters, options, searchedPokemon } = this.state;
+    const { filters, options, searchedPokemon, collections, current_collection, removed_pokemon } = this.state;
 
     let dontRender = Object.keys(filters).some((filter, key)=>{
 
@@ -290,11 +331,12 @@ export default class HomePage extends React.Component {
       return;
     }
 
-    if (!pokemon.removed){
+    if (!removed_pokemon[pokemon.id]){
       return (
         <Pokemon
           key={key}
           pokemon={pokemon}
+          selected={collections[current_collection].pokemon_ids[pokemon.id]}
           onClick={(pokemon)=>{this.handlePokemonChange("addRemovePokemon", pokemon);}}
           toggleFullyRemovePokemon={(pokemon)=>{this.handlePokemonChange("toggleFullyRemovePokemon", pokemon);}}
           showFullyRemoveButton={(options.showXButtons) ? (true) : (false)}
@@ -305,11 +347,14 @@ export default class HomePage extends React.Component {
   };
 
   renderFullyRemovedPokemon = (pokemon, key)=>{
-    if (pokemon.removed){
+    const { collections, current_collection, removed_pokemon } = this.state;
+
+    if (removed_pokemon[pokemon.id]){
       return (
         <Pokemon
           key={key}
           pokemon={pokemon}
+          selected={collections[current_collection].pokemon_ids[pokemon.id]}
           onClick={(pokemon)=>{this.handlePokemonChange("addRemovePokemon");}}
           toggleFullyRemovePokemon={(pokemon)=>{this.handlePokemonChange("toggleFullyRemovePokemon", pokemon);}}
           showFullyRemoveButton={true}
@@ -319,17 +364,36 @@ export default class HomePage extends React.Component {
   }
 
   renderSelectedPokemon = (pokemon, key)=>{
-    if (pokemon.selected){
+     const { collections, current_collection } = this.state;
+
+    if (collections[current_collection].pokemon_ids[pokemon.id]){
       return (
         <Pokemon
           key={key}
           pokemon={pokemon}
+          selected={collections[current_collection].pokemon_ids[pokemon.id]}
           onClick={(pokemon)=>{this.handlePokemonChange("addRemovePokemon", pokemon);}}
           selectedScreen={true}
         />
       );
     }
   }
+
+  renderSharedPokemon = (pokemon, key)=>{
+    const { shared_collection } = this.state;
+
+    if (shared_collection.pokemon_ids[pokemon.id]){
+      return (
+        <Pokemon
+          key={key}
+          pokemon={pokemon}
+          selected={false}
+          onClick={()=>{}}
+          selectedScreen={true}
+        />
+      );
+    }
+  };
 
   toPanel = (panel)=>{
     this.setState({
@@ -354,11 +418,14 @@ export default class HomePage extends React.Component {
   };
 
   syncLocalStorage = ()=>{
-    const { pokemon, filters, options } = this.state;
+    const { pokemon, filters, options, collections, current_collection, removed_pokemon } = this.state;
 
-    localStorage.pokemon = JSON.stringify(pokemon);
+    // localStorage.pokemon = JSON.stringify(pokemon);
     localStorage.filters = JSON.stringify(filters);
     localStorage.options = JSON.stringify(options);
+    localStorage.removed_pokemon = JSON.stringify(removed_pokemon);
+    localStorage.collections = JSON.stringify(collections);
+    localStorage.current_collection = JSON.stringify(current_collection);
     localStorage.version = JSON.stringify(this.currentVersion);
   }
 
@@ -449,18 +516,195 @@ export default class HomePage extends React.Component {
     });
   };
 
-  dropdownSelect = (e)=>{
-    console.log(e);
-  };
-
   dropdownToggle = ()=>{
     this.setState({
       dropdownOpen: !this.state.dropdownOpen
     });
-  }
+  };
+
+  collectionNameChange = (e)=>{
+    const { collections, current_collection } = this.state;
+
+    let state = {};
+    if (e.target.value){
+      state = {
+        collections: {
+          ...collections,
+          [current_collection]: Object.assign({}, collections[current_collection], {name: e.target.value})
+        }
+      };
+
+      this.setState(state, this.syncLocalStorage);
+    }
+  };
+
+  addNewCollection = ()=>{
+    this.setState({
+      collections: Object.assign({}, this.state.collections, {
+        [Date.now()]: {
+          name: "New Collection",
+          pokemon_ids: {}
+        }
+      })
+    }, this.syncLocalStorage)
+  };
+
+  openDeleteCollectionModal = (focused_collection)=>{
+    this.setState({
+      deleteCollectionModal: true,
+      focused_collection
+    });
+  };
+
+  openShareCollectionModal = (focused_collection)=>{
+    this.setState({
+      shareCollectionModal: true,
+      focused_collection
+    });
+  };
+
+  getDeleteCollectionModal = ()=>{
+    const { deleteCollectionModal, deleted, collections, focused_collection } = this.state;
+
+    return (
+      <Modal
+        isOpen={deleteCollectionModal}
+        closeTimeoutMS={150}
+        onRequestClose={()=>{
+          this.setState({
+            deleteCollectionModal: false
+          });
+        }}
+      >
+        <div>
+          {(deleted) ? (
+            <div style={{color: "red", textAlign: "center"}}>Collection Deleted!</div>
+          ) : (
+            <div>
+              <div style={styles.closeX}>
+                <FontAwesomeIcon onClick={()=>{
+                  this.setState({
+                    deleteCollectionModal: false,
+                    deleted: false,
+                  });
+                }} icon={faTimes} />
+              </div>
+              <div style={{marginTop: 16, textAlign: "center"}}>Are you sure you want to delete the {(collections[focused_collection]) ? (collections[focused_collection].name) : (null)} collection?</div>
+              <div className="shadow" style={{...styles.buttonStyle, marginTop: 16, marginBottom: 16, backgroundColor: "red", fontWeight: 600, fontSize: 16}} onClick={this.deleteCollection}>DELETE</div>
+            </div>
+          )}
+        </div>
+      </Modal>
+    );
+  };
+
+  getShareCollectionModal = ()=>{
+    const { shareCollectionModal, focused_collection, collections, copied } = this.state;
+
+    let url = "";
+    if (collections[focused_collection]){
+      url = this.getSharingUrl();
+    }
+
+    return (
+      <Modal
+        isOpen={shareCollectionModal}
+        closeTimeoutMS={150}
+        onRequestClose={()=>{
+          this.setState({
+            shareCollectionModal: false,
+            copied: false,
+          });
+        }}
+      >
+        <div>
+          <div style={styles.closeX}>
+            <FontAwesomeIcon onClick={()=>{
+              this.setState({
+                shareCollectionModal: false,
+                copied: false,
+              });
+            }} icon={faTimes} />
+          </div>
+          <div className="shadow" style={{...styles.buttonStyle, marginTop: 16, marginBottom: 16, fontWeight: 600}} onClick={()=>{
+            copy(url);
+
+            this.setState({
+              copied: true
+            });
+          }}>Copy Link</div>
+        {(copied) ? (<div style={{color: "red", marginBottom: 8}}>Link Copied!</div>) : (null)}
+          <div style={{wordWrap: "break-word"}}>{url}</div>
+        </div>
+      </Modal>
+    );
+  };
+
+  deleteCollection = ()=>{//cleanup
+    const { focused_collection, collections } = this.state;
+
+    let new_collections = Object.assign({}, collections);
+
+    delete new_collections[focused_collection];
+
+    this.setState({
+      collections: new_collections,
+      deleted: true
+    }, ()=>{
+
+      this.syncLocalStorage();
+
+      setTimeout(()=>{
+        this.setState({
+          deleteCollectionModal: false
+        }, ()=>{
+          setTimeout(()=>{
+            this.setState({
+              deleted: false
+            })
+          }, 1000)
+        });
+      }, 2000);
+    });
+  };
+
+  getSharingUrl = ()=>{
+    const { focused_collection, collections } = this.state;
+
+    let url = `https://pogocollector.com/?collection_name=${collections[focused_collection].name}&pokemon=`;
+
+    Object.keys(collections[focused_collection].pokemon_ids).forEach((id, key)=>{
+      const comma = (key !== 0) ? (",") : ("");
+      url = `${url}${comma}${id}`;
+    });
+
+    return url;
+  };
+
+  addSharedCollection = ()=>{
+    const { shared_collection } = this.state;
+
+    const new_collection_id = Date.now();
+
+    this.setState({
+      collections: Object.assign({}, this.state.collections, {
+        [new_collection_id]: {
+          name: shared_collection.name,
+          pokemon_ids: shared_collection.pokemon_ids
+        }
+      })
+    }, ()=>{
+      this.context.router.history.replace("");
+
+      this.setState({
+        panel: "done",
+        current_collection: new_collection_id
+      });
+    }, this.syncLocalStorage)
+  };
 
   render(){
-    const { panel, pokemon, filters, options, showNav, searchedPokemon, checked, unChecked, ArrowDown, ArrowRight, filtersMenuOpen, moreMenuOpen, aboutMenuOpen, contactMenuOpen, featuresMenuOpen, collections, current_collection, dropdownOpen } = this.state;
+    const { panel, pokemon, filters, options, showNav, searchedPokemon, checked, unChecked, ArrowDown, ArrowRight, filtersMenuOpen, moreMenuOpen, aboutMenuOpen, contactMenuOpen, featuresMenuOpen, collections, current_collection, dropdownOpen, editingName, shared_collection } = this.state;
 
     const Filters = this.getFilters();
 
@@ -472,37 +716,54 @@ export default class HomePage extends React.Component {
       DropdownMenu = <span style={{color: "red"}}>Removed Pokemon</span>;
       shownPokemon = pokemon.map(this.renderFullyRemovedPokemon);
       navigationButton = (
-        <div style={styles.buttonStyle} onClick={()=>{this.toPanel("selecting");}}>Back</div>
+        <div className="shadow" style={styles.buttonStyle} onClick={()=>{this.toPanel("selecting");}}>Back</div>
       );
-    } else if (panel === "selecting"){
+    } else if (panel === "selecting"){//refactor these DropdownMenu's code to combine them
       DropdownMenu = (
         <div>
+          <span onClick={()=>{
+              this.setState({
+                editingName: !editingName
+              });
+            }} style={{paddingRight: 8}}>
+            <FontAwesomeIcon icon={faPencilAlt} />
+          </span>
           <span>Selecting for </span>
-          <span onClick={this.dropdownToggle}>
-            <span style={styles.dropdownTriggerStyle}>
+          <span>
+            <span>
               <span>
                 {(editingName) ? (
-                  <input 
+                  <input
                     name='collection-name'
+                    style={styles.inputStyle}
                     onChange={this.collectionNameChange} value={collections[current_collection].name}
                   />
                 ) : (
                   collections[current_collection].name
                 )}
               </span>
-              {(dropdownOpen) ? (ArrowDown) : (ArrowRight)}
+              <span onClick={this.dropdownToggle}>
+                {(dropdownOpen) ? (ArrowDown) : (ArrowRight)}
+              </span>
               {(dropdownOpen) ? (
-                <div style={styles.dropdownMenuStyle}>
+                <div className="shadow" style={styles.dropdownMenuStyle}>
                   {Object.keys(collections).map((key)=>{
                     return (
-                      <div onClick={()=>{
-                        this.setState({
-                          current_collection: key,
-                          dropdownOpen: false
-                        })
-                      }}>{collections[key].name}</div>
+                      <div style={{display: "flex", justifyContent: "space-between"}}>
+                        <div style={{padding: 4}} onClick={()=>{
+                            this.setState({
+                              current_collection: key,
+                              dropdownOpen: false
+                            })
+                          }}>{collections[key].name}</div>
+                        <span>
+                          <FontAwesomeIcon onClick={()=>{this.openShareCollectionModal(key);}} style={{paddingLeft: 4, paddingRight: 16}} icon={faShareAlt} />
+                          <FontAwesomeIcon onClick={()=>{this.openDeleteCollectionModal(key);}} icon={faTimes} />
+                        </span>
+                      </div>
                     );
                   })}
+                  <div style={{padding: 4}} onClick={this.addNewCollection}>+ New Collection</div>
                 </div>
               ) : (null)}
             </span>
@@ -512,12 +773,12 @@ export default class HomePage extends React.Component {
       );
       shownPokemon = pokemon.map(this.renderPokemon);
       navigationButton = (
-        <div style={styles.buttonStyle} onClick={()=>{this.toPanel("done");}}>View Selected</div>
+        <div className="shadow" style={styles.buttonStyle} onClick={()=>{this.toPanel("done");}}>View Selected</div>
       );
       searchbar = (
         <input
           placeholder="Search by Pokemon #"
-          style={styles.inputStyle}
+          style={{...styles.inputStyle}}
           name="searchedPokemon"
           ref="searchedPokemon"
           id="searchedPokemon"
@@ -528,20 +789,89 @@ export default class HomePage extends React.Component {
       );
     } else if (panel === "shared_collection"){
       DropdownMenu = shared_collection.name;
-      shownPokemon = pokemon.map(this.renderSelectedPokemon);
+      shownPokemon = pokemon.map(this.renderSharedPokemon);
       navigationButton = (
-        <div style={styles.buttonStyle} onClick={()=>{this.toPanel("selecting");}}>Back</div>
+        <div className="shadow" style={styles.buttonStyle} onClick={()=>{this.toPanel("selecting");}}>Back</div>
       );
-    } else {
-      DropdownMenu = collections[current_collection].name;
+      searchbar = (
+        <div className="shadow" style={{...styles.buttonStyle, marginLeft: 0, width: "100%"}} onClick={this.addSharedCollection}>Add Collection</div>
+      );
+    } else {//refactor these DropdownMenu's code to combine them
+      DropdownMenu = (
+        <div>
+          <span onClick={()=>{
+              this.setState({
+                editingName: !editingName
+              });
+            }} style={{paddingRight: 8}}>
+            <FontAwesomeIcon icon={faPencilAlt} />
+          </span>
+          <span>
+            <span>
+              <span>
+                {(editingName) ? (
+                  <input
+                    name='collection-name'
+                    style={styles.inputStyle}
+                    onChange={this.collectionNameChange} value={collections[current_collection].name}
+                  />
+                ) : (
+                  collections[current_collection].name
+                )}
+              </span>
+              <span onClick={this.dropdownToggle}>
+                {(dropdownOpen) ? (ArrowDown) : (ArrowRight)}
+              </span>
+              {(dropdownOpen) ? (
+                <div className="shadow" style={styles.dropdownMenuStyle}>
+                  {Object.keys(collections).map((key)=>{
+                    return (
+                      <div style={{display: "flex", justifyContent: "space-between"}}>
+                        <div style={{padding: 4}} onClick={()=>{
+                            this.setState({
+                              current_collection: key,
+                              dropdownOpen: false
+                            })
+                          }}>{collections[key].name}</div>
+                        <span>
+                          <FontAwesomeIcon onClick={()=>{this.openShareCollectionModal(key);}} style={{paddingLeft: 4, paddingRight: 16}} icon={faShareAlt} />
+                          <FontAwesomeIcon onClick={()=>{this.openDeleteCollectionModal(key);}} icon={faTimes} />
+                        </span>
+                      </div>
+                    );
+                  })}
+                  <div style={{padding: 4}} onClick={this.addNewCollection}>+ New Collection</div>
+                </div>
+              ) : (null)}
+            </span>
+          </span>
+
+        </div>
+      );
       shownPokemon = pokemon.map(this.renderSelectedPokemon);
       navigationButton = (
-        <div style={styles.buttonStyle} onClick={()=>{this.toPanel("selecting");}}>Back</div>
+        <div className="shadow" style={styles.buttonStyle} onClick={()=>{this.toPanel("selecting");}}>Back</div>
       );
     }
 
+    const DeleteCollectionModal = this.getDeleteCollectionModal();
+    const ShareCollectionModal = this.getShareCollectionModal();
+
+    const closeThingsBackground = (dropdownOpen) ? (
+      <div style={{position: "fixed", left: 0, right: 0, top: 0, bottom: 0, background: "rgba(0, 0, 0, 0)", zIndex: 0}} onClick={()=>{
+        this.setState({
+          dropdownOpen: false
+        });
+      }}></div>
+    ) : (null);
+
     return (
       <div style={styles.containerStyle}>
+
+        {DeleteCollectionModal}
+        {ShareCollectionModal}
+
+        {closeThingsBackground}
 
         <svg
           onClick={() => this.setState({showNav: true})}
@@ -584,31 +914,31 @@ export default class HomePage extends React.Component {
                 <div style={{borderBottom: "1px solid"}}>
                   <div style={styles.regularButtonStyle} onClick={this.toggleXButtons}>
                     {(options.showXButtons) ? (checked) : (unChecked)}
-                    <span style={{paddingTop: 1}}>
+                    <span style={{paddingTop: 1, textAlign: "left"}}>
                       Show 'Remove Pokemon' Buttons
                     </span>
                   </div>
                   <div style={styles.regularButtonStyle} onClick={this.toggleAllPokemon}>
                     {(options.showAllPokemon) ? (checked) : (unChecked)}
-                    <span style={{paddingTop: 1}}>
+                    <span style={{paddingTop: 1, textAlign: "left"}}>
                       Show Pokemon Not In Game Yet
                     </span>
                   </div>
                   <div style={styles.regularButtonStyle} onClick={this.toggleAllShiny}>
                     {(options.showAllShiny) ? (checked) : (unChecked)}
-                    <span style={{paddingTop: 1}}>
+                    <span style={{paddingTop: 1, textAlign: "left"}}>
                       Show Shiny Pokemon Not In Game Yet
                     </span>
                   </div>
-                  <div style={styles.redButtonStyle} onClick={()=>{
+                  <div className="shadow" style={styles.redButtonStyle} onClick={()=>{
                       this.setState({
                         showNav: false
                       }, ()=>{
                         this.toPanel("removed");
                       });
                     }}>View Removed Pokemon</div>
-                  <div style={styles.redButtonStyle} onClick={()=>{this.handlePokemonChange("clearAllRemovedPokemon");}}>Clear All Removed Pokemon</div>
-                  <div style={styles.redButtonStyle} onClick={()=>{this.handlePokemonChange("clearAllSelectedPokemon");}}>Clear All Selected Pokemon</div>
+                  <div className="shadow" style={styles.redButtonStyle} onClick={()=>{this.handlePokemonChange("clearAllRemovedPokemon");}}>Clear All Removed Pokemon</div>
+                  <div className="shadow" style={styles.redButtonStyle} onClick={()=>{this.handlePokemonChange("clearAllSelectedPokemon");}}>Clear All Current Collection's Selected Pokemon</div>
                 </div>
               ) : (null)}
 
@@ -671,7 +1001,7 @@ export default class HomePage extends React.Component {
             PoGo Collector
           </div>
 
-          <div style={{marginTop: 8}}>
+          <div style={styles.dropdownTriggerStyle}>
             {DropdownMenu}
           </div>
 
