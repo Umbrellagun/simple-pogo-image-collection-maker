@@ -531,17 +531,14 @@ export default class HomePage extends React.Component {
   collectionNameChange = (e)=>{
     const { collections, current_collection } = this.state;
 
-    let state = {};
-    if (e.target.value){
-      state = {
-        collections: {
-          ...collections,
-          [current_collection]: Object.assign({}, collections[current_collection], {name: e.target.value})
-        }
-      };
+    const state = {
+      collections: {
+        ...collections,
+        [current_collection]: Object.assign({}, collections[current_collection], {name: e.target.value || ""})
+      }
+    };
 
-      this.setState(state, this.syncLocalStorage);
-    }
+    this.setState(state, this.syncLocalStorage);
   };
 
   addNewCollection = ()=>{
@@ -726,55 +723,52 @@ export default class HomePage extends React.Component {
       );
     } else if (panel === "selecting"){//refactor these DropdownMenu's code to combine them
       DropdownMenu = (
-        <div>
-          <span onClick={()=>{
+        <div style={{display: "flex", alignItems: "center", justifyContent: "center", width: "100%"}}>
+          <div onClick={()=>{
               this.setState({
                 editingName: !editingName
               });
             }} style={{paddingRight: 8}}>
             <FontAwesomeIcon icon={faPencilAlt} />
-          </span>
-          <span>Selecting for </span>
-          <span>
-            <span>
-              <span>
-                {(editingName) ? (
-                  <input
-                    name='collection-name'
-                    style={styles.inputStyle}
-                    onChange={this.collectionNameChange} value={collections[current_collection].name}
-                  />
-                ) : (
-                  collections[current_collection].name
-                )}
-              </span>
-              <span onClick={this.dropdownToggle}>
-                {(dropdownOpen) ? (ArrowDown) : (ArrowRight)}
-              </span>
-              {(dropdownOpen) ? (
-                <div className="shadow" style={styles.dropdownMenuStyle}>
-                  {Object.keys(collections).map((key)=>{
-                    return (
-                      <div style={{display: "flex", justifyContent: "space-between"}}>
-                        <div style={{padding: 4}} onClick={()=>{
-                            this.setState({
-                              current_collection: key,
-                              dropdownOpen: false
-                            })
-                          }}>{collections[key].name}</div>
-                        <span>
-                          <FontAwesomeIcon onClick={()=>{this.openShareCollectionModal(key);}} style={{paddingLeft: 4, paddingRight: 16}} icon={faShareAlt} />
-                          <FontAwesomeIcon onClick={()=>{this.openDeleteCollectionModal(key);}} icon={faTimes} />
-                        </span>
+          </div>
+          <div style={{marginRight: 8}}>Selecting for </div>
+          <div style={{display: "flex", alignItems: "center"}}>
+            <div>
+              {(editingName) ? (
+                <input
+                  name='collection-name'
+                  style={styles.inputStyle}
+                  onChange={this.collectionNameChange} value={collections[current_collection].name}
+                />
+              ) : (
+                collections[current_collection].name
+              )}
+            </div>
+            <div onClick={this.dropdownToggle}>
+              {(dropdownOpen) ? (ArrowDown) : (ArrowRight)}
+            </div>
+            {(dropdownOpen) ? (
+              <div className="shadow" style={styles.dropdownMenuStyle}>
+                {Object.keys(collections).map((key)=>{
+                  return (
+                    <div style={{display: "flex", justifyContent: "space-between"}}>
+                      <div style={{padding: 4}} onClick={()=>{
+                        this.setState({
+                          current_collection: key,
+                          dropdownOpen: false
+                        })
+                      }}>{collections[key].name}</div>
+                    <div>
+                        <FontAwesomeIcon onClick={()=>{this.openShareCollectionModal(key);}} style={{paddingLeft: 4, paddingRight: 16}} icon={faShareAlt} />
+                        <FontAwesomeIcon onClick={()=>{this.openDeleteCollectionModal(key);}} icon={faTimes} />
                       </div>
-                    );
-                  })}
-                  <div style={{padding: 4}} onClick={this.addNewCollection}>+ New Collection</div>
-                </div>
-              ) : (null)}
-            </span>
-          </span>
-
+                    </div>
+                  );
+                })}
+                <div style={{padding: 4}} onClick={this.addNewCollection}>+ New Collection</div>
+              </div>
+            ) : (null)}
+          </div>
         </div>
       );
       shownPokemon = pokemon.map(this.renderPokemon);
@@ -784,7 +778,7 @@ export default class HomePage extends React.Component {
       searchbar = (
         <input
           placeholder="Search by Pokemon #"
-          style={{...styles.inputStyle}}
+          style={{...styles.inputStyle, width: "100%"}}
           name="searchedPokemon"
           ref="searchedPokemon"
           id="searchedPokemon"
@@ -1011,7 +1005,7 @@ export default class HomePage extends React.Component {
             {DropdownMenu}
           </div>
 
-          <div style={{display: "flex", width: "100%"}}>
+          <div style={{display: "flex", width: "100%", minHeight: 48}}>
             <label for="searchedPokemon" style={{display: "none"}}>Search by Pokemon #</label>
             {searchbar}
 
