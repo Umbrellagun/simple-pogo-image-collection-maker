@@ -864,7 +864,7 @@ export default class HomePage extends React.Component {
     const ShareCollectionModal = this.getShareCollectionModal();
 
     const closeThingsBackground = (dropdownOpen) ? (
-      <div style={{position: "fixed", left: 0, right: 0, top: 0, bottom: 0, background: "rgba(0, 0, 0, 0)", zIndex: 0}} onClick={()=>{
+      <div style={{position: "fixed", left: 0, right: 0, top: 0, bottom: 0, background: "rgba(0, 0, 0, 0)", zIndex: 1}} onClick={()=>{
         this.setState({
           dropdownOpen: false
         });

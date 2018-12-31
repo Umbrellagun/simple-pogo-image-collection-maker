@@ -51,7 +51,7 @@ export default {
     position: "relative",
     borderRadius: 8,
     width: "100%",
-    zIndex: -1
+    // zIndex: -1
   },
 
   buttonStyle: {
@@ -167,7 +167,7 @@ export default {
     backgroundColor: 'white',
     position: "absolute",
     right: 0,
-    zIndex: 1,
+    zIndex: 2,
     width: "80%",
     padding: 8,
     borderRadius: 4,
