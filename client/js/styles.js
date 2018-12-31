@@ -50,7 +50,8 @@ export default {
     backgroundColor: "white",
     position: "relative",
     borderRadius: 8,
-    width: "100%"
+    width: "100%",
+    zIndex: -1
   },
 
   buttonStyle: {
@@ -91,7 +92,8 @@ export default {
     alignItems: "center",
     lineHeight: "56px",
     position: "absolute",
-    width: "90%"
+    width: "90%",
+    fontWeight: 600
   },
 
   navItemStyle: {
@@ -113,7 +115,6 @@ export default {
     margin: '8px 0px',
     padding: 8,
     borderRadius: 2,
-    width: "100%",
     outline: "none"
   },
 
@@ -152,4 +153,35 @@ export default {
     backgroundPosition: "bottom",
     borderBottom: "2px solid #aacee2",
   },
+
+  dropdownTriggerStyle: {
+    position: "relative",
+    marginTop: 8,
+    width: "100%",
+    display: "flex",
+    justifyContent: "center",
+    padding: 8,
+  },
+
+  dropdownMenuStyle: {
+    backgroundColor: 'white',
+    position: "absolute",
+    right: 0,
+    zIndex: 1,
+    width: "80%",
+    padding: 8,
+    borderRadius: 4,
+    backgroundColor: "darkcyan",
+    color: "#fff",
+    display: "flex",
+    flexDirection: "column",
+    marginRight: 8
+  },
+
+  closeX: {
+    display: "flex",
+    justifyContent: "flex-end",
+    fontSize: 24,
+    color: "darkcyan",
+  }
 }

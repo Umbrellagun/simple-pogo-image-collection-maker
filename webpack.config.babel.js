@@ -65,9 +65,7 @@ const plugins = (DEVELOPMENT) ? (
 
     new SWPrecacheWebpackPlugin({
       cacheId: 'PoGo-Collector',
-      // dontCacheBustUrlsMatching: /\.\w{8}\./,
       minify: true,
-      // navigateFallback: "/index.html",
       mergeStaticsConfig: true,
       stripPrefix: "dist",
       replacePrefix: "",

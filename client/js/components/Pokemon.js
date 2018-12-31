@@ -14,9 +14,9 @@ export default class Pokemon extends React.Component {
   }
 
   render(){
-    const { pokemon, onClick, toggleFullyRemovePokemon, showFullyRemoveButton, selectedScreen } = this.props;
+    const { pokemon, onClick, toggleFullyRemovePokemon, showFullyRemoveButton, selectedScreen, selected } = this.props;
 
-    const selectedStyle = (pokemon.selected) ? (styles.selected) : ({});
+    const selectedStyle = (selected) ? (styles.selected) : ({});
 
     const fullyRemoveButton = (showFullyRemoveButton) ? (
       <div style={styles.xButton} onClick={()=>{
