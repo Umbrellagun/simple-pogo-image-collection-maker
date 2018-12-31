@@ -93,7 +93,7 @@ export default {
     lineHeight: "56px",
     position: "absolute",
     width: "90%",
-    fontWeight: 600
+    // fontWeight: 600
   },
 
   navItemStyle: {
@@ -167,6 +167,7 @@ export default {
     backgroundColor: 'white',
     position: "absolute",
     right: 0,
+    top: 26,
     zIndex: 2,
     width: "80%",
     padding: 8,

@@ -738,7 +738,13 @@ export default class HomePage extends React.Component {
                 <input
                   name='collection-name'
                   style={styles.inputStyle}
-                  onChange={this.collectionNameChange} value={collections[current_collection].name}
+                  onChange={this.collectionNameChange}
+                  onBlur={()=>{
+                    this.setState({
+                      editingName: false
+                    });
+                  }}
+                  value={collections[current_collection].name}
                 />
               ) : (
                 collections[current_collection].name
