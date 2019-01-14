@@ -13,6 +13,8 @@ export default [
   "012",//Butterfree
   "025",//Pikachu
   "026",//Raichu
+  "027",//Sandshrew
+  "028",//Sandslash
   "029",//Nidoran♀
   "030",//Nidorina
   "031",//Nidoqueen
@@ -64,6 +66,9 @@ export default [
   "155",//Cyndaquil
   "156",//Quilava
   "157",//Typhlosion
+  "158",//Totodile
+  "159",//Croconaw
+  "160",//Feraligatr
   "172",//Pichu
   "175",//Togepi
   "176",//Togetic
@@ -96,6 +101,10 @@ export default [
   "250",//Ho-Oh
   "261",//Poochyena
   "262",//Mightyena
+  "263",//Zigzagoon
+  "264",//Linoone
+  "276",//Taillow
+  "277",//Swellow
   "278",//Wingull
   "279",//Pelipper
   "296",//Makuhita
