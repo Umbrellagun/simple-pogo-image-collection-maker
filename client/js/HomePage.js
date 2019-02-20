@@ -671,7 +671,7 @@ export default class HomePage extends React.Component {
 
   getSharingUrl = ()=>{
     const { focused_collection, collections } = this.state;
-    console.log("thing ".replace(/ /g, "%20"));
+
     let url = `https://pogocollector.com/?collection_name=${collections[focused_collection].name.replace(/ /g, "%20")}&pokemon=`;
 
     Object.keys(collections[focused_collection].pokemon_ids).forEach((id, key)=>{
