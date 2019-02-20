@@ -18,6 +18,10 @@ export default [
   "029",//Nidoran♀
   "030",//Nidorina
   "031",//Nidoqueen
+  "035",//Clefairy
+  "036",//Clefable
+  "054",//Psyduck
+  "055",//Golduck
   "058",//Growlithe
   "059",//Arcanine
   "074",//Geodude
@@ -40,6 +44,7 @@ export default [
   "099",//Kingler
   "104",//Cubone
   "105",//Marowak
+  "124",//Jynx
   "125",//Electabuzz
   "126",//Magmar
   "127",//Pinsir
@@ -70,6 +75,7 @@ export default [
   "159",//Croconaw
   "160",//Feraligatr
   "172",//Pichu
+  "173",//Cleffa
   "175",//Togepi
   "176",//Togetic
   "177",//Natu
@@ -92,6 +98,7 @@ export default [
   "225",//Delibird
   "228",//Houndour
   "229",//Houndoom
+  "238",//Smoochum
   "239",//Elekid
   "240",//Magby
   "246",//Larvitar
@@ -122,8 +129,12 @@ export default [
   "315",//Roselia
   "320",//Wailmer
   "321",//Wailord
+  "325",//Spoink
+  "326",//Grumpig
   "333",//Swablu
   "334",//Altaria
+  "349",//Feebas
+  "350",//Milotic
   "353",//Shuppet
   "354",//Banette
   "355",//Duskull
@@ -144,4 +155,6 @@ export default [
   "425",//Drifloon
   "426",//Drifblim
   "466",//Electivire
+  "808",//Meltan
+  "809",//Melmetal
 ];
