@@ -11,6 +11,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckSquare, faAngleDown, faAngleRight, faPencilAlt, faShareAlt, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { faSquare }   from '@fortawesome/free-regular-svg-icons';
 
+import image_parser   from "./image_parser.js";
+
 import SideNav        from 'react-simple-sidenav';
 
 import nonLivePokemon from "./non-live-pokemon.js";
@@ -162,15 +164,30 @@ export default class HomePage extends React.Component {
 
       const host = (hostname === "localhost") ? (`${protocol}//${hostname}:${window.location.port}/pokemon`) : (`${protocol}//${hostname}/pokemon`);
 
-      axios.get(host).then((response)=>{
+      window.storage.listAll().then((res)=>{
+        let pokemon = [];
+        res.items.forEach(function(image){
+          pokemon.push(image_parser(image.location.path));
+        });
+
         this.setState({
-          pokemon: JSON.parse(response.data)
+          pokemon
         }, ()=>{
           localStorage.pokemon = JSON.stringify(this.state.pokemon);
         });
-      }).catch((error)=>{
-        console.log(error);
+      }).catch((err)=>{
+        console.log(err);
       });
+
+      // axios.get(host).then((response)=>{
+      //   this.setState({
+      //     pokemon: JSON.parse(response.data)
+      //   }, ()=>{
+      //     localStorage.pokemon = JSON.stringify(this.state.pokemon);
+      //   });
+      // }).catch((error)=>{
+      //   console.log(error);
+      // });
     }
   };
 

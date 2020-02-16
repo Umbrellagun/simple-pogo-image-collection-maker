@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Web site created using create-react-app"
+    />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+
+    <title>PoGo Collector</title>
+
+    <style>
+
+      body {
+        background: url("%PUBLIC_URL%/bg_image.png");
+        background-repeat: no-repeat;
+        background-size: cover;
+        margin: 0px;
+      }
+
+      .selected {
+        background: url();
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position: bottom;
+        border-bottom: 1px solid #f2f2f2;
+      }
+
+      .shadow {
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+      }
+
+      .ReactModal__Overlay {
+        z-index: 2;
+      }
+
+      .dropdown {
+        display: inline-block;
+      }
+
+      .dropdown__content {
+        display: none;
+        position: absolute;
+      }
+
+      .dropdown--active .dropdown__content {
+        display: block;
+      }
+
+    </style>
+  </head>
+
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+  </body>
+
+</html>

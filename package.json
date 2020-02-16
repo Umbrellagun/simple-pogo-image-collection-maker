@@ -4,10 +4,10 @@
   "description": "Create a collection of pogo images for trading or whatever else",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js",
-    "bundle": "export NODE_ENV=production && webpack && mv ./bundle.js ./dist/ && mv ./bundle.js.map ./dist/ && mv ./service-worker.js ./dist/",
-    "dev": "export PORT=1333 && export NODE_ENV=dev && babel-watch server.js"
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
   },
   "repository": {
     "type": "git",
@@ -18,7 +18,6 @@
   "bugs": {
     "url": "https://github.com/Umbrellagun/simple-pogo-image-collection-maker/issues"
   },
-  "homepage": "https://github.com/Umbrellagun/simple-pogo-image-collection-maker#readme",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.0-14",
     "@fortawesome/free-regular-svg-icons": "^5.1.0-11",
@@ -26,12 +25,8 @@
     "@fortawesome/react-fontawesome": "0.1.0-11",
     "axios": "^0.18.0",
     "copy-to-clipboard": "^3.0.8",
-    "copy-webpack-plugin": "^4.5.2",
-    "express": "^4.16.3",
-    "file-loader": "^2.0.0",
-    "html-webpack-plugin": "^3.2.0",
+    "firebase": "^7.8.2",
     "moment": "^2.22.2",
-    "path": "^0.12.7",
     "prop-types": "^15.6.2",
     "query-string": "^6.2.0",
     "react": "^16.4.2",
@@ -39,29 +34,20 @@
     "react-lazy-load": "^3.0.13",
     "react-modal": "^3.5.1",
     "react-router-dom": "^4.3.1",
+    "react-scripts": "^3.4.0",
     "react-simple-dropdown": "^3.2.3",
-    "react-simple-sidenav": "^1.0.1",
-    "sw-precache-webpack-plugin": "^0.11.5",
-    "webpack-manifest-plugin": "^2.0.3"
+    "react-simple-sidenav": "^1.0.1"
   },
-  "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.3",
-    "babel-eslint": "^9.0.0",
-    "babel-loader": "^7.1.4",
-    "babel-plugin-transform-class-properties": "^6.24.1",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-preset-env": "^1.7.0",
-    "babel-preset-react": "^6.24.1",
-    "babel-register": "^6.26.0",
-    "babel-runtime": "^6.26.0",
-    "babel-watch": "^2.0.7",
-    "chokidar": "^2.0.4",
-    "eslint": "^5.4.0",
-    "eslint-plugin-babel": "^5.1.0",
-    "webpack": "^4.17.1",
-    "webpack-cli": "^3.1.0",
-    "webpack-dev-middleware": "^3.2.0",
-    "webpack-hot-middleware": "^2.22.3"
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }
