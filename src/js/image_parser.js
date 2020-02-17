@@ -29,6 +29,8 @@ export default (image_name)=>{
       number === "422"
       ||
       number === "423"
+      ||
+      number === "453"
     ){
       gender_exception = true;
     }
@@ -75,19 +77,6 @@ export default (image_name)=>{
       return fragment;
     }
   }).filter((f)=>{return f;}).join("_");
-
-  if (image_name.includes("pm")){
-    console.log({
-      image: image_name,
-      id,
-      number,
-      special,
-      regular,
-      gen,
-      additional_gender,
-      shiny
-    })
-  }
 
   return {
     image: image_name,

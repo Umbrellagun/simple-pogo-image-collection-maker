@@ -3,7 +3,6 @@ import PropTypes      from "prop-types";
 
 import Modal          from "react-modal";
 
-import axios          from "axios";
 import queryString    from "query-string";
 import copy           from "copy-to-clipboard";
 
@@ -25,7 +24,7 @@ export default class HomePage extends React.Component {
 
   constructor(props){
     super(props);
-    this.currentVersion = 23;
+    this.currentVersion = 24;
     this.state = {
       pokemon: [],
       collections: {
@@ -97,25 +96,13 @@ export default class HomePage extends React.Component {
     if (localStorage.version){
       if (JSON.parse(localStorage.version) !== this.currentVersion){
 
-        const hostname = window.location.hostname;
-        const protocol = window.location.protocol;
-
-        const host = (hostname === "localhost") ? (`${protocol}//${hostname}:${window.location.port}/pokemon`) : (`${protocol}//${hostname}/pokemon`);
-
-        axios.get(host).then((response)=>{
+        window.storage.listAll().then((res)=>{
 
           const oldPokemon = JSON.parse(localStorage.getItem("pokemon"));
 
-          const updatedPokemon = JSON.parse(response.data).map((pokemon, key)=>{
-            if (pokemon.number === "453"){
-              if (pokemon.shiny){
-                return Object.assign({}, pokemon, {image: "pokemon_icon_453_00_shiny.png", id: "453_00", additional_gender: false});
-              } else {
-                return Object.assign({}, pokemon, {image: "pokemon_icon_453_00.png", id: "453_00_shiny", additional_gender: false});
-              }
-            } else {
-              return pokemon;
-            }
+          let updatedPokemon = [];
+          res.items.forEach(function(image){
+            updatedPokemon.push(image_parser(image.location.path));
           });
 
           const filters = Object.assign({}, this.state.filters, JSON.parse(localStorage.getItem("filters")));
@@ -160,10 +147,6 @@ export default class HomePage extends React.Component {
         });
       }
     } else {
-      const hostname = window.location.hostname;
-      const protocol = window.location.protocol;
-
-      const host = (hostname === "localhost") ? (`${protocol}//${hostname}:${window.location.port}/pokemon`) : (`${protocol}//${hostname}/pokemon`);
 
       window.storage.listAll().then((res)=>{
         let pokemon = [];
