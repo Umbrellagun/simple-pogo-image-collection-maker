@@ -138,7 +138,7 @@ export default {
   },
 
   shinyStyle: {
-    background: `url(../images/shiny.png) center center / contain no-repeat`,
+    background: `url(../../shiny.png) center center / contain no-repeat`,
     width: 26,
     height: 26,
     position: "absolute",
@@ -147,7 +147,7 @@ export default {
   },
 
   selected: {
-    background: `url("../images/selected.png")`,
+    background: `url("../../selected.png")`,
     backgroundRepeat: "no-repeat",
     backgroundSize: "contain",
     backgroundPosition: "bottom",

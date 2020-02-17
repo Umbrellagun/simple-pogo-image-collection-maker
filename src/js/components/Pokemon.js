@@ -6,15 +6,16 @@ import LazyLoad  from "react-lazy-load";
 import styles    from "../styles.js";
 
 export default class Pokemon extends React.Component {
-  constructor(props){
-    super(props);
-    this.state = {
-
-    };
-  }
 
   render(){
-    const { pokemon, onClick, toggleFullyRemovePokemon, showFullyRemoveButton, selectedScreen, selected } = this.props;
+    const {
+      pokemon,
+      onClick,
+      toggleFullyRemovePokemon,
+      showFullyRemoveButton,
+      selectedScreen,
+      selected
+    } = this.props;
 
     const selectedStyle = (selected) ? (styles.selected) : ({});
 

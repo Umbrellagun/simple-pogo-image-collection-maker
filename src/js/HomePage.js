@@ -45,6 +45,7 @@ export default class HomePage extends React.Component {
         gen_2: true,
         gen_3: true,
         gen_4: true,
+        gen_5: true,
       },
       panel: "selecting",
       options: {
@@ -179,15 +180,6 @@ export default class HomePage extends React.Component {
         console.log(err);
       });
 
-      // axios.get(host).then((response)=>{
-      //   this.setState({
-      //     pokemon: JSON.parse(response.data)
-      //   }, ()=>{
-      //     localStorage.pokemon = JSON.stringify(this.state.pokemon);
-      //   });
-      // }).catch((error)=>{
-      //   console.log(error);
-      // });
     }
   };
 
@@ -793,7 +785,9 @@ export default class HomePage extends React.Component {
           </div>
         </div>
       );
-      shownPokemon = pokemon.map(this.renderPokemon);
+      shownPokemon = pokemon.sort((a, b)=>{
+        return parseInt(a.number) - parseInt(b.number);
+      }).map(this.renderPokemon);
       navigationButton = (
         <div className="shadow" style={styles.buttonStyle} onClick={()=>{this.toPanel("done");}}>View Selected</div>
       );

@@ -1,3 +1,4 @@
+//https://tinyurl.com/sk4kmc4
 export default [
   "001",//Bulbasaur
   "002",//Ivysaur
@@ -11,6 +12,13 @@ export default [
   "010",//Caterpie
   "011",//Metapod
   "012",//Butterfree
+  "016",//Pidgey
+  "017",//Pidgeotto
+  "018",//Pidgeot
+  "019",//Rattata
+  "020",//Raticate
+  "023",//Ekans
+  "024",//Arbok
   "025",//Pikachu
   "026",//Raichu
   "027",//Sandshrew
@@ -18,12 +26,38 @@ export default [
   "029",//Nidoran♀
   "030",//Nidorina
   "031",//Nidoqueen
+  "032",//Nidoran
+  "033",//Nidorino
+  "034",//Nidoking
   "035",//Clefairy
   "036",//Clefable
+  "037",//Vulpix
+  "038",//Ninetales
+  "039",//Jigglypuff
+  "040",//Wigglypuff
+  "041",//Zubat
+  "042",//Golbat
+  "043",//Oddish
+  "044",//Gloom
+  "045",//Vileplume
+  "050",//Diglett
+  "051",//Dugtrio
+  "052",//Meowth
+  "053",//Persian
   "054",//Psyduck
   "055",//Golduck
+  "056",//Mankey
+  "057",//Primeape
   "058",//Growlithe
   "059",//Arcanine
+  "060",//Poliwag
+  "061",//Poliwhirl
+  "062",//Poliwrath
+  "066",//Machop
+  "067",//Machoke
+  "068",//Machamp
+  "072",//Tentacool
+  "073",//Tentacruel
   "074",//Geodude
   "075",//Graveler
   "076",//Golem
@@ -31,6 +65,9 @@ export default [
   "078",//Rapidash
   "081",//Magnemite
   "082",//Magneton
+  "083",//Farfetch'd
+  "086",//Seal
+  "087",//Dewgong
   "088",//Grimer
   "089",//Muk
   "090",//Shellder
@@ -42,14 +79,26 @@ export default [
   "097",//Hypno
   "098",//Krabby
   "099",//Kingler
+  "103",//Exeggutor
   "104",//Cubone
   "105",//Marowak
+  "108",//Lickitung
+  "109",//Koffing
+  "110",//Weezing
+  "113",//Chansey
+  "115",//Kangaskhan
+  "116",//Horsea
+  "117",//Seadra
+  "122",//Mr. Mime
+  "123",//Scyther
   "124",//Jynx
   "125",//Electabuzz
   "126",//Magmar
   "127",//Pinsir
+  "128",//Tauros
   "129",//Magikarp
   "130",//Gyarados
+  "131",//Lapras
   "133",//Eevee
   "134",//Vaporeon
   "135",//Jolteon
@@ -65,6 +114,7 @@ export default [
   "147",//Dratini
   "148",//Dragonair
   "149",//Dragonite
+  "150",//Mewtwo
   "152",//Chikorita
   "153",//Bayleef
   "154",//Meganium
@@ -74,8 +124,12 @@ export default [
   "158",//Totodile
   "159",//Croconaw
   "160",//Feraligatr
+  "161",//Sentret
+  "162",//Furret
+  "169",//Crobat
   "172",//Pichu
   "173",//Cleffa
+  "174",//Igglybuff
   "175",//Togepi
   "176",//Togetic
   "177",//Natu
@@ -83,37 +137,79 @@ export default [
   "179",//Mareep
   "180",//Flaaffy
   "181",//Ampharos
+  "182",//Bellosom
   "183",//Azurill
   "184",//Azumarill
+  "186",//Politoed
+  "190",//Aipom
   "191",//Sunkern
   "192",//Sunflora
+  "193",//Yanma
   "196",//Espeon
   "197",//Umbreon
   "198",//Murkrow
+  "200",//Misdreavus
   "202",//Wobbuffet
   "204",//Pineco
   "205",//Forretress
+  "207",//Gligar
+  "208",//Steelix
   "209",//Snubbull
   "210",//Granbull
+  "212",//Scizor
+  "213",//Shuckle
+  "215",//Sneasel
+  "220",//Swinub
+  "221",//Piloswine
   "225",//Delibird
+  "227",//Skarmory
   "228",//Houndour
   "229",//Houndoom
+  "230",//Kingdra
+  "234",//Stantler
   "238",//Smoochum
   "239",//Elekid
   "240",//Magby
+  "242",//Blissey
+  "243",//Raikou
+  "244",//Entei
+  "245",//Suicune
   "246",//Larvitar
   "247",//Pupitar
   "248",//Tyranitar
   "249",//Lugia
   "250",//Ho-Oh
+  "252",//Treecko
+  "253",//Grovyle
+  "254",//Sceptile
+  "255",//Torchic
+  "256",//Combusken
+  "257",//Blaziken
+  "258",//Mudkip
+  "259",//Marshtomp
+  "260",//Swampert
   "261",//Poochyena
   "262",//Mightyena
   "263",//Zigzagoon
   "264",//Linoone
+  "265",//Wurmple
+  "266",//Silcoon
+  "267",//Beautifly
+  "268",//Cascoon
+  "269",//Dustox
+  "270",//Lotad
+  "271",//Lombre
+  "272",//Ludicolo
   "276",//Taillow
   "277",//Swellow
   "278",//Wingull
   "279",//Pelipper
+  "280",//Ralts
+  "281",//Kirlia
+  "282",//Gardevoir
+  "287",//Slakoth
+  "288",//Vigoroth
+  "289",//Slaking
   "296",//Makuhita
   "297",//Hariyama
   "298",//Azurill
@@ -124,17 +220,36 @@ export default [
   "306",//Aggron
   "307",//Meditite
   "308",//Medicham
+  "309",//Electrike
+  "310",//Manectric
   "311",//Plusle
   "312",//Minun
   "315",//Roselia
+  "318",//Carvanha
+  "319",//Sharpedo
   "320",//Wailmer
   "321",//Wailord
   "325",//Spoink
   "326",//Grumpig
+  "327",//Spinda
+  "328",//Trapinch
+  "329",//Vibrava
+  "330",//Flygon
   "333",//Swablu
   "334",//Altaria
+  "335",//Zangoose
+  "336",//Seviper
+  "337",//Lunatone
+  "338",//Solrock
+  "339",//Barboach
+  "340",//Whiscash
+  "345",//Lileep
+  "346",//Cradily
+  "347",//Anorith
+  "348",//Armaldo
   "349",//Feebas
   "350",//Milotic
+  "351",//Castform
   "353",//Shuppet
   "354",//Banette
   "355",//Duskull
@@ -143,18 +258,91 @@ export default [
   "360",//Wynaut
   "361",//Snorunt
   "362",//Glalie
+  "366",//Clamperl
+  "367",//Huntail
+  "368",//Gorebyss
   "370",//Luvdisc
+  "371",//Bagon
+  "372",//Shelgon
+  "373",//Salamence
   "374",//Beldum
   "375",//Metang
   "376",//Metagross
+  "377",//Regirock
+  "378",//Regice
+  "379",//Registeel
+  "380",//Latias
+  "381",//Latios
   "382",//Kyogre
+  "383",//Groudon
+  "384",//Rayquaza
+  "387",//Turtwig
+  "388",//Grotle
+  "389",//Torterra
+  "390",//Chimchar
+  "391",//Monferno
+  "392",//Infernape
+  "393",//Piplup
+  "394",//Prinplup
+  "395",//Empoleon
   "403",//Shinx
   "404",//Luxio
   "405",//Luxray
   "406",//Budew
+  "407",//Roserade
+  "412",//Burmy
+  "413",//Wormadam
+  "414",//Mothim
+  "424",//Ambipom
   "425",//Drifloon
   "426",//Drifblim
+  "427",//Buneary
+  "428",//Lopunny
+  "429",//Mismagius
+  "430",//Honchcrow
+  "436",//Bronzor
+  "437",//Bronzong
+  "438",//Bonsly
+  "439",//Mime Jr.
+  "440",//Happiny
+  "443",//Gible
+  "444",//Gabite
+  "445",//Garchomp
+  "447",//Riolu
+  "448",//Lucario
+  "449",//Hippopotas
+  "450",//Hippowdon
+  "459",//Snover
+  "460",//Abomasnow
+  "461",//Weavile
+  "462",//Magnezone
+  "463",//Lickilicky
   "466",//Electivire
+  "467",//Magmortar
+  "468",//Togekiss
+  "469",//Yanmega
+  "470",//Leafeon
+  "471",//Glaceon
+  "472",//Gliscor
+  "473",//Mamoswine
+  "475",//Gallade
+  "477",//Dusknoir
+  "478",//Froslass
+  "485",//Heatran
+  "487",//Giratina
+  "488",//Cresselia
+  "504",//Patrat
+  "505",//Watchog
+  "506",//Lillipup
+  "507",//Herdier
+  "508",//Stoutland
+  "562",//Yamask
+  "563",//Cofagrigus
+  "572",//Minccino
+  "573",//Cinncino
+  "599",//Klink
+  "600",//Klang
+  "601",//Klinklang
   "808",//Meltan
   "809",//Melmetal
 ];
