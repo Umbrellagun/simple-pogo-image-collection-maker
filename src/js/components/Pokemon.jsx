@@ -34,7 +34,7 @@ export default class Pokemon extends React.Component {
         {fullyRemoveButton}
         <div style={{...{margin: 8, borderRadius: 6, cursor: "pointer"}, ...selectedStyle}} onClick={()=>{onClick(pokemon);}}>
           <LazyLoad offset={600}>
-            <img style={styles.imgStyle} src={`https://firebasestorage.googleapis.com/v0/b/pogo-collector-e42c9.appspot.com/o/${pokemon.image}?alt=media`} alt={`pokemon ${pokemon.number}`}/>
+            <img style={styles.imgStyle} src={`${import.meta.env.VITE_FIREBASE_STORAGE_URL}${pokemon.image}?alt=media`} alt={`pokemon ${pokemon.number}`}/>
           </LazyLoad>
           {shiny}
         </div>
