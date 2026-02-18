@@ -2,12 +2,12 @@
   "name": "simple-pogo-image-collection-maker",
   "version": "1.0.0",
   "description": "Create a collection of pogo images for trading or whatever else",
-  "main": "index.js",
+  "type": "module",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "dev": "vite",
+    "start": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "repository": {
     "type": "git",
@@ -19,34 +19,23 @@
     "url": "https://github.com/Umbrellagun/simple-pogo-image-collection-maker/issues"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^1.2.27",
-    "@fortawesome/free-regular-svg-icons": "^5.12.1",
-    "@fortawesome/free-solid-svg-icons": "^5.12.1",
-    "@fortawesome/react-fontawesome": "0.1.8",
-    "copy-to-clipboard": "^3.0.8",
-    "firebase": "^7.8.2",
-    "moment": "^2.24.0",
-    "prop-types": "^15.7.2",
-    "query-string": "^6.2.0",
-    "react": "^16.12.0",
-    "react-dom": "^16.12.0",
-    "react-lazy-load": "^3.0.13",
-    "react-modal": "^3.5.1",
-    "react-router-dom": "^4.3.1",
-    "react-scripts": "^3.4.0",
-    "react-simple-dropdown": "^3.2.3",
+    "@fortawesome/fontawesome-svg-core": "^6.5.1",
+    "@fortawesome/free-regular-svg-icons": "^6.5.1",
+    "@fortawesome/free-solid-svg-icons": "^6.5.1",
+    "@fortawesome/react-fontawesome": "^0.2.0",
+    "copy-to-clipboard": "^3.3.3",
+    "firebase": "^10.7.0",
+    "prop-types": "^15.8.1",
+    "query-string": "^9.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-lazy-load": "^4.0.1",
+    "react-modal": "^3.16.1",
+    "react-router-dom": "^6.21.0",
     "react-simple-sidenav": "^1.0.1"
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.2.1",
+    "vite": "^5.0.10"
   }
 }
