@@ -454,6 +454,19 @@ const HomePage = () => {
               featuresMenuOpen={featuresMenuOpen}
               onToggleMenu={() => setContactMenuOpen(!contactMenuOpen)}
             />
+
+            <div style={{ 
+              position: 'absolute', 
+              bottom: 16, 
+              left: 16, 
+              fontSize: 12, 
+              color: '#888',
+              fontStyle: 'italic',
+              pointerEvents: 'none',
+              userSelect: 'none'
+            }}>
+              v{import.meta.env.PACKAGE_VERSION || '1.0.1'}
+            </div>
           </div>
         ]}
         navStyle={styles.navStyle}

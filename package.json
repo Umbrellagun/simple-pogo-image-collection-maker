@@ -1,13 +1,17 @@
 {
   "name": "simple-pogo-image-collection-maker",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Create a collection of pogo images for trading or whatever else",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "start": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "version:bump": "node scripts/bump-version.js",
+    "deploy:setup": "echo 'Setting up Firebase environment variables...' && firebase login && firebase hosting:config:set env.VITE_FIREBASE_API_KEY=\"$FIREBASE_API_KEY\" && firebase hosting:config:set env.VITE_FIREBASE_AUTH_DOMAIN=\"$FIREBASE_AUTH_DOMAIN\" && firebase hosting:config:set env.VITE_FIREBASE_DATABASE_URL=\"$FIREBASE_DATABASE_URL\" && firebase hosting:config:set env.VITE_FIREBASE_PROJECT_ID=\"$FIREBASE_PROJECT_ID\" && firebase hosting:config:set env.VITE_FIREBASE_STORAGE_BUCKET=\"$FIREBASE_STORAGE_BUCKET\" && firebase hosting:config:set env.VITE_FIREBASE_MESSAGING_SENDER_ID=\"$FIREBASE_MESSAGING_SENDER_ID\" && firebase hosting:config:set env.VITE_FIREBASE_APP_ID=\"$FIREBASE_APP_ID\" && firebase hosting:config:set env.VITE_FIREBASE_MEASUREMENT_ID=\"$FIREBASE_MEASUREMENT_ID\" && firebase hosting:config:set env.VITE_FIREBASE_STORAGE_URL=\"$FIREBASE_STORAGE_URL\"",
+    "deploy": "npm run version:bump && npm run build && firebase deploy --only hosting",
+    "deploy:check": "firebase hosting:sites:list"
   },
   "repository": {
     "type": "git",
@@ -35,7 +39,13 @@
     "react-simple-sidenav": "^1.0.1"
   },
   "devDependencies": {
+    "@types/node": "^25.3.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@types/react-modal": "^3.16.3",
     "@vitejs/plugin-react": "^4.2.1",
+    "firebase-tools": "^13.0.0",
+    "typescript": "^5.9.3",
     "vite": "^5.0.10"
   }
 }
