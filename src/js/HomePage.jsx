@@ -7,8 +7,8 @@ import queryString from "query-string";
 
 import SideNav from 'react-simple-sidenav';
 
-import nonLivePokemon from "./non-live-pokemon.js";
-import liveShinys from "./live-shinys.js";
+import nonLivePokemon from "./non-live-pokemon";
+import liveShinys from "./live-shinys";
 import Pokemon from "./components/Pokemon.jsx";
 import FilterPanel from "./components/FilterPanel.jsx";
 import MoreMenu from "./components/MoreMenu.jsx";
@@ -24,7 +24,7 @@ import useCollections from "./hooks/useCollections.js";
 import useFilters from "./hooks/useFilters.js";
 import usePokemon from "./hooks/usePokemon.js";
 
-import styles from "./styles.js";
+import styles from "./styles";
 
 const CURRENT_VERSION = 24;
 

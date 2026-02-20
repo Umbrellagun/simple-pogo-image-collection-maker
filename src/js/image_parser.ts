@@ -1,19 +1,25 @@
-export default (image_name)=>{
+export interface ParsedPokemon {
+  image: string;
+  id: string;
+  number: string;
+  special: boolean;
+  regular: boolean;
+  gen: number | undefined;
+  additional_gender: boolean;
+  shiny: boolean;
+}
+
+const imageParser = (image_name: string): ParsedPokemon => {
 
   const splitFileName = image_name.split("_");
 
-  let number;
+  let number: string;
   if (splitFileName[2].includes("pm")){
     number = splitFileName[2].split("pm")[1].substr(1);
   } else {
     number = splitFileName[2];
   }
-//[2]_[3]_[4]_[5]_[6]
-//pm0150_00_pgo_a_shiny
-//025_00_03
-//[2] = number
-//[3] = gender if 01
-//[4] = special number
+
   const shiny = image_name.includes("shiny");
 
   let special = false;
@@ -21,7 +27,7 @@ export default (image_name)=>{
     special = true;
   }
 
-  let gender_exception;
+  let gender_exception: boolean | undefined;
   if (splitFileName[3].includes("11")){
     if (
       number === "421"
@@ -37,15 +43,15 @@ export default (image_name)=>{
   }
 
   let additional_gender = false;
-  if (shiny || special){//gender at 3 = "01"
+  if (shiny || special){
     if (splitFileName[3] == "01"){
-      if (number !== "453"){//fix for stupid Croagunk issue
+      if (number !== "453"){
         additional_gender = true;
       }
     }
-  } else {// regular gender at 3 = "01.png"
+  } else {
     if (splitFileName[3].includes("01") || gender_exception){
-      if (number !== "453"){//fix for stupid Croagunk issue
+      if (number !== "453"){
         additional_gender = true;
       }
     }
@@ -53,30 +59,31 @@ export default (image_name)=>{
 
   const regular = (!special && !shiny);
 
-  let gen;
-  if (number <= 151){
+  let gen: number | undefined;
+  if (parseInt(number) <= 151){
     gen = 1;
-  } else if (number <= 251){
+  } else if (parseInt(number) <= 251){
     gen = 2;
-  } else if (number <= 386){
+  } else if (parseInt(number) <= 386){
     gen = 3;
-  } else if (number <= 493){
+  } else if (parseInt(number) <= 493){
     gen = 4;
-  } else if (number <= 649){
+  } else if (parseInt(number) <= 649){
     gen = 5;
-  } else if (number <= 721){
+  } else if (parseInt(number) <= 721){
     gen = 6;
-  } else if (number <= 809){
+  } else if (parseInt(number) <= 809){
     gen = 7;
   }
 
-  const id = splitFileName.map((fragment, key)=>{
+  const id = splitFileName.map((fragment, key) => {
     if (key === (splitFileName.length - 1)){
       return fragment.split('.')[0];
     } else if (key !== 0 && key !== 1){
       return fragment;
     }
-  }).filter((f)=>{return f;}).join("_");
+    return undefined;
+  }).filter((f): f is string => f !== undefined).join("_");
 
   return {
     image: image_name,
@@ -89,4 +96,6 @@ export default (image_name)=>{
     shiny
   };
 
-}
+};
+
+export default imageParser;

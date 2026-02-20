@@ -1,4 +1,4 @@
-export default [
+const nonLivePokemon: string[] = [
   "479",//Rotom
   "486",//Regigigas
   "489",//Phione
@@ -63,3 +63,5 @@ export default [
   "648",//Meloetta
   "649",//Genesect
 ];
+
+export default nonLivePokemon;

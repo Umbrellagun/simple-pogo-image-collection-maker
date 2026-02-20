@@ -1,5 +1,4 @@
-//https://tinyurl.com/sk4kmc4
-export default [
+const liveShinys: string[] = [
   "001",//Bulbasaur
   "002",//Ivysaur
   "003",//Venusaur
@@ -346,3 +345,5 @@ export default [
   "808",//Meltan
   "809",//Melmetal
 ];
+
+export default liveShinys;

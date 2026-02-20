@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { listAll } from "firebase/storage";
-import useLocalStorage from "./useLocalStorage.js";
-import image_parser from "../image_parser.js";
+import useLocalStorage from "./useLocalStorage";
+import image_parser from "../image_parser";
 
 const usePokemon = (currentVersion) => {
   const [pokemon, setPokemon] = useLocalStorage("pokemon", []);

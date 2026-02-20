@@ -2,7 +2,7 @@ import React from "react";
 import Modal from "react-modal";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
-import styles from "../styles.js";
+import styles from "../styles";
 
 const DeleteCollectionModal = ({
   isOpen,

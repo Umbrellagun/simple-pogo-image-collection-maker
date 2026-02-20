@@ -1,4 +1,30 @@
-export default {
+import { CSSProperties } from 'react';
+
+interface Styles {
+  header: CSSProperties;
+  filterStyle: CSSProperties;
+  menuStyle: CSSProperties;
+  redButtonStyle: CSSProperties;
+  regularButtonStyle: CSSProperties;
+  style: CSSProperties;
+  buttonStyle: CSSProperties;
+  containerStyle: CSSProperties;
+  buttonsStyle: CSSProperties;
+  navTitleStyle: CSSProperties;
+  navItemStyle: CSSProperties;
+  navItemHoverStyle: CSSProperties;
+  navStyle: CSSProperties;
+  inputStyle: CSSProperties;
+  imgStyle: CSSProperties;
+  xButton: CSSProperties;
+  shinyStyle: CSSProperties;
+  selected: CSSProperties;
+  dropdownTriggerStyle: CSSProperties;
+  dropdownMenuStyle: CSSProperties;
+  closeX: CSSProperties;
+}
+
+const styles: Styles = {
 
   header: {
     display: "flex",
@@ -18,7 +44,6 @@ export default {
     zIndex: 99,
     backgroundColor: "white",
     color: "darkcyan",
-    // boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
   },
 
   redButtonStyle: {
@@ -51,7 +76,6 @@ export default {
     position: "relative",
     borderRadius: 8,
     width: "100%",
-    // zIndex: -1
   },
 
   buttonStyle: {
@@ -93,7 +117,6 @@ export default {
     lineHeight: "56px",
     position: "absolute",
     width: "90%",
-    // fontWeight: 600
   },
 
   navItemStyle: {
@@ -107,7 +130,6 @@ export default {
   },
 
   navStyle: {
-    // backgroundColor: ""
   },
 
   inputStyle: {
@@ -123,7 +145,7 @@ export default {
     height: 80,
   },
 
-   xButton: {
+  xButton: {
     color: "white",
     backgroundColor: "red",
     borderRadius: "50%",
@@ -164,7 +186,7 @@ export default {
   },
 
   dropdownMenuStyle: {
-    backgroundColor: 'white',
+    backgroundColor: "darkcyan",
     position: "absolute",
     right: 0,
     top: 26,
@@ -172,7 +194,6 @@ export default {
     width: "80%",
     padding: 8,
     borderRadius: 4,
-    backgroundColor: "darkcyan",
     color: "#fff",
     display: "flex",
     flexDirection: "column",
@@ -185,4 +206,6 @@ export default {
     fontSize: 24,
     color: "darkcyan",
   }
-}
+};
+
+export default styles;

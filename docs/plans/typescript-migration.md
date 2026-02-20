@@ -136,10 +136,10 @@ Convert the PoGo Collector React app from JavaScript to TypeScript to improve ty
 - [x] Create type definition files for existing modules
 
 ### Phase 2: Utility Files
-- [ ] Convert styles.js to styles.ts
-- [ ] Add type definitions for style objects
-- [ ] Convert any other utility JavaScript files
-- [ ] Verify utility functions compile without errors
+- [x] Convert styles.js to styles.ts
+- [x] Add type definitions for style objects
+- [x] Convert any other utility JavaScript files (image_parser, live-shinys, non-live-pokemon)
+- [x] Verify utility functions compile without errors
 
 ### Phase 3: Custom Hooks
 - [ ] Convert useLocalStorage.js to useLocalStorage.ts

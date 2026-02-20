@@ -2,7 +2,7 @@ import React from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencilAlt, faShareAlt, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { ArrowDownIcon, ArrowRightIcon } from "./Icons.jsx";
-import styles from "../styles.js";
+import styles from "../styles";
 
 const CollectionDropdown = ({
   collections,

@@ -1,6 +1,6 @@
 import React from "react";
 import { CheckedIcon, UncheckedIcon, ArrowDownIcon, ArrowRightIcon } from "./Icons.jsx";
-import styles from "../styles.js";
+import styles from "../styles";
 
 const FilterPanel = ({ filters, filtersMenuOpen, onToggleMenu, onToggleFilter }) => {
   const getFilterName = (filter) => {

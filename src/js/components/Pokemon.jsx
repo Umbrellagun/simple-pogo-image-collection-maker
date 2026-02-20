@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 import LazyLoad  from "react-lazy-load";
 
-import styles    from "../styles.js";
+import styles    from "../styles";
 
 export default class Pokemon extends React.Component {
 
