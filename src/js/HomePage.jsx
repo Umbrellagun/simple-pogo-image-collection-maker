@@ -20,9 +20,9 @@ import DeleteCollectionModal from "./components/DeleteCollectionModal.jsx";
 import ShareCollectionModal from "./components/ShareCollectionModal.jsx";
 import { ArrowDownIcon, ArrowRightIcon } from "./components/Icons.jsx";
 
-import useCollections from "./hooks/useCollections.js";
-import useFilters from "./hooks/useFilters.js";
-import usePokemon from "./hooks/usePokemon.js";
+import useCollections from "./hooks/useCollections";
+import useFilters from "./hooks/useFilters";
+import usePokemon from "./hooks/usePokemon";
 
 import styles from "./styles";
 

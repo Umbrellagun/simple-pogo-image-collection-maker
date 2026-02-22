@@ -1,18 +1,24 @@
 import { useState, useEffect, useCallback } from "react";
-import { listAll } from "firebase/storage";
+import { listAll, StorageReference } from "firebase/storage";
 import useLocalStorage from "./useLocalStorage";
-import image_parser from "../image_parser";
+import imageParser, { ParsedPokemon } from "../image_parser";
 
-const usePokemon = (currentVersion) => {
-  const [pokemon, setPokemon] = useLocalStorage("pokemon", []);
-  const [version, setVersion] = useLocalStorage("version", null);
-  const [loading, setLoading] = useState(true);
+interface UsePokemonReturn {
+  pokemon: ParsedPokemon[];
+  loading: boolean;
+  refetch: () => Promise<void>;
+}
+
+const usePokemon = (currentVersion: number): UsePokemonReturn => {
+  const [pokemon, setPokemon] = useLocalStorage<ParsedPokemon[]>("pokemon", []);
+  const [version, setVersion] = useLocalStorage<number | null>("version", null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const fetchPokemon = useCallback(async () => {
     try {
-      const res = await listAll(window.storage);
+      const res = await listAll(window.storage as StorageReference);
       const updatedPokemon = res.items.map((image) => 
-        image_parser(image.fullPath)
+        imageParser(image.fullPath)
       );
       setPokemon(updatedPokemon);
       setVersion(currentVersion);

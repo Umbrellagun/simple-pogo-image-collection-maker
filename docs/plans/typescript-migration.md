@@ -142,11 +142,11 @@ Convert the PoGo Collector React app from JavaScript to TypeScript to improve ty
 - [x] Verify utility functions compile without errors
 
 ### Phase 3: Custom Hooks
-- [ ] Convert useLocalStorage.js to useLocalStorage.ts
-- [ ] Convert usePokemon.js to usePokemon.ts
-- [ ] Convert useCollections.js to useCollections.ts
-- [ ] Convert useFilters.js to useFilters.ts
-- [ ] Add proper TypeScript interfaces for hook parameters and return values
+- [x] Convert useLocalStorage.js to useLocalStorage.ts
+- [x] Convert usePokemon.js to usePokemon.ts
+- [x] Convert useCollections.js to useCollections.ts
+- [x] Convert useFilters.js to useFilters.ts
+- [x] Add proper TypeScript interfaces for hook parameters and return values
 
 ### Phase 4: Simple Components
 - [ ] Convert Icons.js to Icons.tsx

@@ -1,21 +1,51 @@
 import { useCallback } from "react";
-import useLocalStorage from "./useLocalStorage.js";
+import useLocalStorage from "./useLocalStorage";
 
-const DEFAULT_COLLECTIONS = {
+export interface Collection {
+  name: string;
+  pokemon_ids: Record<string, string>;
+}
+
+export interface Collections {
+  [key: string]: Collection;
+}
+
+export interface SharedCollection {
+  name: string;
+  pokemon_ids: Record<string, string>;
+}
+
+interface UseCollectionsReturn {
+  collections: Collections;
+  currentCollection: string;
+  setCurrentCollection: (value: string | ((prev: string) => string)) => void;
+  removedPokemon: Record<string, string>;
+  addRemovePokemon: (pokemonId: string) => void;
+  clearAllSelectedPokemon: () => void;
+  toggleFullyRemovePokemon: (pokemonId: string) => void;
+  clearAllRemovedPokemon: () => void;
+  addNewCollection: () => string;
+  deleteCollection: (collectionId: string) => void;
+  updateCollectionName: (name: string) => void;
+  getSharingUrl: (collectionId: string) => string;
+  addSharedCollection: (sharedCollection: SharedCollection) => string;
+}
+
+const DEFAULT_COLLECTIONS: Collections = {
   default: {
     name: "My Collection",
     pokemon_ids: {}
   }
 };
 
-const useCollections = () => {
-  const [collections, setCollections] = useLocalStorage("collections", DEFAULT_COLLECTIONS);
-  const [currentCollection, setCurrentCollection] = useLocalStorage("current_collection", "default");
-  const [removedPokemon, setRemovedPokemon] = useLocalStorage("removed_pokemon", {});
+const useCollections = (): UseCollectionsReturn => {
+  const [collections, setCollections] = useLocalStorage<Collections>("collections", DEFAULT_COLLECTIONS);
+  const [currentCollection, setCurrentCollection] = useLocalStorage<string>("current_collection", "default");
+  const [removedPokemon, setRemovedPokemon] = useLocalStorage<Record<string, string>>("removed_pokemon", {});
 
-  const addRemovePokemon = useCallback((pokemonId) => {
+  const addRemovePokemon = useCallback((pokemonId: string) => {
     setCollections((prev) => {
-      const newCollections = JSON.parse(JSON.stringify(prev));
+      const newCollections = JSON.parse(JSON.stringify(prev)) as Collections;
       if (newCollections[currentCollection].pokemon_ids[pokemonId]) {
         delete newCollections[currentCollection].pokemon_ids[pokemonId];
       } else {
@@ -27,13 +57,13 @@ const useCollections = () => {
 
   const clearAllSelectedPokemon = useCallback(() => {
     setCollections((prev) => {
-      const newCollections = JSON.parse(JSON.stringify(prev));
+      const newCollections = JSON.parse(JSON.stringify(prev)) as Collections;
       newCollections[currentCollection].pokemon_ids = {};
       return newCollections;
     });
   }, [currentCollection, setCollections]);
 
-  const toggleFullyRemovePokemon = useCallback((pokemonId) => {
+  const toggleFullyRemovePokemon = useCallback((pokemonId: string) => {
     setRemovedPokemon((prev) => {
       const newRemoved = { ...prev };
       if (newRemoved[pokemonId]) {
@@ -49,7 +79,7 @@ const useCollections = () => {
     setRemovedPokemon({});
   }, [setRemovedPokemon]);
 
-  const addNewCollection = useCallback(() => {
+  const addNewCollection = useCallback((): string => {
     const newId = Date.now().toString();
     setCollections((prev) => ({
       ...prev,
@@ -61,7 +91,7 @@ const useCollections = () => {
     return newId;
   }, [setCollections]);
 
-  const deleteCollection = useCallback((collectionId) => {
+  const deleteCollection = useCallback((collectionId: string) => {
     setCollections((prev) => {
       const newCollections = { ...prev };
       delete newCollections[collectionId];
@@ -69,7 +99,7 @@ const useCollections = () => {
     });
   }, [setCollections]);
 
-  const updateCollectionName = useCallback((name) => {
+  const updateCollectionName = useCallback((name: string) => {
     setCollections((prev) => ({
       ...prev,
       [currentCollection]: {
@@ -79,7 +109,7 @@ const useCollections = () => {
     }));
   }, [currentCollection, setCollections]);
 
-  const getSharingUrl = useCallback((collectionId) => {
+  const getSharingUrl = useCallback((collectionId: string): string => {
     const collection = collections[collectionId];
     if (!collection) return "";
 
@@ -93,7 +123,7 @@ const useCollections = () => {
     return url;
   }, [collections]);
 
-  const addSharedCollection = useCallback((sharedCollection) => {
+  const addSharedCollection = useCallback((sharedCollection: SharedCollection): string => {
     const newId = Date.now().toString();
     setCollections((prev) => ({
       ...prev,
